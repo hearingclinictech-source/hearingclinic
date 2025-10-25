@@ -5,6 +5,78 @@ app_description = "All customizations for the Hearing Clinic ERPNext Implementat
 app_email = "thomas@dierochs.de"
 app_license = "mit"
 
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            ["name", "in", [
+                # Address (3 custom fields)
+                "Address-custom_stateprovince",  # State/Province
+                "Address-tax_category",  # Tax Category
+                "Address-is_your_company_address",  # Is Your Company Address
+
+                # Communication (1 custom fields)
+                "Communication-company",  # Company
+
+                # Contact (1 custom fields)
+                "Contact-is_billing_contact",  # Is Billing Contact
+
+                # Customer (9 custom fields)
+                "Customer-custom_customer_id",  # Customer Id
+                "Customer-custom_nricpassport",  # NRIC/Passport
+                "Customer-custom_ethinicity",  # Ethinicity
+                "Customer-custom_date_of_birth",  # Date of Birth
+                "Customer-custom_customer_info",  # Customer Info
+                "Customer-custom_devices",  # Devices
+                "Customer-custom_items_purchased",  # Items Purchased
+                "Customer-custom_maintenance",  # Maintenance
+                "Customer-custom_maintenance_info",  # Maintenance Info
+
+                # Delivery Note Item (2 custom fields)
+                "Delivery Note Item-custom_for_ear",  # For Ear
+                "Delivery Note Item-custom_device_serial_number",  # Device Serial Number
+
+                # Email Account (1 custom fields)
+                "Email Account-company",  # Company
+
+                # Item (2 custom fields)
+                "Item-custom_manufacturer",  # Manufacturer
+                "Item-custom_hearing_aid_type",  # Hearing Aid Type
+
+                # Lead (2 custom fields)
+                "Lead-custom_hc_request_type",  # HC Request Type
+                "Lead-custom_stateprovince",  # State/Province
+
+                # Print Settings (3 custom fields)
+                "Print Settings-compact_item_print",  # Compact Item Print
+                "Print Settings-print_uom_after_quantity",  # Print UOM after Quantity
+                "Print Settings-print_taxes_with_zero_amount",  # Print taxes with zero amount
+            ]]
+        ]
+    },
+    # Export all Property Setters for specific doctypes
+    {
+        "dt": "Property Setter",
+        "filters": [
+            ["doc_type", "in", ["Item", "Customer", "Sales Invoice", "Delivery Note", "Address", "Lead"]]
+        ]
+    },
+    # Export only Client Scripts from your module
+    {
+        "dt": "Client Script",
+        "filters": [
+            ["module", "=", "Hearingclinic"]  # Your module name
+        ]
+    },
+    # Export only Server Scripts from your module
+    {
+        "dt": "Server Script",
+        "filters": [
+            ["module", "=", "Hearingclinic"]  # Your module name
+        ]
+    }
+]
+
 # Apps
 # ------------------
 
