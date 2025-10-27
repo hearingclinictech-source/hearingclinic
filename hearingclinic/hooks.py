@@ -5,6 +5,16 @@ app_description = "All customizations for the Hearing Clinic ERPNext Implementat
 app_email = "thomas@dierochs.de"
 app_license = "mit"
 
+doctype_js = {
+       "Customer": "public/js/customer.js",
+}
+
+doc_events = {
+    "Customer": {
+        "before_save": "hearingclinic.hearingclinic.custom.customer_id.before_save"
+    }
+}
+
 fixtures = [
     {
         "dt": "Custom Field",
@@ -61,20 +71,6 @@ fixtures = [
             ["doc_type", "in", ["Item", "Customer", "Sales Invoice", "Delivery Note", "Address", "Lead"]]
         ]
     },
-    # Export only Client Scripts from your module
-    {
-        "dt": "Client Script",
-        "filters": [
-            ["module", "=", "Hearingclinic"]  # Your module name
-        ]
-    },
-    # Export only Server Scripts from your module
-    {
-        "dt": "Server Script",
-        "filters": [
-            ["module", "=", "Hearingclinic"]  # Your module name
-        ]
-    }
 ]
 
 # Apps
