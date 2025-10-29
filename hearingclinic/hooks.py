@@ -6,12 +6,24 @@ app_email = "thomas@dierochs.de"
 app_license = "mit"
 
 doctype_js = {
-       "Customer": "public/js/customer.js",
+       "Customer": [
+           "public/js/Customer/format_customer_id.js",
+           "public/js/Customer/format_sales_button.js",                 
+           "public/js/Customer/customer_info_devices.js",                 
+           "public/js/Customer/customer_info_maintenance.js",                 
+       ],
+       "Sales Invoice": [
+           "public/js/Sales_Invoice/auto_expand_packages.js",
+           "public/js/Sales_Invoice/create_delivery_note.js",
+       ]
 }
 
 doc_events = {
     "Customer": {
-        "before_save": "hearingclinic.hearingclinic.custom.customer_id.before_save"
+        "before_save": "hearingclinic.hearingclinic.custom.customer_id.before_save",
+    },
+    "Delivery Note": {
+        "on_submit": "hearingclinic.hearingclinic.custom.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     }
 }
 
