@@ -40,7 +40,8 @@ fixtures = [
                 "Customer-custom_devices",  # Devices
                 "Customer-custom_items_purchased",  # Items Purchased
                 "Customer-custom_maintenance",  # Maintenance
-                "Customer-custom_maintenance_info",  # Maintenance Info
+                "Customer-custom_maintenance_info",  # Maintenance InfoERPNext
+                "Customer-custom_new_sales_invoice",  # New Sales Invoice button
 
                 # Delivery Note Item (2 custom fields)
                 "Delivery Note Item-custom_for_ear",  # For Ear
