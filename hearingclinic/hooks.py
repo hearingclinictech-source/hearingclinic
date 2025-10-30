@@ -81,7 +81,17 @@ fixtures = [
     {
         "dt": "Property Setter",
         "filters": [
-            ["doc_type", "in", ["Item", "Customer", "Sales Invoice", "Delivery Note", "Address", "Lead"]]
+            ["doc_type", "in", [
+                "Item",
+                "Customer",
+                "Sales Invoice",
+                "Delivery Note",
+                "Address",
+                "Lead",
+                "Maintenance Schedule",
+                "Maintenance Visit Purpose",
+                "Delivery Note Item"
+            ]]
         ]
     },
 ]
