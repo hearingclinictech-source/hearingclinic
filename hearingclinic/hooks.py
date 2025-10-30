@@ -15,7 +15,7 @@ doctype_js = {
        "Sales Invoice": [
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
-       ]
+       ], 
 }
 
 doc_events = {

@@ -63,6 +63,9 @@ function load_maintenance_visits(frm, schedules, fieldname) {
                 callback: function(r) {
                     if (r.message && r.message.schedules) {
                         schedule.schedule_items = r.message.schedules;
+                        schedule.items = r.message.items; // Also store items
+                        schedule.customer_name = r.message.customer_name;
+                        schedule.company = r.message.company;
                     }
                     resolve();
                 }
@@ -218,7 +221,6 @@ function display_maintenance_schedules(frm, schedules, fieldname) {
                             <th>Status</th>
                             <th>Last Completed Visit</th>
                             <th>Next Scheduled Visit</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -226,7 +228,6 @@ function display_maintenance_schedules(frm, schedules, fieldname) {
     schedules.forEach(schedule => {
         let lastCompleted = get_last_completed_visit(schedule);
         let nextScheduled = get_next_scheduled_visit(schedule);
-        let nextVisitData = get_next_visit_data(schedule);
         
         html += `
             <tr>
@@ -239,7 +240,6 @@ function display_maintenance_schedules(frm, schedules, fieldname) {
                 <td>${get_status_badge(schedule.status)}</td>
                 <td>${lastCompleted}</td>
                 <td>${nextScheduled}</td>
-                <td>${get_action_button(schedule, nextVisitData)}</td>
             </tr>`;
     });
     
@@ -250,13 +250,6 @@ function display_maintenance_schedules(frm, schedules, fieldname) {
         </div>`;
     
     frm.get_field(fieldname).$wrapper.html(html);
-    
-    // Attach event listeners to the create visit buttons
-    frm.get_field(fieldname).$wrapper.find('.btn-create-visit').on('click', function() {
-        let schedule_name = $(this).data('schedule');
-        let item_name = $(this).data('item');
-        create_maintenance_visit(frm, schedule_name, item_name);
-    });
 }
 
 function get_status_badge(status) {
@@ -319,96 +312,4 @@ function get_next_scheduled_visit(schedule) {
 
 function count_by_status(schedules, status) {
     return schedules.filter(s => s.status === status).length;
-}
-
-function get_next_visit_data(schedule) {
-    if (!schedule.schedule_items || schedule.schedule_items.length === 0) {
-        return null;
-    }
-    
-    let today = frappe.datetime.get_today();
-    let upcomingVisits = schedule.schedule_items.filter(item => 
-        item.completion_status !== 'Fully Completed' && 
-        item.scheduled_date && 
-        item.scheduled_date >= today
-    ).sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
-    
-    if (upcomingVisits.length > 0) {
-        return upcomingVisits[0];
-    }
-    
-    return null;
-}
-
-function get_action_button(schedule, nextVisitData) {
-    if (!nextVisitData) {
-        return '<span class="text-muted">-</span>';
-    }
-    
-    return `<button class="btn-create-visit" 
-                    data-schedule="${schedule.name}" 
-                    data-item="${nextVisitData.name}">
-                Create Visit
-            </button>`;
-}
-
-function create_maintenance_visit(frm, schedule_name, item_name) {
-    frappe.call({
-        method: 'frappe.client.get',
-        args: {
-            doctype: 'Maintenance Schedule',
-            name: schedule_name
-        },
-        callback: function(r) {
-            if (r.message) {
-                let schedule = r.message;
-                let schedule_item = schedule.schedules.find(item => item.name === item_name);
-                
-                if (!schedule_item) {
-                    frappe.msgprint('Schedule item not found');
-                    return;
-                }
-                
-                // Prepare purposes data from schedule items
-                let purposes = [];
-                if (schedule.items && schedule.items.length > 0) {
-                    schedule.items.forEach(item => {
-                        purposes.push({
-                            item_code: item.item_code,
-                            item_name: item.item_name,
-                            serial_no: item.serial_no,
-                            description: item.description
-                        });
-                    });
-                }
-                
-                // Create new Maintenance Visit with route
-                frappe.route_options = {
-                    customer: schedule.customer,
-                    customer_name: schedule.customer_name,
-                    maintenance_schedule: schedule_name,
-                    maintenance_type: 'Scheduled',
-                    mntc_date: schedule_item.scheduled_date,
-                    company: schedule.company
-                };
-                
-                frappe.new_doc('Maintenance Visit');
-                
-                // Add items after a short delay to ensure form is loaded
-                setTimeout(() => {
-                    let cur_form = cur_frm;
-                    if (cur_form && cur_form.doctype === 'Maintenance Visit') {
-                        purposes.forEach(purpose => {
-                            let row = cur_form.add_child('purposes');
-                            row.item_code = purpose.item_code;
-                            row.item_name = purpose.item_name;
-                            row.serial_no = purpose.serial_no;
-                            row.description = purpose.description;
-                        });
-                        cur_form.refresh_field('purposes');
-                    }
-                }, 500);
-            }
-        }
-    });
 }
