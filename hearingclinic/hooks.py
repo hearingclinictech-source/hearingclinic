@@ -28,6 +28,11 @@ doc_events = {
 }
 
 fixtures = [
+    {"dt": "Custom DocPerm",
+             "filters": [
+            ["role", "in", ["Hearing Clinic"]]
+        ]
+    },
     {
         "dt": "Custom Field",
         "filters": [
