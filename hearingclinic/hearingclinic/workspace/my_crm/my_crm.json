@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "My CRM",
  "links": [],
- "modified": "2025-11-03 10:55:07.087675",
+ "modified": "2025-11-03 11:47:35.014009",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "My CRM",
@@ -43,7 +43,11 @@
    "quick_list_filter": "[[\"Maintenance Schedule Detail\",\"scheduled_date\",\"Timespan\",\"next 30 days\",false]]"
   }
  ],
- "roles": [],
+ "roles": [
+  {
+   "role": "Hearing Clinic"
+  }
+ ],
  "sequence_id": 1.0,
  "shortcuts": [
   {
