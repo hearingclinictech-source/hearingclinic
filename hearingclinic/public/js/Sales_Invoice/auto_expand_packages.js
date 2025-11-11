@@ -122,7 +122,7 @@ function set_package_items_to_zero(frm) {
                 
                 // Skip hearing aid models (you can customize this condition)
                 // For now, we'll set accessories and services to 0
-                if (item.item_code.startsWith('ACC-') || item.item_code.startsWith('SERV-') || item.item_code.startsWith('HA-'))  {
+                if (!item.item_code.startsWith('PACK-'))  {
                     frappe.model.set_value(item.doctype, item.name, 'rate', 0);
                     updated++;
                 }

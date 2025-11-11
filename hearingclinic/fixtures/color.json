@@ -1,0 +1,30 @@
+[
+ {
+  "color": "#e81e2a",
+  "docstatus": 0,
+  "doctype": "Color",
+  "modified": "2025-10-21 19:37:08.682236",
+  "name": "Brand"
+ },
+ {
+  "color": "#969292",
+  "docstatus": 0,
+  "doctype": "Color",
+  "modified": "2025-10-21 19:37:38.632137",
+  "name": "DarkGrey"
+ },
+ {
+  "color": "#FFE0B2",
+  "docstatus": 0,
+  "doctype": "Color",
+  "modified": "2025-10-26 22:14:04.966877",
+  "name": "Staging"
+ },
+ {
+  "color": "#C8E6C9",
+  "docstatus": 0,
+  "doctype": "Color",
+  "modified": "2025-10-21 20:27:17.847670",
+  "name": "Development"
+ }
+]

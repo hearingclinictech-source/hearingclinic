@@ -15,7 +15,7 @@ frappe.ui.form.on('Sales Invoice', {
 function create_delivery_note_from_invoice(frm) {
     // Confirm with user
     frappe.confirm(
-        __('Create a Delivery Note from this Sales Invoice?<br>Items will be copied automatically.'),
+        __('Create a Delivery Note from this Sales Invoice?<br>Relevant Items will be copied automatically.'),
         function() {
             // Yes - create the Delivery Note
             frappe.call({

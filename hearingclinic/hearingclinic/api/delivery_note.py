@@ -69,7 +69,7 @@ def create_delivery_note_from_invoice(sales_invoice_name):
         item_group = frappe.db.get_value("Item", item.item_code, "item_group")
         
         # Only copy items from "Hearing Aids" item group
-        if item_group != "Hearing Aids":
+        if item_group not in ["Hearing Aids", "Warranty"]:
             continue
         
         dn_item = delivery_note.append("items", {})

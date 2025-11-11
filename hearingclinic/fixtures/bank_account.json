@@ -1,0 +1,25 @@
+[
+ {
+  "account": "8003027876 - CIMB 8003027876 - HC-PJ",
+  "account_name": "CIMB PJ",
+  "account_subtype": "CIMB Berhad",
+  "account_type": "Bank",
+  "bank": "CIMB Berhad",
+  "bank_account_no": "8003027876",
+  "branch_code": null,
+  "company": "Hearing Clinic Petaling Jaya",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Bank Account",
+  "iban": null,
+  "integration_id": null,
+  "is_company_account": 1,
+  "is_default": 1,
+  "last_integration_date": null,
+  "mask": null,
+  "modified": "2025-10-24 19:22:15.187057",
+  "name": "CIMB PJ - CIMB Berhad",
+  "party": null,
+  "party_type": null
+ }
+]

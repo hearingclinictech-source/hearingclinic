@@ -16,22 +16,62 @@ doctype_js = {
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
        ], 
+       "Maintenance Schedule": [
+           "public/js/Maintenance_Schedule/extend_warranty_button.js",
+       ],
 }
 
 doc_events = {
     "Customer": {
-        "before_save": "hearingclinic.hearingclinic.custom.customer_id.before_save",
+        "before_save": "hearingclinic.hearingclinic.doc_events.customer_id.before_save",
     },
     "Delivery Note": {
-        "on_submit": "hearingclinic.hearingclinic.custom.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
-    }
+        "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
+    },
+    "Sales Invoice": {
+        "on_submit": "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice"
+    },
 }
 
 fixtures = [
-    {"dt": "Custom DocPerm",
-             "filters": [
-            ["role", "in", ["Hearing Clinic"]]
-        ]
+    "Company",
+    "Item Group",
+    "UOM",
+    "Bank Account",
+    "Warehouse",
+    "Manufacturer",
+    "Gender",
+    "Color",
+    "POS Profile",
+    {"doctype": "Website Settings"},
+    {"doctype": "Website Script"},
+    {
+        "doctype": "Sales Taxes and Charges Template",
+        "filters": [["title", "in", ["Malaysia GST 6%"]]],
+    },
+    {
+        "doctype": "Website Theme",
+        "filters": [["name", "in", ["Hearing Clinic Standard"]]],
+    },
+    {
+        "doctype": "Sales Taxes and Charges",
+        "filters": [["parent", "in", ["Malaysia GST 6% - HC", "Malaysia GST 6% - HC-PJ"]]],
+    },
+    {
+        "doctype": "Stock Settings",
+        "filters": [["name", "=", "Stock Settings"]]
+    },
+    {
+        "doctype": "Selling Settings",
+        "filters": [["name", "=", "Selling Settings"]]
+    },
+    {
+        "doctype": "System Settings",
+        "filters": [["name", "=", "System Settings"]]
+    },
+    {
+        "doctype": "Global Defaults",
+        "filters": [["name", "=", "Global Defaults"]]
     },
     {
         "dt": "Custom Field",
@@ -70,10 +110,18 @@ fixtures = [
                 # Item (2 custom fields)
                 "Item-custom_manufacturer",  # Manufacturer
                 "Item-custom_hearing_aid_type",  # Hearing Aid Type
+                "Item-custom_warranty",  # Warranty period in months
+
+                # Sales Incvoice Item (2 custom fields)
+                "Sales Invoice Item-custom_warranty_serial_number",  # Warranty Serial Number
+                "Sales Invoice Item-custom_extension_start_date",  # Extension Start Date
 
                 # Lead (2 custom fields)
                 "Lead-custom_hc_request_type",  # HC Request Type
                 "Lead-custom_stateprovince",  # State/Province
+
+                # Maintenance Schedule (1 custom field)
+                "Maintenance Schedule-custom_device_serial_number",  # Device Serial Number
 
                 # Print Settings (3 custom fields)
                 "Print Settings-compact_item_print",  # Compact Item Print

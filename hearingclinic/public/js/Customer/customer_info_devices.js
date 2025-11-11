@@ -18,7 +18,7 @@ function load_purchased_items(frm, fieldname) {
     
     console.log('Loading purchase history for customer:', frm.doc.name);
     
-    // Query Sales Invoice with items - this respects permissions better
+    // Query Sales Invoice with items
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
@@ -42,15 +42,14 @@ function load_purchased_items(frm, fieldname) {
             
             let invoice_names = inv_response.message.map(inv => inv.name);
             
-            // Now get the items for these invoices using server-side method
+            // Check if we can access invoice details
             frappe.call({
                 method: 'frappe.client.get',
                 args: {
                     doctype: 'Sales Invoice',
-                    name: invoice_names[0]  // Get first invoice to start
+                    name: invoice_names[0]
                 },
                 callback: function(r) {
-                    // If we can't access invoice details, use summary only
                     if (r.message) {
                         load_all_invoice_items(frm, invoice_names, inv_response.message, fieldname);
                     } else {
@@ -72,12 +71,6 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
     let all_items = [];
     let completed = 0;
     
-    // Create a mapping of invoices
-    let invoice_map = {};
-    invoices.forEach(inv => {
-        invoice_map[inv.name] = inv;
-    });
-    
     // First, get all delivery notes for this customer
     frappe.call({
         method: 'frappe.client.get_list',
@@ -92,7 +85,6 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
         },
         callback: function(dn_response) {
             console.log('Delivery Notes found:', dn_response.message ? dn_response.message.length : 0);
-            console.log('Delivery Notes:', dn_response);
             
             let delivery_note_map = {};
             
@@ -102,7 +94,6 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
                 let total_dns = dn_response.message.length;
                 
                 dn_response.message.forEach(function(dn) {
-                    // Capture dn.name in closure
                     let dn_name = dn.name;
                     console.log('Loading Delivery Note:', dn_name);
                     
@@ -114,34 +105,22 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
                             fields: ['name', 'items']
                         },
                         callback: function(dn_detail) {
-                            console.log('DN Detail for', dn_name, ':', dn_detail);
-                            
                             if (dn_detail.message && dn_detail.message.items) {
-                                console.log('DN Items for', dn_name, ':', dn_detail.message.items);
-                                
                                 dn_detail.message.items.forEach(function(dn_item) {
-                                    console.log('Processing DN item:', dn_item.item_code, 'from DN:', dn_name);
-                                    console.log('Against Sales Invoice:', dn_item.against_sales_invoice);
-                                    console.log('SI Detail:', dn_item.si_detail);
-                                    
                                     // Map by si_detail (the link to the specific Sales Invoice Item)
                                     if (dn_item.si_detail) {
-                                        let key = dn_item.si_detail; // Use the unique Sales Invoice Item name
-                                        console.log('Creating DN map key:', key);
-                                        
+                                        let key = dn_item.si_detail;
                                         delivery_note_map[key] = {
                                             device_serial: dn_item.serial_no || dn_item.custom_device_serial_number || '',
                                             for_ear: dn_item.custom_for_ear || '',
                                             delivery_note: dn_name,
                                             item_code: dn_item.item_code
                                         };
-                                        console.log('Mapped DN data for key', key, ':', delivery_note_map[key]);
                                     }
                                 });
                             }
                             
                             dn_completed++;
-                            console.log('DN completed:', dn_completed, 'of', total_dns);
                             
                             // When all delivery notes are loaded, load invoice items
                             if (dn_completed === total_dns) {
@@ -166,7 +145,6 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
         },
         error: function(r) {
             console.error('Error loading delivery notes:', r);
-            // Continue without delivery note data
             load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, fieldname);
         }
     });
@@ -174,11 +152,8 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
 
 function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname) {
     console.log('Loading invoice items with DN data');
-    console.log('Invoice names:', invoice_names);
-    console.log('DN Map received:', delivery_note_map);
     
     let all_items = [];
-    let item_groups_loaded = {};
     let items_to_check = new Set();
     let completed = 0;
     
@@ -192,15 +167,13 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
                 fields: ['name', 'posting_date', 'items']
             },
             callback: function(r) {
-                console.log('Invoice loaded:', invoice_name, r);
+                console.log('Invoice loaded:', invoice_name);
                 
                 if (r.message && r.message.items) {
                     r.message.items.forEach(item => {
                         // Look up delivery note data using the Sales Invoice Item's unique name
-                        let dn_key = item.name; // item.name is the unique identifier for the Sales Invoice Item
+                        let dn_key = item.name;
                         let dn_data = delivery_note_map[dn_key] || {};
-                        
-                        console.log('Item:', item.item_code, 'SI Item name:', item.name, 'DN Key:', dn_key, 'DN Data:', dn_data);
                         
                         all_items.push({
                             item_code: item.item_code,
@@ -278,19 +251,20 @@ function check_item_groups(frm, all_items, item_codes, invoices, fieldname) {
                 if (items_checked === item_codes.length) {
                     console.log('All item groups loaded:', item_group_map);
                     
-                    // Filter items to only include "Hearing Aids" group
+                    // Filter items to only include "Hearing Aids" group for display
                     let filtered_items = all_items.filter(item => {
                         return item_group_map[item.item_code] === 'Hearing Aids';
                     });
                     
                     console.log('Filtered items (Hearing Aids only):', filtered_items.length);
+                    console.log('All items (for revenue calc):', all_items.length);
                     
                     if (filtered_items.length > 0) {
-                        process_and_display_items(frm, filtered_items, invoices, fieldname);
+                        // Pass both filtered items (for display) and all items (for total revenue)
+                        process_and_display_items(frm, filtered_items, all_items, invoices, fieldname);
                     } else {
-                        frm.get_field(fieldname).$wrapper.html(
-                            '<div class="alert alert-info">No Hearing Aids found in purchase history for this customer.</div>'
-                        );
+                        // No hearing aids found, but still show total revenue
+                        display_invoice_summary_only(frm, invoices, fieldname);
                     }
                 }
             },
@@ -305,7 +279,7 @@ function check_item_groups(frm, all_items, item_codes, invoices, fieldname) {
                     });
                     
                     if (filtered_items.length > 0) {
-                        process_and_display_items(frm, filtered_items, invoices, fieldname);
+                        process_and_display_items(frm, filtered_items, all_items, invoices, fieldname);
                     } else {
                         display_invoice_summary_only(frm, invoices, fieldname);
                     }
@@ -315,11 +289,11 @@ function check_item_groups(frm, all_items, item_codes, invoices, fieldname) {
     });
 }
 
-function process_and_display_items(frm, all_items, invoices, fieldname) {
-    // Group by item_code and sum quantities
+function process_and_display_items(frm, filtered_items, all_items, invoices, fieldname) {
+    // Group filtered items (Hearing Aids only) by item_code for display
     let item_summary = {};
     
-    all_items.forEach(item => {
+    filtered_items.forEach(item => {
         if (!item_summary[item.item_code]) {
             item_summary[item.item_code] = {
                 item_code: item.item_code,
@@ -346,15 +320,21 @@ function process_and_display_items(frm, all_items, invoices, fieldname) {
         item.avg_rate = item.total_amount / item.total_qty;
     });
     
-    // Convert to array and sort
+    // Convert to array and sort by total amount
     let items_array = Object.values(item_summary);
     items_array.sort((a, b) => b.total_amount - a.total_amount);
     
-    display_items_table(frm, items_array, all_items, invoices, fieldname);
+    // Calculate total revenue from ALL items (not just hearing aids)
+    let total_revenue = all_items.reduce((sum, item) => sum + item.amount, 0);
+    
+    display_items_table(frm, items_array, filtered_items, total_revenue, invoices, fieldname);
 }
 
-function display_items_table(frm, summary_items, detail_items, invoices, fieldname) {
-    let total_value = summary_items.reduce((sum, item) => sum + item.total_amount, 0);
+function display_items_table(frm, summary_items, detail_items, total_revenue, invoices, fieldname) {
+    let hearing_aids_value = summary_items.reduce((sum, item) => sum + item.total_amount, 0);
+    
+    // Format revenue with thousands separator, no decimals
+    let formatted_revenue = Math.round(total_revenue).toLocaleString('en-US');
     
     let html = `
         <div class="purchase-history-container">
@@ -411,6 +391,16 @@ function display_items_table(frm, summary_items, detail_items, invoices, fieldna
                     flex: 1;
                     min-width: 150px;
                 }
+                .stat-card.highlight {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                }
+                .stat-card.highlight .stat-value {
+                    color: white;
+                }
+                .stat-card.highlight .stat-label {
+                    color: rgba(255, 255, 255, 0.9);
+                }
                 .stat-value {
                     font-size: 24px;
                     font-weight: 600;
@@ -432,24 +422,28 @@ function display_items_table(frm, summary_items, detail_items, invoices, fieldna
                 }
             </style>
             
-            <div style="margin-bottom: 15px;">
-                <span style="font-weight: 600;">Showing:</span>
-                <span class="filter-badge">Hearing Aids Only</span>
-            </div>
-            
             <div class="summary-stats">
+                <div class="stat-card highlight">
+                    <div class="stat-value">RM ${formatted_revenue}</div>
+                    <div class="stat-label">Total Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${invoices.length}</div>
+                    <div class="stat-label">Total Invoices</div>
+                </div>
                 <div class="stat-card">
                     <div class="stat-value">${summary_items.length}</div>
-                    <div class="stat-label">Unique Hearing Aids</div>
+                    <div class="stat-label">Hearing Aid Types</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${detail_items.length}</div>
                     <div class="stat-label">Total Devices</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">${format_currency(total_value)}</div>
-                    <div class="stat-label">Total Value</div>
-                </div>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <span style="font-weight: 600;">Showing:</span>
+                <span class="filter-badge">Hearing Aids Items Only</span>
             </div>
             
             <ul class="nav nav-tabs" role="tablist">
@@ -519,17 +513,14 @@ function display_items_table(frm, summary_items, detail_items, invoices, fieldna
     detail_items.sort((a, b) => new Date(b.posting_date) - new Date(a.posting_date));
     
     detail_items.forEach(item => {
-        // Format device serial
         let device_serial = item.device_serial || '-';
         
-        // Format ear with badge styling
         let ear_display = '-';
         if (item.for_ear) {
-            let ear_color = item.for_ear === 'R' ? '#dc3545' : '#007bff'; // Red for R, Blue for L
+            let ear_color = item.for_ear === 'R' ? '#dc3545' : '#007bff';
             ear_display = `<span style="background: ${ear_color}; color: white; padding: 2px 8px; border-radius: 3px; font-weight: 600;">${item.for_ear}</span>`;
         }
         
-        // Add delivery note link if available
         let dn_link = item.delivery_note ? 
             `<a href="/app/delivery-note/${item.delivery_note}" target="_blank">${item.delivery_note}</a>` : '-';
         
@@ -588,6 +579,16 @@ function display_invoice_summary_only(frm, invoices, fieldname) {
                     flex: 1;
                     min-width: 150px;
                 }
+                .stat-card.highlight {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                }
+                .stat-card.highlight .stat-value {
+                    color: white;
+                }
+                .stat-card.highlight .stat-label {
+                    color: rgba(255, 255, 255, 0.9);
+                }
                 .stat-value {
                     font-size: 24px;
                     font-weight: 600;
@@ -614,13 +615,13 @@ function display_invoice_summary_only(frm, invoices, fieldname) {
             </style>
             
             <div class="summary-stats">
+                <div class="stat-card highlight">
+                    <div class="stat-value">${format_currency(total_value)}</div>
+                    <div class="stat-label">Total Value</div>
+                </div>
                 <div class="stat-card">
                     <div class="stat-value">${invoices.length}</div>
                     <div class="stat-label">Total Invoices</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${format_currency(total_value)}</div>
-                    <div class="stat-label">Total Value</div>
                 </div>
             </div>
             
@@ -643,7 +644,7 @@ function display_invoice_summary_only(frm, invoices, fieldname) {
             <tr>
                 <td><a href="/app/sales-invoice/${inv.name}" target="_blank">${inv.name}</a></td>
                 <td>${frappe.datetime.str_to_user(inv.posting_date)}</td>
-                <td class="text-right">${format_currency(inv.grand_total)}</td>
+                <td class="text-right"><strong>${format_currency(inv.grand_total)}</strong></td>
                 <td>${inv.status}</td>
             </tr>`;
     });

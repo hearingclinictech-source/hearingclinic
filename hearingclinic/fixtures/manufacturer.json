@@ -1,0 +1,50 @@
+[
+ {
+  "country": "United States",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "Persona Medical",
+  "logo": null,
+  "modified": "2025-10-21 14:13:47.463931",
+  "name": "PERSONA",
+  "notes": null,
+  "short_name": "PERSONA",
+  "website": "https://personamedical.com/"
+ },
+ {
+  "country": "Singapore",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "GN Hearing PTE Limited",
+  "logo": null,
+  "modified": "2025-10-21 14:21:00.971381",
+  "name": "RESOUND",
+  "notes": null,
+  "short_name": "RESOUND",
+  "website": "https://www.resound.com/en-us/"
+ },
+ {
+  "country": "Malaysia",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "SIVANTOS MALAYSIA",
+  "logo": null,
+  "modified": "2025-10-21 14:24:13.518892",
+  "name": "REXTON",
+  "notes": null,
+  "short_name": "REXTON",
+  "website": "https://www.rexton.com/en/"
+ },
+ {
+  "country": "Malaysia",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "Phonak",
+  "logo": null,
+  "modified": "2025-10-21 14:30:31.296793",
+  "name": "PHONAK",
+  "notes": null,
+  "short_name": "PHONAK",
+  "website": "https://intl.phonak.com/en-my/"
+ }
+]
