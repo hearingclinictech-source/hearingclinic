@@ -5,8 +5,6 @@ app_description = "All customizations for the Hearing Clinic ERPNext Implementat
 app_email = "thomas@dierochs.de"
 app_license = "mit"
 
-after_migrate = "hearingclinic.setup.install.after_install"
-
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
