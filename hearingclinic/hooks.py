@@ -5,6 +5,8 @@ app_description = "All customizations for the Hearing Clinic ERPNext Implementat
 app_email = "thomas@dierochs.de"
 app_license = "mit"
 
+after_install = "hearingclinic.setup.install.after_install"
+
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
@@ -15,6 +17,7 @@ doctype_js = {
        "Sales Invoice": [
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
+            "public/js/Sales_Invoice/apply_value_add_card.js",
        ], 
        "Maintenance Schedule": [
            "public/js/Maintenance_Schedule/extend_warranty_button.js",
@@ -29,12 +32,13 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
-        "on_submit": "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice"
+        "on_submit": "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice",
+        "on_submit": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",
+        "on_cancel": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_cancel",
     },
 }
 
 fixtures = [
-    "Company",
     "Item Group",
     "UOM",
     "Bank Account",
@@ -73,7 +77,8 @@ fixtures = [
         "doctype": "Global Defaults",
         "filters": [["name", "=", "Global Defaults"]]
     },
-    {
+    # Export all Property Setters for specific doctypes
+        {
         "dt": "Custom Field",
         "filters": [
             ["name", "in", [
@@ -82,39 +87,39 @@ fixtures = [
                 "Address-tax_category",  # Tax Category
                 "Address-is_your_company_address",  # Is Your Company Address
 
-                # Communication (1 custom fields)
+                # Communication (1 custom field)
                 "Communication-company",  # Company
 
-                # Contact (1 custom fields)
+                # Contact (1 custom field)
                 "Contact-is_billing_contact",  # Is Billing Contact
 
-                # Customer (9 custom fields)
+                # Contact Phone (2 custom fields)
+                "Contact Phone-custom_contact_type",  # Contact Type
+                "Contact Phone-custom_contact_name",  # Contact Name
+
+                # Customer (10 custom fields)
                 "Customer-custom_customer_id",  # Customer Id
+                "Customer-custom_new_sales_invoice",  # New Sales Invoice
                 "Customer-custom_nricpassport",  # NRIC/Passport
-                "Customer-custom_ethinicity",  # Ethinicity
+                "Customer-custom_ethinicity",  # Ethnicity
                 "Customer-custom_date_of_birth",  # Date of Birth
                 "Customer-custom_customer_info",  # Customer Info
-                "Customer-custom_devices",  # Devices
                 "Customer-custom_items_purchased",  # Items Purchased
-                "Customer-custom_maintenance",  # Maintenance
-                "Customer-custom_maintenance_info",  # Maintenance InfoERPNext
-                "Customer-custom_new_sales_invoice",  # New Sales Invoice button
+                "Customer-custom_devices_and_sales",  # Devices and Sales
+                "Customer-custom_maintenance_info",  # Maintenance Info
+                "Customer-custom_maintenance_information",  # Maintenance Information
 
                 # Delivery Note Item (2 custom fields)
-                "Delivery Note Item-custom_for_ear",  # For Ear
                 "Delivery Note Item-custom_device_serial_number",  # Device Serial Number
+                "Delivery Note Item-custom_for_ear",  # For Ear
 
-                # Email Account (1 custom fields)
+                # Email Account (1 custom field)
                 "Email Account-company",  # Company
 
-                # Item (2 custom fields)
-                "Item-custom_manufacturer",  # Manufacturer
+                # Item (3 custom fields)
                 "Item-custom_hearing_aid_type",  # Hearing Aid Type
-                "Item-custom_warranty",  # Warranty period in months
-
-                # Sales Incvoice Item (2 custom fields)
-                "Sales Invoice Item-custom_warranty_serial_number",  # Warranty Serial Number
-                "Sales Invoice Item-custom_extension_start_date",  # Extension Start Date
+                "Item-custom_manufacturer",  # Manufacturer
+                "Item-custom_warranty",  # Warranty
 
                 # Lead (2 custom fields)
                 "Lead-custom_hc_request_type",  # HC Request Type
@@ -127,10 +132,19 @@ fixtures = [
                 "Print Settings-compact_item_print",  # Compact Item Print
                 "Print Settings-print_uom_after_quantity",  # Print UOM after Quantity
                 "Print Settings-print_taxes_with_zero_amount",  # Print taxes with zero amount
+
+                # Sales Invoice (3 custom fields)
+                "Sales Invoice-value_add_card_section",  # Value Add Card
+                "Sales Invoice-value_add_card",  # Value Add Card
+                "Sales Invoice-card_amount_used",  # Card Amount Used
+
+                # Sales Invoice Item (2 custom fields)
+                "Sales Invoice Item-custom_warranty_serial_number",  # Warranty Serial Number
+                "Sales Invoice Item-custom_extension_start_date",  # Extension Start Date
+
             ]]
         ]
     },
-    # Export all Property Setters for specific doctypes
     {
         "dt": "Property Setter",
         "filters": [

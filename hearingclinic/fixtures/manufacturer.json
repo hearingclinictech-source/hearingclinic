@@ -1,17 +1,5 @@
 [
  {
-  "country": "United States",
-  "docstatus": 0,
-  "doctype": "Manufacturer",
-  "full_name": "Persona Medical",
-  "logo": null,
-  "modified": "2025-10-21 14:13:47.463931",
-  "name": "PERSONA",
-  "notes": null,
-  "short_name": "PERSONA",
-  "website": "https://personamedical.com/"
- },
- {
   "country": "Singapore",
   "docstatus": 0,
   "doctype": "Manufacturer",
@@ -46,5 +34,17 @@
   "notes": null,
   "short_name": "PHONAK",
   "website": "https://intl.phonak.com/en-my/"
+ },
+ {
+  "country": "United States",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "Persona Medical",
+  "logo": null,
+  "modified": "2025-10-21 14:13:47.463931",
+  "name": "PERSONA",
+  "notes": null,
+  "short_name": "PERSONA",
+  "website": "https://personamedical.com/"
  }
 ]
