@@ -84,6 +84,7 @@ fixtures = [
                 "Address-custom_stateprovince",  # State/Province
                 "Address-tax_category",  # Tax Category
                 "Address-is_your_company_address",  # Is Your Company Address
+                "Address-custom_cleansing_info" ,  # Notes
 
                 # Communication (1 custom field)
                 "Communication-company",  # Company
