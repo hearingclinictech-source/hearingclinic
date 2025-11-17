@@ -107,6 +107,7 @@ fixtures = [
                 "Customer-custom_devices_and_sales",  # Devices and Sales
                 "Customer-custom_maintenance_info",  # Maintenance Info
                 "Customer-custom_maintenance_information",  # Maintenance Information
+                "Customer-custom_customer_since",  # Customer Since imported for legacy data
 
                 # Delivery Note Item (2 custom fields)
                 "Delivery Note Item-custom_device_serial_number",  # Device Serial Number
