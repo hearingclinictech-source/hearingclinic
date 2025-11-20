@@ -36,6 +36,30 @@
   "website": "https://intl.phonak.com/en-my/"
  },
  {
+  "country": "Malaysia",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "Legay Import",
+  "logo": null,
+  "modified": "2025-11-20 11:56:42.842865",
+  "name": "LEGACY",
+  "notes": "Created for import of excel records without available or obsolete Manufacture",
+  "short_name": "LEGACY",
+  "website": null
+ },
+ {
+  "country": "Malaysia",
+  "docstatus": 0,
+  "doctype": "Manufacturer",
+  "full_name": "SIEMENS Healthcare",
+  "logo": null,
+  "modified": "2025-11-20 12:05:57.191182",
+  "name": "SIEMENS",
+  "notes": "This is the manufacturer only - the brand name is Signia!",
+  "short_name": "SIEMENS",
+  "website": "https://www.siemens.com/my/en/products/healthcare.html"
+ },
+ {
   "country": "United States",
   "docstatus": 0,
   "doctype": "Manufacturer",
