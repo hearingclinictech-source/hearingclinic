@@ -46,6 +46,8 @@ fixtures = [
     "Color",
     "POS Profile",
     "Brand",
+    "State",
+    "Terms and Conditions",
     {"doctype": "Website Settings"},
     {"doctype": "Website Script"},
     {

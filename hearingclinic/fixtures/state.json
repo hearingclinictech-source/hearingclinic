@@ -1,0 +1,154 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-08 14:46:57.127949",
+  "name": "Selangor",
+  "state_code": null,
+  "state_name": "Selangor"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.696429",
+  "name": "WP Kuala Lumpur",
+  "state_code": null,
+  "state_name": "WP Kuala Lumpur"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.712242",
+  "name": "Johor",
+  "state_code": null,
+  "state_name": "Johor"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.716581",
+  "name": "Kedah",
+  "state_code": null,
+  "state_name": "Kedah"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.720530",
+  "name": "Kelantan",
+  "state_code": null,
+  "state_name": "Kelantan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.724719",
+  "name": "Melaka",
+  "state_code": null,
+  "state_name": "Melaka"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.728986",
+  "name": "Negeri Sembilan",
+  "state_code": null,
+  "state_name": "Negeri Sembilan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.732725",
+  "name": "New South Wales",
+  "state_code": null,
+  "state_name": "New South Wales"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.736558",
+  "name": "Pahang",
+  "state_code": null,
+  "state_name": "Pahang"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.744707",
+  "name": "Perak",
+  "state_code": null,
+  "state_name": "Perak"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.752010",
+  "name": "Pulau Pinang",
+  "state_code": null,
+  "state_name": "Pulau Pinang"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.770003",
+  "name": "WP Putrajaya",
+  "state_code": null,
+  "state_name": "WP Putrajaya"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.773988",
+  "name": "Rivière du Rempart District",
+  "state_code": null,
+  "state_name": "Rivière du Rempart District"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.777845",
+  "name": "Sabah",
+  "state_code": null,
+  "state_name": "Sabah"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.781903",
+  "name": "Sana'a City",
+  "state_code": null,
+  "state_name": "Sana'a City"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.785852",
+  "name": "Sarawak",
+  "state_code": null,
+  "state_name": "Sarawak"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.797996",
+  "name": "Sumatera Selatan",
+  "state_code": null,
+  "state_name": "Sumatera Selatan"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.802871",
+  "name": "Terengganu",
+  "state_code": null,
+  "state_name": "Terengganu"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2025-11-21 07:35:16.806675",
+  "name": "Western Australia",
+  "state_code": null,
+  "state_name": "Western Australia"
+ }
+]

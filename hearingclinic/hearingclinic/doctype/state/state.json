@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:state_name",
  "creation": "2025-10-25 13:19:22.890384",
@@ -28,7 +29,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-25 13:21:35.239592",
+ "modified": "2025-11-21 07:33:42.672855",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "State",
