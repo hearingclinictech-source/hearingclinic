@@ -103,14 +103,14 @@ function add_customer_since_badge(frm) {
                 let text_color, bg_color, border_color;
                 if (customer_date < cutoff) {
                     // Yellow/Gold for before cutoff
-                    text_color = '#F57F17';
-                    bg_color = '#FFF9C4';
-                    border_color = '#F9A825';
+                    text_color = '#7B1FA2';
+                    bg_color = '#E1BEE7';
+                    border_color = '#AB47BC';
                 } else {
                     // Blue for after cutoff
-                    text_color = '#1976D2';
-                    bg_color = '#E3F2FD';
-                    border_color = '#42A5F5';
+                    text_color = '#00897B';
+                    bg_color = '#B2DFDB';
+                    border_color = '#26A69A';
                 }
                 
                 // Determine P/NP - THIS IS THE KEY FIX
@@ -167,9 +167,9 @@ function display_badge(frm, formatted_date, customer_type, text_color, bg_color,
                     font-weight: 600;
                     color: ${text_color};
                     background: linear-gradient(135deg, ${bg_color} 0%, ${bg_color}ee 100%);
-                    padding: 8px 16px;
-                    border-radius: 6px;
-                    border: 2px solid ${border_color};
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    border: 1px solid ${border_color};
                     text-align: center;
                     letter-spacing: 1px;
                     display: inline-block;
@@ -178,27 +178,34 @@ function display_badge(frm, formatted_date, customer_type, text_color, bg_color,
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                     transition: all 0.3s ease;
                 ">
-                    📅 ${formatted_date}
+                
+                <svg height="25px" width="25px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus-outline</title><path d="M15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4M15,5.9C16.16,5.9 17.1,6.84 17.1,8C17.1,9.16 16.16,10.1 15,10.1A2.1,2.1 0 0,1 12.9,8A2.1,2.1 0 0,1 15,5.9M4,7V10H1V12H4V15H6V12H9V10H6V7H4M15,13C12.33,13 7,14.33 7,17V20H23V17C23,14.33 17.67,13 15,13M15,14.9C17.97,14.9 21.1,16.36 21.1,17V18.1H8.9V17C8.9,16.36 12,14.9 15,14.9Z" /></svg>
+                 ${formatted_date}
                 </div>
                 <div class="customer-type-badge" style="
-                    font-size: 19px;
+                    font-size: 14px;
                     font-weight: 600;
                     color: ${type_color};
                     background: linear-gradient(135deg, ${type_bg} 0%, ${type_bg}ee 100%);
-                    padding: 4px 8px;
-                    border-radius: 6px;
-                    border: 2px solid ${type_border};
+                    padding: 6px 6px;
+                    border-radius: 4px;
+                    border: 1px solid ${type_border};
                     text-align: center;
                     letter-spacing: 1px;
                     font-family: monospace;
                     display: inline-block;
-                    min-width: 60px;
+                    min-width: 40px;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                     transition: all 0.3s ease;
                 ">
-                    ${customer_type === 'Purchased' ? '🦻🏻' : '🙉'} 
+                <svg width="25px" height="25px" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    ${customer_type === 'Purchased' ? 
+                        '<path d="M9 20C9 21.1 8.1 22 7 22S5 21.1 5 20 5.9 18 7 18 9 18.9 9 20M17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18M7.2 14.8V14.7L8.1 13H15.5C16.2 13 16.9 12.6 17.2 12L21.1 5L19.4 4L15.5 11H8.5L4.3 2H1V4H3L6.6 11.6L5.2 14C5.1 14.3 5 14.6 5 15C5 16.1 5.9 17 7 17H19V15H7.4C7.3 15 7.2 14.9 7.2 14.8M18 2.8L16.6 1.4L11.8 6.2L9.2 3.6L7.8 5L11.8 9L18 2.8Z" />'
+                         : '<path d="M22.73,22.73L1.27,1.27L0,2.54L4.39,6.93L6.6,11.59L5.25,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H14.46L15.84,18.38C15.34,18.74 15,19.33 15,20A2,2 0 0,0 17,22C17.67,22 18.26,21.67 18.62,21.16L21.46,24L22.73,22.73M7.42,15A0.25,0.25 0 0,1 7.17,14.75L7.2,14.63L8.1,13H10.46L12.46,15H7.42M15.55,13C16.3,13 16.96,12.59 17.3,11.97L20.88,5.5C20.96,5.34 21,5.17 21,5A1,1 0 0,0 20,4H6.54L15.55,13M7,18A2,2 0 0,0 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20A2,2 0 0,0 7,18Z" />'} 
+                </svg>
                 </div>
             </div>
+
         `;
         
         // Add badges to the field wrapper

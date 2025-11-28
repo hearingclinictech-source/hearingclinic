@@ -17,7 +17,7 @@ function add_value_add_card_button(frm) {
     if (frm.doc.docstatus === 0) {
         frm.add_custom_button(__('Apply Value Add Card'), function() {
             show_value_add_card_dialog(frm);
-        }, __('Get Items From'));
+        }, __('Actions'));
     }
     
     // If card is already applied, show card info
@@ -40,6 +40,7 @@ function show_value_add_card_dialog(frm) {
             get_query: function() {
                 return {
                     filters: {
+                        'customer': frm.doc.customer,
                         'status': ['in', ['Active', 'Partially Used']],
                         'current_balance': ['>', 0]
                     }
