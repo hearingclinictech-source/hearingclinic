@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"CuDMBDUdUH\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px; letter-spacing: 0.18px;\\\"><b>Hearing Clinic PJ</b></span>\",\"col\":12}},{\"id\":\"CY8L7adv9n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Show Me...</b></span>\",\"col\":12}},{\"id\":\"_g1qKUfBb-\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customers\",\"col\":4}},{\"id\":\"HDOOMfbtQ6\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Sales\",\"col\":4}},{\"id\":\"LmNEsTMD8l\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Maintenance Schedules\",\"col\":4}},{\"id\":\"DFQ3TX4Ar0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Upcoming</b></span>\",\"col\":12}},{\"id\":\"kzNnJnKOZh\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Upcoming Maintenance\",\"col\":4}},{\"id\":\"L4LsD5chDU\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Create New...</b></span>\",\"col\":12}},{\"id\":\"vPRlfP93kp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Potential\",\"col\":3}},{\"id\":\"mMc05v0qe0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"oRdvZMy_g-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Review...</b></span>\",\"col\":12}},{\"id\":\"wgwiONAEd2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hearing Aids\",\"col\":3}},{\"id\":\"vFIGE4lqVl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"-vEjtdQqSo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Services\",\"col\":3}},{\"id\":\"AEAlyLmeHa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packages\",\"col\":3}},{\"id\":\"-ubym1TE2s\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pricelist\",\"col\":3}}]",
+ "content": "[{\"id\":\"CuDMBDUdUH\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px; letter-spacing: 0.18px;\\\"><b>Hearing Clinic PJ</b></span>\",\"col\":12}},{\"id\":\"CY8L7adv9n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Show Me...</b></span>\",\"col\":12}},{\"id\":\"_g1qKUfBb-\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customers\",\"col\":4}},{\"id\":\"HDOOMfbtQ6\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Sales\",\"col\":4}},{\"id\":\"LmNEsTMD8l\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Maintenance Schedules\",\"col\":4}},{\"id\":\"DFQ3TX4Ar0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Upcoming</b></span>\",\"col\":12}},{\"id\":\"kzNnJnKOZh\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Upcoming Maintenance\",\"col\":4}},{\"id\":\"qiHsk5pQeT\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Schedules ending soon\",\"col\":4}},{\"id\":\"L4LsD5chDU\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Create New...</b></span>\",\"col\":12}},{\"id\":\"vPRlfP93kp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Potential\",\"col\":3}},{\"id\":\"mMc05v0qe0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"oRdvZMy_g-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Review...</b></span>\",\"col\":12}},{\"id\":\"wgwiONAEd2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hearing Aids\",\"col\":3}},{\"id\":\"vFIGE4lqVl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"-vEjtdQqSo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Services\",\"col\":3}},{\"id\":\"AEAlyLmeHa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packages\",\"col\":3}},{\"id\":\"-ubym1TE2s\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pricelist\",\"col\":3}}]",
  "creation": "2025-11-03 08:12:41.078114",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "My CRM",
  "links": [],
- "modified": "2025-11-03 11:47:35.014009",
+ "modified": "2025-11-28 14:55:23.399779",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "My CRM",
@@ -26,6 +26,11 @@
    "document_type": "Customer",
    "label": "Customers",
    "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Maintenance Schedule",
+   "label": "Schedules ending soon",
+   "quick_list_filter": "[[\"Maintenance Schedule Item\",\"end_date\",\"Timespan\",\"next 30 days\",false]]"
   },
   {
    "document_type": "Sales Invoice",

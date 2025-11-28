@@ -126,7 +126,7 @@ fixtures = [
                 "Customer-custom_maintenance_info",  # Maintenance Info
                 "Customer-custom_maintenance_information",  # Maintenance Information
                 "Customer-custom_customer_since",  # Customer Since imported for legacy data
-                "Customer-custom_last_pta" # Last Hearing Test Date
+                "Customer-custom_last_pta", # Last Hearing Test Date
 
                 # Delivery Note Item (2 custom fields)
                 "Delivery Note Item-custom_device_serial_number",  # Device Serial Number
