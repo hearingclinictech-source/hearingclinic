@@ -232,7 +232,7 @@ function get_work_done(visit) {
     if (!work && visit.purposes && Array.isArray(visit.purposes)) {
         work = visit.purposes.map(p => {
             let parts = [];
-            if (p.service_person) parts.push('By: ' + p.service_person);
+//            if (p.service_person) parts.push('By: ' + p.service_person);
             if (p.work_done) parts.push(p.work_done);
             if (p.description) parts.push(p.description);
             return parts.join(' - ');
