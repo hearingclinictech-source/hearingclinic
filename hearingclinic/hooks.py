@@ -5,6 +5,10 @@ app_description = "All customizations for the Hearing Clinic ERPNext Implementat
 app_email = "thomas@dierochs.de"
 app_license = "mit"
 
+app_include_js = [
+    "/assets/hearingclinic/js/Maintenance_Visit/get_items_from_dn.js"
+]
+
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
@@ -20,6 +24,9 @@ doctype_js = {
        "Maintenance Schedule": [
            "public/js/Maintenance_Schedule/extend_warranty_button.js",
        ],
+       "Maintenance Visit": [
+           "public/js/Maintenance_Visit/get_items_from_dn.js",
+       ],
 }
 
 doc_events = {
@@ -30,8 +37,10 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
-        "on_submit": "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice",
-        "on_submit": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",
+        "on_submit": [
+            "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice",
+            "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",
+        ],
         "on_cancel": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_cancel",
     },
 }
@@ -77,6 +86,12 @@ fixtures = [
     {
         "doctype": "Global Defaults",
         "filters": [["name", "=", "Global Defaults"]]
+    },
+    {
+        "dt": "Print Format",
+        "filters": [
+            ["name", "in", ["HC Sales Invoice"]]
+        ]
     },
     # Export all Property Setters for specific doctypes
         {
@@ -159,6 +174,7 @@ fixtures = [
                 "Address",
                 "Lead",
                 "Maintenance Schedule",
+                "Maintenance Visit",
                 "Maintenance Visit Purpose",
                 "Delivery Note Item"
             ]]

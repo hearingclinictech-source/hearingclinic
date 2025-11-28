@@ -1,8 +1,8 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "VAC-.YYYY.-.#####",
  "creation": "2025-11-12 08:32:16.135146",
- "custom": 0,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -90,7 +90,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-12 08:51:11.814560",
+ "modified": "2025-11-27 08:29:20.487851",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "Value Add Card",

@@ -16,7 +16,7 @@ frappe.ui.form.on('Customer', {
 function load_purchased_items(frm, fieldname) {
     frm.get_field(fieldname).$wrapper.html('<p class="text-muted">Loading purchase history...</p>');
     
-    console.log('Loading purchase history for customer:', frm.doc.name);
+    // console.log('Loading purchase history for customer:', frm.doc.name);
     
     // Query Sales Invoice with items
     frappe.call({
@@ -31,7 +31,7 @@ function load_purchased_items(frm, fieldname) {
             limit_page_length: 500
         },
         callback: function(inv_response) {
-            console.log('Sales Invoices found:', inv_response.message ? inv_response.message.length : 0);
+            // console.log('Sales Invoices found:', inv_response.message ? inv_response.message.length : 0);
             
             if (!inv_response.message || inv_response.message.length === 0) {
                 frm.get_field(fieldname).$wrapper.html(
@@ -84,7 +84,7 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
             limit_page_length: 500
         },
         callback: function(dn_response) {
-            console.log('Delivery Notes found:', dn_response.message ? dn_response.message.length : 0);
+            // console.log('Delivery Notes found:', dn_response.message ? dn_response.message.length : 0);
             
             let delivery_note_map = {};
             
@@ -95,7 +95,7 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
                 
                 dn_response.message.forEach(function(dn) {
                     let dn_name = dn.name;
-                    console.log('Loading Delivery Note:', dn_name);
+                    // console.log('Loading Delivery Note:', dn_name);
                     
                     frappe.call({
                         method: 'frappe.client.get',
@@ -124,7 +124,7 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
                             
                             // When all delivery notes are loaded, load invoice items
                             if (dn_completed === total_dns) {
-                                console.log('All DNs loaded. Final DN Map:', delivery_note_map);
+                                // console.log('All DNs loaded. Final DN Map:', delivery_note_map);
                                 load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname);
                             }
                         },
@@ -139,7 +139,7 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
                 });
             } else {
                 // No delivery notes found, load items without serial numbers
-                console.log('No delivery notes found, loading items without serial data');
+                // console.log('No delivery notes found, loading items without serial data');
                 load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, fieldname);
             }
         },
@@ -151,7 +151,7 @@ function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
 }
 
 function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname) {
-    console.log('Loading invoice items with DN data');
+    // console.log('Loading invoice items with DN data');
     
     let all_items = [];
     let items_to_check = new Set();
@@ -167,7 +167,7 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
                 fields: ['name', 'posting_date', 'items']
             },
             callback: function(r) {
-                console.log('Invoice loaded:', invoice_name);
+                // console.log('Invoice loaded:', invoice_name);
                 
                 if (r.message && r.message.items) {
                     r.message.items.forEach(item => {
@@ -194,12 +194,12 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
                 }
                 
                 completed++;
-                console.log('Invoice items completed:', completed, 'of', invoice_names.length);
+                // console.log('Invoice items completed:', completed, 'of', invoice_names.length);
                 
                 // When all invoices are loaded, check item groups
                 if (completed === invoice_names.length) {
-                    console.log('All items loaded. Total items:', all_items.length);
-                    console.log('Unique items to check:', items_to_check.size);
+                    // console.log('All items loaded. Total items:', all_items.length);
+                    // console.log('Unique items to check:', items_to_check.size);
                     
                     if (all_items.length > 0 && items_to_check.size > 0) {
                         // Load item groups for filtering
@@ -225,7 +225,7 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
 }
 
 function check_item_groups(frm, all_items, item_codes, invoices, fieldname) {
-    console.log('Checking item groups for', item_codes.length, 'unique items');
+    // console.log('Checking item groups for', item_codes.length, 'unique items');
     
     let item_group_map = {};
     let items_checked = 0;
@@ -242,22 +242,22 @@ function check_item_groups(frm, all_items, item_codes, invoices, fieldname) {
             callback: function(r) {
                 if (r.message) {
                     item_group_map[item_code] = r.message.item_group;
-                    console.log('Item:', item_code, 'Group:', r.message.item_group);
+                    // console.log('Item:', item_code, 'Group:', r.message.item_group);
                 }
                 
                 items_checked++;
                 
                 // When all items are checked, filter and display
                 if (items_checked === item_codes.length) {
-                    console.log('All item groups loaded:', item_group_map);
+                    // console.log('All item groups loaded:', item_group_map);
                     
                     // Filter items to only include "Hearing Aids" group for display
                     let filtered_items = all_items.filter(item => {
                         return item_group_map[item.item_code] === 'Hearing Aids';
                     });
                     
-                    console.log('Filtered items (Hearing Aids only):', filtered_items.length);
-                    console.log('All items (for revenue calc):', all_items.length);
+                    // console.log('Filtered items (Hearing Aids only):', filtered_items.length);
+                    // console.log('All items (for revenue calc):', all_items.length);
                     
                     if (filtered_items.length > 0) {
                         // Pass both filtered items (for display) and all items (for total revenue)
