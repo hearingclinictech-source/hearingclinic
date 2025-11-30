@@ -191,8 +191,8 @@
   "ignore_pricing_rule": 0,
   "income_account": null,
   "item_groups": [],
-  "letter_head": null,
-  "modified": "2025-10-24 19:26:38.677378",
+  "letter_head": "Hearing Clinic",
+  "modified": "2025-11-30 14:58:41.673466",
   "name": "Bank Transfer",
   "payments": [
    {
@@ -211,7 +211,7 @@
   "selling_price_list": "Hearing Clinic Products",
   "tax_category": null,
   "taxes_and_charges": null,
-  "tc_name": null,
+  "tc_name": "Hearing Clinic",
   "update_stock": 1,
   "validate_stock_on_save": 0,
   "warehouse": "Stores - HC-PJ",

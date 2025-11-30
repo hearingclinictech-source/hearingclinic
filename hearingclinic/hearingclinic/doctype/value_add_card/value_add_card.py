@@ -3,19 +3,21 @@ from frappe.model.document import Document
 
 class ValueAddCard(Document):
     def validate(self):
-        """Validate and calculate values"""
-        # Auto-calculate card value when amount paid is entered
-        if self.amount_paid:
-            # Explicit float conversion and assignment
-            self.card_value = float(self.amount_paid) * 1.6
-        
-        # Set initial balance - ensure card_value exists first
-        if self.card_value and not self.current_balance:
-            self.current_balance = float(self.card_value)
-        
-        # Set status
-        if not self.status:
-            self.status = "Active"
+        """Validate and calculate values - only for NEW cards"""
+        # Only auto-calculate for new cards
+        if self.is_new():
+            # Auto-calculate card value when amount paid is entered
+            if self.amount_paid:
+                calculated_value = float(self.amount_paid) * 1.6
+                self.card_value = calculated_value
+            
+            # Set initial balance
+            if self.card_value and not self.current_balance:
+                self.current_balance = float(self.card_value)
+            
+            # Set initial status
+            if not self.status:
+                self.status = "Active"
     
     def update_balance(self, amount, transaction_type="Purchase"):
         """Update card balance after a transaction
@@ -43,7 +45,12 @@ class ValueAddCard(Document):
         else:
             self.status = "Active"
         
-        self.save()
+        # Use db_set to update without triggering validate
+        self.db_set("current_balance", self.current_balance, update_modified=False)
+        self.db_set("status", self.status, update_modified=False)
+        
+        # Reload to get updated values
+        self.reload()
         
         return balance_before, self.current_balance
     

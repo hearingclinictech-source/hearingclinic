@@ -3,7 +3,6 @@
  "allow_rename": 1,
  "autoname": "VACT-.YYYY.-.#####",
  "creation": "2025-11-12 08:54:01.130590",
- "custom": 0,
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -34,7 +33,7 @@
    "options": "Value Add Card"
   },
   {
-   "default": "Now",
+   "default": "now",
    "fieldname": "transaction_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -101,7 +100,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-12 09:03:19.086731",
+ "modified": "2025-11-30 15:55:16.345052",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "Card Transaction",

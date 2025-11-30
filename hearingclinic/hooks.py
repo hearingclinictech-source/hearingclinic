@@ -19,7 +19,8 @@ doctype_js = {
        "Sales Invoice": [
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
-            "public/js/Sales_Invoice/apply_value_add_card.js",
+           "public/js/Sales_Invoice/apply_value_add_card.js",
+           "public/js/Sales_Invoice/sales_invoice_partial_payment.js",
        ], 
        "Maintenance Schedule": [
            "public/js/Maintenance_Schedule/extend_warranty_button.js",
@@ -37,11 +38,13 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
+        "validate": "hearingclinic.hearingclinic.doc_events.sales_invoice_partial_payment.override_pos_payment_amount",
         "on_submit": [
             "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice",
             "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",
         ],
         "on_cancel": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_cancel",
+        "after_submit": "hearingclinic.hearingclinic.doc_events.create_vac_on_sales.after_submit",
     },
 }
 
@@ -93,16 +96,15 @@ fixtures = [
             ["name", "in", ["HC Sales Invoice"]]
         ]
     },
-    # Export all Property Setters for specific doctypes
-        {
+    {
         "dt": "Custom Field",
         "filters": [
             ["name", "in", [
-                # Address (3 custom fields)
+                # Address (4 custom fields)
                 "Address-custom_stateprovince",  # State/Province
                 "Address-tax_category",  # Tax Category
+                "Address-custom_cleansing_info",  # Cleansing Info
                 "Address-is_your_company_address",  # Is Your Company Address
-                "Address-custom_cleansing_info" ,  # Notes
 
                 # Communication (1 custom field)
                 "Communication-company",  # Company
@@ -114,19 +116,19 @@ fixtures = [
                 "Contact Phone-custom_contact_type",  # Contact Type
                 "Contact Phone-custom_contact_name",  # Contact Name
 
-                # Customer (10 custom fields)
+                # Customer (12 custom fields)
                 "Customer-custom_customer_id",  # Customer Id
                 "Customer-custom_new_sales_invoice",  # New Sales Invoice
+                "Customer-custom_customer_since",  # Customer Since
                 "Customer-custom_nricpassport",  # NRIC/Passport
                 "Customer-custom_ethinicity",  # Ethnicity
                 "Customer-custom_date_of_birth",  # Date of Birth
+                "Customer-custom_last_pta",  # Last PTA
                 "Customer-custom_customer_info",  # Customer Info
-                "Customer-custom_items_purchased",  # Items Purchased
                 "Customer-custom_devices_and_sales",  # Devices and Sales
-                "Customer-custom_maintenance_info",  # Maintenance Info
+                "Customer-custom_items_purchased",  # Items Purchased
                 "Customer-custom_maintenance_information",  # Maintenance Information
-                "Customer-custom_customer_since",  # Customer Since imported for legacy data
-                "Customer-custom_last_pta", # Last Hearing Test Date
+                "Customer-custom_maintenance_info",  # Maintenance Info
 
                 # Delivery Note Item (2 custom fields)
                 "Delivery Note Item-custom_device_serial_number",  # Device Serial Number
@@ -152,7 +154,15 @@ fixtures = [
                 "Print Settings-print_uom_after_quantity",  # Print UOM after Quantity
                 "Print Settings-print_taxes_with_zero_amount",  # Print taxes with zero amount
 
-                # Sales Invoice (3 custom fields)
+                # Sales Invoice (11 custom fields)
+                "Sales Invoice-custom_sales_person",  # Sales Person
+                "Sales Invoice-custom_partial_payment_section",  # Partial Payment Section
+                "Sales Invoice-custom_partial_payment_amount",  # Partial Payment Amount
+                "Sales Invoice-custom_amount_paid_this_transaction",  # Amount Paid This Transaction
+                "Sales Invoice-custom_column_break_bwhw7",  # 
+                "Sales Invoice-custom_is_partial_payment",  # Is Partial Payment
+                "Sales Invoice-custom_payment_overview",  # 
+                "Sales Invoice-custom_payment_history_html",  # Payment History HTML
                 "Sales Invoice-value_add_card_section",  # Value Add Card
                 "Sales Invoice-value_add_card",  # Value Add Card
                 "Sales Invoice-card_amount_used",  # Card Amount Used

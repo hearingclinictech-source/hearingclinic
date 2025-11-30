@@ -30,15 +30,6 @@
   "docstatus": 0,
   "doctype": "UOM",
   "enabled": 1,
-  "modified": "2025-10-20 20:19:53.630740",
-  "must_be_whole_number": 1,
-  "name": "Set",
-  "uom_name": "Set"
- },
- {
-  "docstatus": 0,
-  "doctype": "UOM",
-  "enabled": 1,
   "modified": "2025-10-20 20:19:53.631554",
   "must_be_whole_number": 0,
   "name": "Meter",
@@ -2140,6 +2131,24 @@
   "must_be_whole_number": 0,
   "name": "Parts Per Million",
   "uom_name": "Parts Per Million"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "UOM",
+  "enabled": 1,
+  "modified": "2025-11-30 15:13:04.972179",
+  "must_be_whole_number": 0,
+  "name": "Pc",
+  "uom_name": "Pc"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "UOM",
+  "enabled": 1,
+  "modified": "2025-10-20 20:19:53.630740",
+  "must_be_whole_number": 1,
+  "name": "Set",
+  "uom_name": "Set"
  },
  {
   "docstatus": 0,

@@ -42,39 +42,39 @@ exec(open('generate_custom_fields.py').read())
 ### Setup
 1. Create directory structure in your custom app:
    ```bash
-   mkdir -p /path/to/your_custom_app/your_custom_app/utils
+   mkdir -p /path/to/hearingclinic/hearingclinic/utils
    ```
 
 2. Copy `generate_fixtures.py` to:
    ```
-   your_custom_app/your_custom_app/utils/generate_fixtures.py
+   hearingclinic/hearingclinic/utils/generate_fixtures.py
    ```
 
 3. Create `__init__.py` if it doesn't exist:
    ```bash
-   touch your_custom_app/your_custom_app/utils/__init__.py
+   touch hearingclinic/hearingclinic/utils/__init__.py
    ```
 
 ### Usage
 
 #### Generate ALL Custom Fields
 ```bash
-bench execute your_custom_app.utils.generate_fixtures.generate_custom_field_fixtures
+bench execute hearingclinic.utils.generate_fixtures.generate_custom_field_list
 ```
 
 #### Generate for Specific DocTypes
 ```bash
-bench execute your_custom_app.utils.generate_fixtures.generate_for_doctypes --args "['Customer', 'Sales Invoice', 'Item']"
+bench execute hearingclinic.utils.generate_fixtures.generate_for_doctypes --args "['Customer', 'Sales Invoice', 'Item']"
 ```
 
 #### List All DocTypes with Custom Fields
 ```bash
-bench execute your_custom_app.utils.generate_fixtures.list_all_doctypes_with_custom_fields
+bench execute hearingclinic.utils.generate_fixtures.list_all_doctypes_with_custom_fields
 ```
 
 #### Export as JSON
 ```bash
-bench execute your_custom_app.utils.generate_fixtures.export_to_json_file
+bench execute hearingclinic.utils.generate_fixtures.export_to_json_file
 ```
 
 ---
@@ -87,7 +87,7 @@ Run one of the commands above to generate your custom field list.
 ### Step 2: Copy to hooks.py
 Open your app's `hooks.py` file:
 ```python
-# your_custom_app/hooks.py
+# hearingclinic/hooks.py
 
 fixtures = [
     {
@@ -111,13 +111,13 @@ fixtures = [
 
 ### Step 3: Export the fixtures
 ```bash
-cd /path/to/your_custom_app
-bench --site your-site export-fixtures
+cd /path/to/hearingclinic
+bench --site development.localhost export-fixtures
 ```
 
 This will create/update JSON files in:
 ```
-your_custom_app/your_custom_app/fixtures/custom_field.json
+hearingclinic/hearingclinic/fixtures/custom_field.json
 ```
 
 ---
@@ -126,14 +126,14 @@ your_custom_app/your_custom_app/fixtures/custom_field.json
 
 ### Import fixtures to a new site
 ```bash
-bench --site new-site install-app your_custom_app
+bench --site new-site install-app hearingclinic
 ```
 
 The custom fields will be automatically installed!
 
 ### Manually import fixtures
 ```bash
-bench --site your-site import-fixtures your_custom_app/your_custom_app/fixtures
+bench --site development.localhost import-fixtures hearingclinic/hearingclinic/fixtures
 ```
 
 ---
@@ -188,7 +188,7 @@ fixtures = [
 
 ```python
 import frappe
-from your_custom_app.utils.generate_fixtures import generate_custom_field_fixtures
+from hearingclinic.utils.generate_fixtures import generate_custom_field_fixtures
 
 # In a custom script or migration
 def after_install():
@@ -216,7 +216,7 @@ Add to your app's hooks.py:
 ```python
 scheduler_events = {
     "weekly": [
-        "your_custom_app.utils.generate_fixtures.generate_custom_field_fixtures"
+        "hearingclinic.utils.generate_fixtures.generate_custom_field_fixtures"
     ]
 }
 ```
@@ -227,7 +227,7 @@ scheduler_events = {
 
 ### "No custom fields found"
 - Check if custom fields exist: `bench console` → `frappe.db.count('Custom Field')`
-- Verify you're on the correct site: `bench use your-site`
+- Verify you're on the correct site: `bench use development.localhost`
 
 ### Permission Errors
 - Ensure you have write permissions to the output directory

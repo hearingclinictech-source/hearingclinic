@@ -1,11 +1,16 @@
 import frappe
 from frappe.model.document import Document
+from frappe.utils import now_datetime
 
 class CardTransaction(Document):
     def validate(self):
         """Validate transaction before saving"""
+        # Set transaction date if not set
+        if not self.transaction_date:
+            self.transaction_date = now_datetime()
+        
         # Get card document
-        card = frappe.get_doc("Value Add Card", self.value_add_card)
+        card = frappe.get_doc("Value Add Card", self.card_number)  # ← FIXED
         
         # Check if card has sufficient balance for purchases
         if self.transaction_type == "Purchase":
@@ -21,7 +26,7 @@ class CardTransaction(Document):
     def on_submit(self):
         """Update card balance when transaction is submitted"""
         # Update the card balance
-        card = frappe.get_doc("Value Add Card", self.value_add_card)
+        card = frappe.get_doc("Value Add Card", self.card_number)  # ← FIXED
         balance_before, balance_after = card.update_balance(self.amount, self.transaction_type)
         
         # Update this transaction with final balances
@@ -35,7 +40,7 @@ class CardTransaction(Document):
     def on_cancel(self):
         """Reverse the transaction when cancelled"""
         # Reverse the transaction
-        card = frappe.get_doc("Value Add Card", self.value_add_card)
+        card = frappe.get_doc("Value Add Card", self.card_number)  # ← FIXED
         reverse_type = "Refund" if self.transaction_type == "Purchase" else "Purchase"
         card.update_balance(self.amount, reverse_type)
         
