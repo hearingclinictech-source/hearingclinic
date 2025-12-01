@@ -62,6 +62,12 @@ fixtures = [
     {"doctype": "Website Settings"},
     {"doctype": "Website Script"},
     {
+        "dt": "Role",
+        "filters": [
+            ["name", "in", ["Hearing Clinic User", "Hearing Clinic Manager"]]  # Add your custom roles
+        ]
+    },
+    {
         "doctype": "Sales Taxes and Charges Template",
         "filters": [["title", "in", ["Malaysia GST 6%"]]],
     },
