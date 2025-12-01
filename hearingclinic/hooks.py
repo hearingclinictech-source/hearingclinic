@@ -67,6 +67,13 @@ fixtures = [
             ["name", "in", ["Hearing Clinic User", "Hearing Clinic Manager"]]  # Add your custom roles
         ]
     },
+    # Role permissions on DocTypes - THIS IS WHAT YOU'RE MISSING
+    {
+        "dt": "Custom DocPerm",
+        "filters": [
+            ["role", "in", ["Hearing Clinic User", "Hearing Clinic Manager"]]
+        ]
+    },
     {
         "doctype": "Sales Taxes and Charges Template",
         "filters": [["title", "in", ["Malaysia GST 6%"]]],
@@ -98,7 +105,7 @@ fixtures = [
     {
         "dt": "Print Format",
         "filters": [
-            ["name", "in", ["HC Sales Invoice"]]
+            ["name", "in", ["HC Sales Invoice", "HC POS Invoice"]]
         ]
     },
     {
