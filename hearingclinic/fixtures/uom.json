@@ -2138,8 +2138,8 @@
   "enabled": 1,
   "modified": "2025-11-30 15:13:04.972179",
   "must_be_whole_number": 0,
-  "name": "Pc",
-  "uom_name": "Pc"
+  "name": "Pcs",
+  "uom_name": "Pcs"
  },
  {
   "docstatus": 0,

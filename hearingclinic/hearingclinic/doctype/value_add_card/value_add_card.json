@@ -15,7 +15,9 @@
   "current_balance",
   "status",
   "sales_invoice",
-  "notes"
+  "notes",
+  "transactions_section",
+  "card_transactions"
  ],
  "fields": [
   {
@@ -85,12 +87,23 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "transactions_section",
+   "fieldtype": "Section Break",
+   "label": "Transactions"
+  },
+  {
+   "fieldname": "card_transactions",
+   "fieldtype": "Table",
+   "label": "Card Transactions",
+   "options": "Card Transaction"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-28 18:00:44.223377",
+ "modified": "2025-12-01 08:10:27.991339",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "Value Add Card",

@@ -1,5 +1,6 @@
 import frappe
 from frappe.model.document import Document
+from frappe.utils import now_datetime
 
 class ValueAddCard(Document):
     def validate(self):
@@ -19,40 +20,113 @@ class ValueAddCard(Document):
             if not self.status:
                 self.status = "Active"
     
-    def update_balance(self, amount, transaction_type="Purchase"):
-        """Update card balance after a transaction
+    def add_transaction(self, transaction_type, amount, reference_doctype=None, reference_name=None, remarks=None):
+        """Add a transaction to the card and update balance
         
         Args:
-            amount: Amount to add/deduct
             transaction_type: 'Purchase' or 'Refund'
+            amount: Amount to deduct (Purchase) or add (Refund)
+            reference_doctype: DocType of reference document (e.g., 'Sales Invoice')
+            reference_name: Name of reference document
+            remarks: Transaction remarks
             
         Returns:
-            tuple: (balance_before, balance_after)
+            dict: balance_before, balance_after, transaction details
         """
         balance_before = self.current_balance
         
+        # Calculate new balance
         if transaction_type == "Purchase":
-            self.current_balance = float(self.current_balance) - float(amount)
+            new_balance = float(self.current_balance) - float(amount)
         elif transaction_type == "Refund":
-            self.current_balance = float(self.current_balance) + float(amount)
+            new_balance = float(self.current_balance) + float(amount)
+        else:
+            frappe.throw(f"Invalid transaction type: {transaction_type}")
+        
+        # Ensure balance doesn't go negative
+        if new_balance < 0:
+            new_balance = 0
+        
+        # Add transaction to child table
+        self.append('card_transactions', {
+            "card_number": self.name,
+            "transaction_type": transaction_type,
+            "transaction_date": now_datetime(),
+            "amount": amount,
+            "sales_invoice": reference_name if reference_doctype == "Sales Invoice" else None,
+            "balance_before": balance_before,
+            "balance_after": new_balance,
+            "remarks": remarks or f"{transaction_type} transaction"
+        })
+        
+        # Update balance
+        self.current_balance = new_balance
         
         # Update status based on balance
         if self.current_balance <= 0:
-            self.status = "Depleted"
-            self.current_balance = 0
+            self.status = "Fully Used"
         elif self.current_balance < self.card_value:
             self.status = "Partially Used"
         else:
             self.status = "Active"
         
-        # Use db_set to update without triggering validate
-        self.db_set("current_balance", self.current_balance, update_modified=False)
-        self.db_set("status", self.status, update_modified=False)
+        # Save the card with transactions
+        self.save(ignore_permissions=True)
         
-        # Reload to get updated values
-        self.reload()
+        return {
+            "balance_before": balance_before,
+            "balance_after": self.current_balance,
+            "amount": amount,
+            "transaction_type": transaction_type
+        }
+    
+    def remove_transaction(self, reference_doctype, reference_name):
+        """Remove a transaction and restore balance (used for cancellations)
         
-        return balance_before, self.current_balance
+        Args:
+            reference_doctype: DocType of reference document
+            reference_name: Name of reference document
+            
+        Returns:
+            dict: amount_restored, new_balance
+        """
+        transaction_to_remove = None
+        amount_to_restore = 0
+        
+        # Find the transaction
+        for idx, txn in enumerate(self.card_transactions):
+            if reference_doctype == "Sales Invoice" and txn.sales_invoice == reference_name:
+                transaction_to_remove = idx
+                # For Purchase, we restore (add back), for Refund we remove (subtract)
+                if txn.transaction_type == "Purchase":
+                    amount_to_restore = txn.amount
+                elif txn.transaction_type == "Refund":
+                    amount_to_restore = -txn.amount
+                break
+        
+        if transaction_to_remove is not None:
+            # Remove the transaction
+            self.remove(self.card_transactions[transaction_to_remove])
+            
+            # Restore balance
+            self.current_balance = float(self.current_balance) + amount_to_restore
+            
+            # Update status
+            if self.current_balance >= self.card_value:
+                self.status = "Active"
+            elif self.current_balance > 0:
+                self.status = "Partially Used"
+            else:
+                self.status = "Fully Used"
+            
+            self.save(ignore_permissions=True)
+            
+            return {
+                "amount_restored": amount_to_restore,
+                "new_balance": self.current_balance
+            }
+        
+        return None
     
     def get_balance(self):
         """Get current balance"""

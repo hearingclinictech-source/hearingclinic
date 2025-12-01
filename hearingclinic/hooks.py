@@ -44,7 +44,6 @@ doc_events = {
             "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",
         ],
         "on_cancel": "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_cancel",
-        "after_submit": "hearingclinic.hearingclinic.doc_events.create_vac_on_sales.after_submit",
     },
 }
 
@@ -154,13 +153,12 @@ fixtures = [
                 "Print Settings-print_uom_after_quantity",  # Print UOM after Quantity
                 "Print Settings-print_taxes_with_zero_amount",  # Print taxes with zero amount
 
-                # Sales Invoice (11 custom fields)
+                # Sales Invoice (10 custom fields)
                 "Sales Invoice-custom_sales_person",  # Sales Person
                 "Sales Invoice-custom_partial_payment_section",  # Partial Payment Section
+                "Sales Invoice-custom_column_break_bwhw7",  # 
                 "Sales Invoice-custom_partial_payment_amount",  # Partial Payment Amount
                 "Sales Invoice-custom_amount_paid_this_transaction",  # Amount Paid This Transaction
-                "Sales Invoice-custom_column_break_bwhw7",  # 
-                "Sales Invoice-custom_is_partial_payment",  # Is Partial Payment
                 "Sales Invoice-custom_payment_overview",  # 
                 "Sales Invoice-custom_payment_history_html",  # Payment History HTML
                 "Sales Invoice-value_add_card_section",  # Value Add Card
@@ -170,6 +168,9 @@ fixtures = [
                 # Sales Invoice Item (2 custom fields)
                 "Sales Invoice Item-custom_warranty_serial_number",  # Warranty Serial Number
                 "Sales Invoice Item-custom_extension_start_date",  # Extension Start Date
+
+                # Value Add Card (1 custom field)
+                "Value Add Card-custom_transactions",  # Transactions
 
             ]]
         ]
