@@ -1,0 +1,25 @@
+[
+ {
+  "align": "Center",
+  "content": "<div style=\"text-align: center;\">\n<img src=\"/files/header.png\" alt=\"Hearing Clinic\" width=\"700.0\" style=\"width: 700.0px;\">\n</div>",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Letter Head",
+  "footer": "",
+  "footer_align": "Left",
+  "footer_image": null,
+  "footer_image_height": 0.0,
+  "footer_image_width": 0.0,
+  "footer_script": null,
+  "footer_source": "HTML",
+  "header_script": null,
+  "image": "/files/header.png",
+  "image_height": 155.859375,
+  "image_width": 700.0,
+  "is_default": 1,
+  "letter_head_name": "Hearing Clinic",
+  "modified": "2025-11-10 17:21:38.590025",
+  "name": "Hearing Clinic",
+  "source": "Image"
+ }
+]

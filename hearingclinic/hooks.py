@@ -75,6 +75,14 @@ fixtures = [
         ]
     },
     {
+        "doctype": "Custom HTML Block",
+        "filters": [["name", "in", ["Tutorials"]]],
+    },
+    {
+        "doctype": "Letter Head",
+        "filters": [["name", "in", ["Hearing Clinic"]]],
+    },
+    {
         "doctype": "Sales Taxes and Charges Template",
         "filters": [["title", "in", ["Malaysia GST 6%"]]],
     },
