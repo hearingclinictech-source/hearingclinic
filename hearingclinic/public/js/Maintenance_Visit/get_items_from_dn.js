@@ -1,6 +1,7 @@
 // Wait for the ERPNext class to be defined, then extend it
 frappe.ui.form.on('Maintenance Visit', {
     refresh: function(frm) {
+        console.log("Testing....")
         // Use setTimeout to run after ERPNext's buttons are added
         setTimeout(() => {
             

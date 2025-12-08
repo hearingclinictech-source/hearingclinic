@@ -1,0 +1,263 @@
+name: HearingClinic Tests
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+
+jobs:
+  backend-tests:
+    name: Backend Python Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_frappe
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        path: apps/hearingclinic
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-dev \
+          python3-setuptools \
+          python3-pip \
+          libmysqlclient-dev \
+          redis-server \
+          libssl-dev \
+          libcrypto++-dev \
+          libfreetype6-dev \
+          liblcms2-dev \
+          libwebp-dev \
+          zlib1g-dev \
+          libffi-dev \
+          libtiff5-dev \
+          tcl8.6-dev \
+          tk8.6-dev \
+          libharfbuzz-dev \
+          libfribidi-dev \
+          libxcb1-dev
+
+    - name: Install Frappe Bench
+      run: |
+        pip install frappe-bench
+
+    - name: Initialize Frappe Bench
+      run: |
+        bench init frappe-bench \
+          --frappe-branch version-15 \
+          --python python3.10 \
+          --skip-redis-config-generation
+
+    - name: Setup hosts
+      run: |
+        echo "127.0.0.1 test_site" | sudo tee -a /etc/hosts
+
+    - name: Create test site
+      working-directory: frappe-bench
+      run: |
+        bench new-site test_site \
+          --db-root-password root \
+          --admin-password admin \
+          --mariadb-root-username root \
+          --mariadb-root-password root \
+          --no-mariadb-socket
+
+    - name: Get app from repository
+      working-directory: frappe-bench
+      run: |
+        bench get-app hearingclinic $GITHUB_WORKSPACE/apps/hearingclinic
+
+    - name: Install app on site
+      working-directory: frappe-bench
+      run: |
+        bench --site test_site install-app hearingclinic
+
+    - name: Install test dependencies
+      working-directory: frappe-bench/apps/hearingclinic
+      run: |
+        pip install pytest pytest-cov pytest-xdist
+
+    - name: Install Testomat CLI
+      if: env.TESTOMATIO != ''
+      run: |
+        npm install -g @testomatio/reporter
+
+    - name: Run backend tests
+      working-directory: frappe-bench
+      env:
+        TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      run: |
+        # Run pytest with JUnit XML output
+        pytest apps/hearingclinic/hearingclinic \
+          --junitxml=test-results.xml \
+          --cov=apps/hearingclinic \
+          --cov-report=xml \
+          -v
+
+    - name: Send results to Testomat.io
+      if: env.TESTOMATIO != '' && always()
+      working-directory: frappe-bench
+      env:
+        TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      run: |
+        npx @testomatio/reporter \
+          --from-junit test-results.xml \
+          --title "HearingClinic Backend Tests - CI" || true
+
+    - name: Generate coverage report
+      working-directory: frappe-bench
+      run: |
+        coverage report
+        coverage xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./frappe-bench/coverage.xml
+        flags: backend
+        name: backend-coverage
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: backend-test-results
+        path: frappe-bench/test-results.xml
+
+  frontend-tests:
+    name: Frontend JavaScript Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run frontend tests
+      env:
+        TESTOMATIO: ${{ secrets.TESTOMATIO }}
+      run: |
+        if [ -n "$TESTOMATIO" ]; then
+          # Run with Testomat.io reporting
+          npm run test:testomat:report
+        else
+          # Run without Testomat.io
+          npm test -- --coverage --ci
+        fi
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/coverage-final.json
+        flags: frontend
+        name: frontend-coverage
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-test-results
+        path: coverage/
+
+  lint:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install linting tools
+      run: |
+        pip install flake8 black pylint
+
+    - name: Run flake8
+      run: |
+        flake8 hearingclinic --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 hearingclinic --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Check code formatting with black
+      run: |
+        black --check hearingclinic
+
+    - name: Setup Node.js for ESLint
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install ESLint
+      run: npm install -g eslint
+
+    - name: Run ESLint
+      run: |
+        eslint hearingclinic/public/js/**/*.js --max-warnings 0 || true
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    if: always()
+
+    steps:
+    - name: Download backend test results
+      uses: actions/download-artifact@v3
+      with:
+        name: backend-test-results
+        path: backend-results
+
+    - name: Download frontend test results
+      uses: actions/download-artifact@v3
+      with:
+        name: frontend-test-results
+        path: frontend-results
+
+    - name: Generate test summary
+      run: |
+        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Backend Tests" >> $GITHUB_STEP_SUMMARY
+        echo "- Status: ${{ needs.backend-tests.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Frontend Tests" >> $GITHUB_STEP_SUMMARY
+        echo "- Status: ${{ needs.frontend-tests.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "See artifacts for detailed test results and coverage reports." >> $GITHUB_STEP_SUMMARY

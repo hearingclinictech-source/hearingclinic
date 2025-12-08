@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"CuDMBDUdUH\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px; letter-spacing: 0.18px;\\\"><b>Hearing Clinic PJ</b></span>\",\"col\":12}},{\"id\":\"CY8L7adv9n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Show Me...</b></span>\",\"col\":12}},{\"id\":\"_g1qKUfBb-\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customers\",\"col\":4}},{\"id\":\"HDOOMfbtQ6\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Sales\",\"col\":4}},{\"id\":\"LmNEsTMD8l\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Maintenance Schedules\",\"col\":4}},{\"id\":\"DFQ3TX4Ar0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Upcoming</b></span>\",\"col\":12}},{\"id\":\"kzNnJnKOZh\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Upcoming Maintenance\",\"col\":4}},{\"id\":\"qiHsk5pQeT\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Schedules ending soon\",\"col\":4}},{\"id\":\"L4LsD5chDU\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Create New...</b></span>\",\"col\":12}},{\"id\":\"vPRlfP93kp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Potential\",\"col\":3}},{\"id\":\"mMc05v0qe0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"oRdvZMy_g-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Review...</b></span>\",\"col\":12}},{\"id\":\"wgwiONAEd2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hearing Aids\",\"col\":3}},{\"id\":\"vFIGE4lqVl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"-vEjtdQqSo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Services\",\"col\":3}},{\"id\":\"AEAlyLmeHa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packages\",\"col\":3}},{\"id\":\"Ao57DRYqpG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Llv0_ztv1x\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Tutorials</b></span>\",\"col\":12}},{\"id\":\"yFPCKRLVso\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Get Started\",\"col\":12}}]",
+ "content": "[{\"id\":\"CuDMBDUdUH\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px; letter-spacing: 0.18px;\\\"><b>Hearing Clinic PJ</b></span>\",\"col\":12}},{\"id\":\"CY8L7adv9n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Show Me...</b></span>\",\"col\":12}},{\"id\":\"_g1qKUfBb-\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customers\",\"col\":4}},{\"id\":\"HDOOMfbtQ6\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Sales\",\"col\":4}},{\"id\":\"LmNEsTMD8l\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Maintenance Schedules\",\"col\":4}},{\"id\":\"DFQ3TX4Ar0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Upcoming</b></span>\",\"col\":12}},{\"id\":\"kzNnJnKOZh\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Upcoming Maintenance\",\"col\":4}},{\"id\":\"qiHsk5pQeT\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Schedules ending soon\",\"col\":4}},{\"id\":\"oRdvZMy_g-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Review...</b></span>\",\"col\":12}},{\"id\":\"wgwiONAEd2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hearing Aids\",\"col\":3}},{\"id\":\"vFIGE4lqVl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"-vEjtdQqSo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Services\",\"col\":3}},{\"id\":\"AEAlyLmeHa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packages\",\"col\":3}},{\"id\":\"Ao57DRYqpG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Llv0_ztv1x\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Tutorials</b></span>\",\"col\":12}},{\"id\":\"yFPCKRLVso\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Get Started\",\"col\":12}}]",
  "creation": "2025-11-03 08:12:41.078114",
  "custom_blocks": [
   {
@@ -18,7 +18,7 @@
  "is_hidden": 0,
  "label": "My CRM",
  "links": [],
- "modified": "2025-12-02 08:50:56.697994",
+ "modified": "2025-12-05 16:05:01.827535",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "My CRM",
@@ -61,14 +61,6 @@
  "sequence_id": 1.0,
  "shortcuts": [
   {
-   "color": "Green",
-   "doc_view": "New",
-   "label": "Potential",
-   "link_to": "Lead",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
    "color": "Grey",
    "doc_view": "List",
    "label": "Hearing Aids",
@@ -81,14 +73,6 @@
    "doc_view": "List",
    "label": "Packages",
    "link_to": "Product Bundle",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "New",
-   "label": "Customer",
-   "link_to": "Customer",
    "stats_filter": "[]",
    "type": "DocType"
   },

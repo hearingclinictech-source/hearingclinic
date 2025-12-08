@@ -6,7 +6,8 @@ app_email = "thomas@dierochs.de"
 app_license = "mit"
 
 app_include_js = [
-    "/assets/hearingclinic/js/Maintenance_Visit/get_items_from_dn.js"
+    "/assets/hearingclinic/js/Maintenance_Visit/get_items_from_dn.js",
+    "/assets/hearingclinic/js/Customer/customer_quick_entry.js",
 ]
 
 doctype_js = {
@@ -33,6 +34,9 @@ doctype_js = {
 doc_events = {
     "Customer": {
         "before_save": "hearingclinic.hearingclinic.doc_events.customer_id.before_save",
+        "before_insert": "hearingclinic.hearingclinic.doc_events.customer_duplicate_check.before_insert",
+        "validate": "hearingclinic.hearingclinic.doc_events.customer_duplicate_check.validate",
+        "after_insert": "hearingclinic.hearingclinic.doc_events.customer_primary_contacts.after_insert",
     },
     "Delivery Note": {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
