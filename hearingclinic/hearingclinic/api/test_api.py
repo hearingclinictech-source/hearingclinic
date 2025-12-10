@@ -1,10 +1,15 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Test cases for API endpoints
+# @S API Tests
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import nowdate, add_days, add_months
 import json
+
+# Load ERPNext fixtures - We create custom test customers and items to avoid Lead circular dependency
+test_dependencies = ["Customer Group", "Territory", "Item Group", "UOM", "Warehouse"]
+test_ignore = ["Customer", "Lead", "Item"]  # Avoid circular dependency
 
 
 class TestValueAddCardAPI(FrappeTestCase):

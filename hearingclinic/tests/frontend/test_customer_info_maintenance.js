@@ -1,8 +1,10 @@
 /**
  * Tests for customer_info_maintenance.js
  * This module displays maintenance schedules and visit history for customers
+ * @S Customer UI Tests
  */
 
+describe('Customer', () => {
 describe('Customer Info Maintenance', () => {
     let frm;
     let mockField;
@@ -443,4 +445,5 @@ describe('Customer Info Maintenance', () => {
 
         expect(schedule.actual_visits.length).toBe(2);
     });
+});
 });

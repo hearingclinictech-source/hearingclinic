@@ -1,4 +1,4 @@
-console.log("=== FILE LOADED v14 - FIXED INSERT ===");
+console.log("=== FILE LOADED v16 - Prevent Edit Full Form redirect ===");
 
 frappe.provide('frappe.ui.form');
 
@@ -8,6 +8,18 @@ try {
     frappe.ui.form.CustomerQuickEntryForm = class CustomCustomerQuickEntryForm extends OriginalCustomerQuickEntry {
         constructor(doctype, after_insert, init_callback, doc, force) {
             super(doctype, after_insert, init_callback, doc, force);
+            this.skip_redirect_on_error = true;
+        }
+
+        render_dialog() {
+            super.render_dialog();
+
+            // Remove the "Edit Full Form" button to prevent navigation to unsaved docs
+            const editFullFormBtn = this.dialog.wrapper.find('.btn-modal-secondary:contains("Edit Full Form")');
+            if (editFullFormBtn.length) {
+                console.log("Removing Edit Full Form button to prevent navigation errors");
+                editFullFormBtn.remove();
+            }
         }
 
         get_variant_fields() {

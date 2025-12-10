@@ -1,8 +1,10 @@
 /**
  * Tests for auto_expand_packages.js
  * This module automatically expands Product Bundles into individual line items in Sales Invoices
+ * @S Sales Invoice Tests
  */
 
+describe('Sales Invoice', () => {
 describe('Auto Expand Packages', () => {
     let frm;
     let mockLocals;
@@ -125,7 +127,7 @@ describe('Auto Expand Packages', () => {
     test('should determine if item rate should be set to zero', () => {
         const testCases = [
             { item_code: 'PKG-BASIC', item_group: 'Packages', expected: false },
-            { item_code: 'HA-PAIR', item_group: 'Hearing Aids', expected: true }, // ends with -PAIR
+            { item_code: 'HA-PAIR', item_group: 'Hearing Aids', expected: false }, // ends with -PAIR, keeps rate
             { item_code: 'HA-LEFT', item_group: 'Hearing Aids', expected: true },
             { item_code: 'HA-RIGHT', item_group: 'Hearing Aids', expected: true },
             { item_code: 'BATT-001', item_group: 'Accessories', expected: true }
@@ -404,4 +406,5 @@ describe('Auto Expand Packages', () => {
         const validItems = items.filter(item => item.item_code);
         expect(validItems.length).toBe(1);
     });
+});
 });

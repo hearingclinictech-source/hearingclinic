@@ -29,7 +29,7 @@ fi
 echo ""
 
 # Get site name
-SITE_NAME=${1:-test_site}
+SITE_NAME=${1:-development.localhost}
 echo -e "${BLUE}Site:${NC} $SITE_NAME"
 echo ""
 
@@ -41,14 +41,18 @@ BENCH_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$BENCH_DIR" || exit 1
 
 # Backend Tests
-echo -e "${GREEN}Running Backend Tests...${NC}"
+echo -e "${GREEN}Running Backend Tests with XML Output...${NC}"
 echo "========================================"
 
 # Ensure required dependencies are installed
 echo -e "${BLUE}Checking dependencies...${NC}"
-./env/bin/pip install coverage unittest-xml-reporting -q 2>/dev/null || true
+./env/bin/pip install unittest-xml-reporting -q 2>/dev/null || true
 
-# Test modules to run (module-by-module to avoid ERPNext fixture issues)
+# Create test results directory (use absolute path)
+TEST_RESULTS_DIR="$BENCH_DIR/test-results/backend"
+mkdir -p "$TEST_RESULTS_DIR"
+
+# Test modules to run
 TEST_MODULES=(
     "hearingclinic.hearingclinic.doc_events.test_customer_id"
     "hearingclinic.hearingclinic.doc_events.test_customer_duplicate_check"
@@ -56,6 +60,7 @@ TEST_MODULES=(
     "hearingclinic.hearingclinic.doctype.card_transaction.test_card_transaction"
     "hearingclinic.hearingclinic.api.test_api"
     "hearingclinic.tests.test_integration"
+    "hearingclinic.tests.test_package_unfolding"
 )
 
 TOTAL_TESTS=0
@@ -63,35 +68,78 @@ PASSED_TESTS=0
 FAILED_TESTS=0
 BACKEND_EXIT=0
 
+# Run tests module by module with XML output
 for module in "${TEST_MODULES[@]}"; do
     echo -e "${BLUE}Running:${NC} $module"
 
-    # Run the test and capture output
-    if bench --site $SITE_NAME run-tests --module "$module" 2>&1 | tee /tmp/test_output.txt; then
-        # Extract test count from output
-        count=$(grep -oP "Ran \K\d+" /tmp/test_output.txt || echo "0")
-        TOTAL_TESTS=$((TOTAL_TESTS + count))
-        PASSED_TESTS=$((PASSED_TESTS + count))
-        echo -e "${GREEN}✓${NC} Passed ($count tests)"
+    # Create module-specific XML file
+    module_name=$(echo "$module" | sed 's/\./_/g')
+    xml_file="$TEST_RESULTS_DIR/${module_name}.xml"
+
+    # Run test with XML output
+    if bench --site "$SITE_NAME" run-tests --module "$module" --junit-xml-output "$xml_file" 2>&1 | tee /tmp/test_output.txt; then
+        test_passed=true
     else
-        count=$(grep -oP "Ran \K\d+" /tmp/test_output.txt || echo "0")
-        TOTAL_TESTS=$((TOTAL_TESTS + count))
+        test_passed=false
+        BACKEND_EXIT=1
+    fi
+
+    # Extract test count from output
+    count=$(grep -oP "Ran \K\d+" /tmp/test_output.txt || echo "0")
+    TOTAL_TESTS=$((TOTAL_TESTS + count))
+
+    # Check results
+    if [ "$test_passed" = true ] && grep -q "^OK" /tmp/test_output.txt; then
+        PASSED_TESTS=$((PASSED_TESTS + count))
+        echo -e "${GREEN}✓${NC} All $count tests passed - XML: $xml_file"
+    else
+        # Extract failure and error counts
         failed_count=$(grep -oP "failures=\K\d+" /tmp/test_output.txt || echo "0")
         error_count=$(grep -oP "errors=\K\d+" /tmp/test_output.txt || echo "0")
-        FAILED_TESTS=$((FAILED_TESTS + failed_count + error_count))
-        echo -e "${RED}✗${NC} Failed"
-        BACKEND_EXIT=1
+
+        failures_and_errors=$((failed_count + error_count))
+        FAILED_TESTS=$((FAILED_TESTS + failures_and_errors))
+        passed_in_module=$((count - failures_and_errors))
+        PASSED_TESTS=$((PASSED_TESTS + passed_in_module))
+
+        echo -e "${RED}✗${NC} $passed_in_module passed, $failures_and_errors failed - XML: $xml_file"
     fi
     echo ""
 done
 
 echo -e "${BLUE}Backend Summary:${NC} $TOTAL_TESTS tests, $PASSED_TESTS passed, $FAILED_TESTS failed"
+echo -e "${BLUE}XML Output:${NC} $TEST_RESULTS_DIR/"
 echo ""
 
-# If Testomat is enabled, send results (note: individual module results, not JUnit XML)
+# Upload backend test results to Testomat.io if enabled
 if [ "$TESTOMAT_ENABLED" = true ]; then
-    echo -e "${BLUE}Note:${NC} Testomat.io reporting works best with frontend tests (Jest has built-in integration)"
-    echo -e "${BLUE}Backend tests${NC} ran module-by-module - see console output above"
+    echo -e "${GREEN}Uploading backend test results to Testomat.io...${NC}"
+
+    # Check if npx is available (needed for testomatio reporter)
+    if command -v npx &> /dev/null; then
+        # Upload all XML files to Testomat.io using the correct command
+        # Use report-xml command from @testomatio/reporter package
+        cd "$BENCH_DIR/apps/hearingclinic"
+
+        # Generate test run title with date
+        RUN_TITLE="Backend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
+
+        # Upload with TESTOMATIO_CREATE env var to create tests if they don't exist
+        # TESTOMATIO_TITLE sets the run title
+        TESTOMATIO=$TESTOMATIO \
+        TESTOMATIO_CREATE=1 \
+        TESTOMATIO_TITLE="$RUN_TITLE" \
+        npx report-xml "$TEST_RESULTS_DIR/*.xml" --lang=Python
+
+        if [ $? -eq 0 ]; then
+            echo -e "${GREEN}✓${NC} Backend test results uploaded to Testomat.io"
+            echo -e "${BLUE}  Run title:${NC} $RUN_TITLE"
+        else
+            echo -e "${YELLOW}Warning: Failed to upload XML reports to Testomat.io${NC}"
+        fi
+    else
+        echo -e "${YELLOW}Warning: npx not found. Install Node.js to enable backend test upload to Testomat.io${NC}"
+    fi
     echo ""
 fi
 
@@ -100,11 +148,17 @@ echo ""
 echo -e "${GREEN}Running Frontend Tests...${NC}"
 echo "========================================"
 
-cd apps/hearingclinic
+cd "$BENCH_DIR/apps/hearingclinic"
 
-# Run frontend tests
+# Run frontend tests with Testomat.io reporting if enabled
 if [ "$TESTOMAT_ENABLED" = true ]; then
-    npm test
+    # Generate test run title with date
+    FRONTEND_RUN_TITLE="Frontend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
+    echo -e "${BLUE}Run title:${NC} $FRONTEND_RUN_TITLE"
+    echo ""
+
+    # Pass TESTOMATIO and TESTOMATIO_TITLE to npm test so Jest reporter can use them
+    TESTOMATIO=$TESTOMATIO TESTOMATIO_TITLE="$FRONTEND_RUN_TITLE" npm test
 else
     npm test
 fi

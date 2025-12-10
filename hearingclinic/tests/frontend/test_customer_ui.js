@@ -1,5 +1,6 @@
 /**
  * Frontend JavaScript Tests for Customer UI
+ * @S Customer UI Tests
  *
  * These tests verify the frontend functionality for customer-related UI components.
  *

@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Test cases for Customer ID generation logic
+# @S Customer Management
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
@@ -9,6 +10,11 @@ from hearingclinic.hearingclinic.doc_events.customer_id import (
 	get_next_id_number,
 	validate_customer_id_matches_gender
 )
+
+# Load ERPNext fixtures - We only need Customer Group and Territory
+# We create our own test customers, so we don't load ERPNext's Customer test_records
+test_dependencies = ["Customer Group", "Territory"]
+test_ignore = ["Customer", "Lead"]  # Avoid circular dependency: Customer->Lead->Customer
 
 
 class TestCustomerID(FrappeTestCase):

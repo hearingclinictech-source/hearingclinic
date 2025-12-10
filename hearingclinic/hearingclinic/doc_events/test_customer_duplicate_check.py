@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Test cases for Customer duplicate checking logic
+# @S Customer Management
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
@@ -7,6 +8,11 @@ from frappe.utils import nowdate
 from hearingclinic.hearingclinic.doc_events.customer_duplicate_check import (
 	check_for_duplicates_before_insert
 )
+
+# Load ERPNext fixtures - Only need Customer Group and Territory
+# We create our own test customers to avoid Lead circular dependency
+test_dependencies = ["Customer Group", "Territory"]
+test_ignore = ["Customer", "Lead"]  # Avoid circular dependency
 
 
 class TestCustomerDuplicateCheck(FrappeTestCase):

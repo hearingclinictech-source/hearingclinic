@@ -1,8 +1,10 @@
 /**
  * Tests for customer_info_devices.js
  * This module displays purchase history for customers, showing devices and hearing aids purchased
+ * @S Customer UI Tests
  */
 
+describe('Customer', () => {
 describe('Customer Info Devices', () => {
     let frm;
     let mockField;
@@ -291,4 +293,5 @@ describe('Customer Info Devices', () => {
         expect(item.device_serial || '-').toBe('-');
         expect(item.for_ear || '-').toBe('-');
     });
+});
 });

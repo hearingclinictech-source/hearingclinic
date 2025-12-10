@@ -1,0 +1,310 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "App Logo" [ref=e6] [cursor=pointer]:
+          - /url: /app
+          - img "App Logo" [ref=e7]
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - link "My CRM" [ref=e10] [cursor=pointer]:
+              - /url: /app/my-crm
+          - listitem [ref=e11]:
+            - link "Value Add Card" [ref=e12] [cursor=pointer]:
+              - /url: /app/value-add-card
+          - listitem [ref=e13]:
+            - link "VAC Test Customer 1765324912244-VAC-0969":
+              - /url: /app/value-add-card/VAC%20Test%20Customer%201765324912244-VAC-0969
+        - generic [ref=e14]:
+          - search [ref=e15]:
+            - generic [ref=e16]:
+              - generic [ref=e17]:
+                - combobox "Search or type a command (Ctrl + G)" [ref=e18]
+                - status [ref=e19]: Begin typing for results.
+              - img [ref=e21]
+          - list [ref=e23]:
+            - listitem "Show Chats" [ref=e24] [cursor=pointer]:
+              - img [ref=e25]
+            - listitem [ref=e27]:
+              - button "No new notifications" [ref=e28] [cursor=pointer]:
+                - generic [ref=e29]:
+                  - generic [ref=e30]: No new notifications
+                  - img [ref=e31]
+            - listitem [ref=e33]
+            - listitem [ref=e34]:
+              - button "Help Dropdown" [ref=e35] [cursor=pointer]:
+                - generic [ref=e36]:
+                  - text: Help
+                  - img [ref=e37]
+            - listitem [ref=e39]:
+              - button "User Menu" [ref=e40] [cursor=pointer]:
+                - generic "Administrator" [ref=e41]:
+                  - generic "Administrator" [ref=e42]: A
+    - generic [ref=e44]:
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - button "Toggle Sidebar" [ref=e49] [cursor=pointer]:
+            - img [ref=e50]
+          - generic [ref=e54]:
+            - heading "VAC Test Customer 1765324912244-VAC-0969" [level=3] [ref=e55] [cursor=pointer]
+            - generic [ref=e57]: Active
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - button [ref=e61] [cursor=pointer]:
+              - img [ref=e62]
+            - button [ref=e64] [cursor=pointer]:
+              - img [ref=e65]
+            - button [ref=e67] [cursor=pointer]:
+              - img [ref=e68]
+          - button "Menu" [ref=e71] [cursor=pointer]:
+            - img [ref=e74]
+          - button "Save" [ref=e75] [cursor=pointer]:
+            - generic [ref=e76]: Save
+      - generic [ref=e80]:
+        - generic [ref=e82]:
+          - list [ref=e83]:
+            - listitem [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]:
+                  - img [ref=e87]
+                  - text: Assigned To
+                - button [ref=e89] [cursor=pointer]:
+                  - img [ref=e90]
+          - list [ref=e92]:
+            - listitem [ref=e93]:
+              - generic [ref=e94]:
+                - generic [ref=e95]:
+                  - img [ref=e96]
+                  - text: Attachments
+                - button [ref=e98] [cursor=pointer]:
+                  - img [ref=e99]
+          - list [ref=e101]:
+            - listitem [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - img [ref=e105]
+                  - text: Tags
+                - button [ref=e107] [cursor=pointer]:
+                  - img [ref=e108]
+          - list [ref=e110]:
+            - listitem [ref=e111]:
+              - generic [ref=e112]:
+                - generic [ref=e113]:
+                  - img [ref=e114]
+                  - text: Share
+                - button [ref=e116] [cursor=pointer]:
+                  - img [ref=e117]
+          - list [ref=e119]:
+            - listitem [ref=e120]
+            - listitem
+          - list [ref=e121]:
+            - generic:
+              - listitem
+            - listitem [ref=e122]
+          - list [ref=e123]:
+            - listitem [ref=e124]:
+              - generic [ref=e125]:
+                - generic [ref=e127]:
+                  - img [ref=e128]
+                  - generic [ref=e130]: "0"
+                - generic [ref=e131]: ·
+                - generic [ref=e132] [cursor=pointer]:
+                  - img [ref=e133]
+                  - generic [ref=e135]: "0"
+              - generic [ref=e136] [cursor=pointer]: Follow
+          - separator [ref=e137]
+          - list [ref=e138]:
+            - listitem
+            - listitem [ref=e139]: You last edited this · just now
+            - listitem [ref=e140]: You created this · just now
+        - generic [ref=e141]:
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - generic [ref=e148]: Value Add Card Details
+              - generic [ref=e149]:
+                - generic [ref=e151]:
+                  - generic [ref=e152]:
+                    - generic [ref=e153]:
+                      - generic [ref=e155]: Customer
+                      - generic [ref=e156]:
+                        - combobox [ref=e160]: VAC Test Customer 1765324912244  
+                        - paragraph
+                    - generic: customer
+                  - generic [ref=e161]:
+                    - generic [ref=e162]:
+                      - generic [ref=e164]: Issue Date *
+                      - generic [ref=e165]:
+                        - textbox [ref=e167]: 10-12-2025
+                        - paragraph
+                    - generic: issue_date
+                  - generic [ref=e168]:
+                    - generic [ref=e169]:
+                      - generic [ref=e171]: Amount Paid *
+                      - generic [ref=e172]:
+                        - textbox [ref=e174]: 1,000.00
+                        - paragraph
+                    - generic: amount_paid
+                  - generic [ref=e175]:
+                    - generic [ref=e176]:
+                      - generic [ref=e178]: Card Value *
+                      - generic [ref=e179]:
+                        - textbox [ref=e181]: 1,600.00
+                        - paragraph
+                    - generic: card_value
+                - generic [ref=e183]:
+                  - generic [ref=e184]:
+                    - generic [ref=e185]:
+                      - generic [ref=e187]: Current Balance
+                      - generic [ref=e188]:
+                        - generic [ref=e189]: RM 1,600.00
+                        - paragraph
+                    - generic: current_balance
+                  - generic [ref=e190]:
+                    - generic [ref=e191]:
+                      - generic [ref=e193]: Status *
+                      - generic [ref=e194]:
+                        - generic [ref=e195]:
+                          - combobox [ref=e196]:
+                            - option "Active" [selected]
+                            - option "Partially Used"
+                            - option "Fully Used"
+                            - option "Cancelled"
+                          - generic:
+                            - img
+                        - paragraph
+                    - generic: status
+                  - generic [ref=e197]:
+                    - generic [ref=e198]:
+                      - generic [ref=e200]: Sales Invoice
+                      - generic [ref=e201]:
+                        - generic [ref=e204]:
+                          - combobox [ref=e205]
+                          - status [ref=e206]: Begin typing for results.
+                        - paragraph
+                    - generic: sales_invoice
+                  - generic [ref=e207]:
+                    - generic [ref=e208]:
+                      - generic [ref=e210]: Notes
+                      - generic [ref=e211]:
+                        - textbox [ref=e213]
+                        - paragraph
+                    - generic: notes
+            - generic [ref=e214]:
+              - generic [ref=e215]: Transactions
+              - generic [ref=e219]:
+                - generic: card_transactions
+                - generic [ref=e220]:
+                  - generic [ref=e221]: Card Transactions
+                  - generic [ref=e223]:
+                    - generic [ref=e226]:
+                      - checkbox [ref=e228]
+                      - generic [ref=e229]: No.
+                      - generic "Transaction Date" [ref=e230]:
+                        - generic [ref=e231]: Transaction Date *
+                      - generic "Transaction Type" [ref=e232]:
+                        - generic [ref=e233]: Transaction Type *
+                      - generic "Sales Invoice" [ref=e234]:
+                        - generic [ref=e235]: Sales Invoice
+                      - generic "Amount" [ref=e236]:
+                        - generic [ref=e237]: Amount *
+                      - generic "Balance After" [ref=e238]:
+                        - generic [ref=e239]: Balance After
+                      - img [ref=e242] [cursor=pointer]
+                    - generic [ref=e245]:
+                      - img "Grid Empty State" [ref=e246]
+                      - text: No Data
+                  - button "Add Row" [ref=e250] [cursor=pointer]
+          - generic [ref=e252]:
+            - generic [ref=e253]:
+              - generic [ref=e255]:
+                - generic [ref=e256]: Comments
+                - generic [ref=e257]:
+                  - generic "Administrator" [ref=e258]:
+                    - generic "Administrator" [ref=e259]: A
+                  - generic [ref=e260]:
+                    - generic: comment
+                    - generic [ref=e261]:
+                      - generic [ref=e262]:
+                        - text: Type a reply / comment
+                        - paragraph [ref=e263]
+                      - text: ×
+              - generic [ref=e264]:
+                - generic [ref=e265]:
+                  - heading "Activity" [level=4] [ref=e266]
+                  - button "New Email" [ref=e270] [cursor=pointer]:
+                    - img [ref=e271]
+                    - text: New Email
+                - generic [ref=e273]:
+                  - generic [ref=e276]:
+                    - text: You created this
+                    - generic [ref=e277]: · just now
+                  - generic [ref=e280]:
+                    - text: You last edited this
+                    - generic [ref=e281]: · just now
+            - button [ref=e282] [cursor=pointer]:
+              - img [ref=e283]
+    - contentinfo
+  - generic:
+    - generic "Show Chats"
+  - generic [ref=e285]:
+    - navigation [ref=e287]:
+      - img [ref=e289] [cursor=pointer]
+      - generic [ref=e291] [cursor=pointer]:
+        - text: December,
+        - generic [ref=e292]: "2025"
+      - img [ref=e294] [cursor=pointer]
+    - generic [ref=e297]:
+      - generic [ref=e298]:
+        - generic [ref=e299]: Su
+        - generic [ref=e300]: Mo
+        - generic [ref=e301]: Tu
+        - generic [ref=e302]: We
+        - generic [ref=e303]: Th
+        - generic [ref=e304]: Fr
+        - generic [ref=e305]: Sa
+      - generic [ref=e306]:
+        - generic [ref=e307] [cursor=pointer]: "30"
+        - generic [ref=e308] [cursor=pointer]: "1"
+        - generic [ref=e309] [cursor=pointer]: "2"
+        - generic [ref=e310] [cursor=pointer]: "3"
+        - generic [ref=e311] [cursor=pointer]: "4"
+        - generic [ref=e312] [cursor=pointer]: "5"
+        - generic [ref=e313] [cursor=pointer]: "6"
+        - generic [ref=e314] [cursor=pointer]: "7"
+        - generic [ref=e315] [cursor=pointer]: "8"
+        - generic [ref=e316] [cursor=pointer]: "9"
+        - generic [ref=e317] [cursor=pointer]: "10"
+        - generic [ref=e318] [cursor=pointer]: "11"
+        - generic [ref=e319] [cursor=pointer]: "12"
+        - generic [ref=e320] [cursor=pointer]: "13"
+        - generic [ref=e321] [cursor=pointer]: "14"
+        - generic [ref=e322] [cursor=pointer]: "15"
+        - generic [ref=e323] [cursor=pointer]: "16"
+        - generic [ref=e324] [cursor=pointer]: "17"
+        - generic [ref=e325] [cursor=pointer]: "18"
+        - generic [ref=e326] [cursor=pointer]: "19"
+        - generic [ref=e327] [cursor=pointer]: "20"
+        - generic [ref=e328] [cursor=pointer]: "21"
+        - generic [ref=e329] [cursor=pointer]: "22"
+        - generic [ref=e330] [cursor=pointer]: "23"
+        - generic [ref=e331] [cursor=pointer]: "24"
+        - generic [ref=e332] [cursor=pointer]: "25"
+        - generic [ref=e333] [cursor=pointer]: "26"
+        - generic [ref=e334] [cursor=pointer]: "27"
+        - generic [ref=e335] [cursor=pointer]: "28"
+        - generic [ref=e336] [cursor=pointer]: "29"
+        - generic [ref=e337] [cursor=pointer]: "30"
+        - generic [ref=e338] [cursor=pointer]: "31"
+        - generic [ref=e339] [cursor=pointer]: "1"
+        - generic [ref=e340] [cursor=pointer]: "2"
+        - generic [ref=e341] [cursor=pointer]: "3"
+    - generic [ref=e343] [cursor=pointer]: Today
+  - alert [ref=e345]:
+    - generic [ref=e347]:
+      - img [ref=e349]
+      - generic [ref=e351]: Saved
+    - img [ref=e353] [cursor=pointer]
+```

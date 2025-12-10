@@ -1,9 +1,15 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Integration tests for complete workflows
+# @S Integration Tests
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import nowdate, add_days, add_months, flt
+
+# Load ERPNext fixtures - Integration tests need base ERPNext setup
+# We create custom test customers to avoid Lead circular dependency
+test_dependencies = ["Customer Group", "Territory", "Item Group", "UOM", "Warehouse"]
+test_ignore = ["Customer", "Lead"]  # Avoid circular dependency
 
 
 class TestCustomerWorkflow(FrappeTestCase):

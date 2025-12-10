@@ -1,9 +1,15 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # See license.txt
+# @S Value Add Card
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import nowdate
+
+# Load ERPNext fixtures - Only need Customer Group and Territory
+# We create custom test customers to avoid Lead circular dependency
+test_dependencies = ["Customer Group", "Territory"]
+test_ignore = ["Customer", "Lead"]  # Avoid circular dependency
 
 
 class TestCardTransaction(FrappeTestCase):

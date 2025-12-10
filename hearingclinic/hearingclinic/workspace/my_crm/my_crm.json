@@ -18,7 +18,7 @@
  "is_hidden": 0,
  "label": "My CRM",
  "links": [],
- "modified": "2025-12-05 16:05:01.827535",
+ "modified": "2025-12-09 11:00:49.544479",
  "modified_by": "Administrator",
  "module": "Hearingclinic",
  "name": "My CRM",
@@ -33,14 +33,14 @@
    "quick_list_filter": "[]"
   },
   {
+   "document_type": "Sales Invoice",
+   "label": "Sales",
+   "quick_list_filter": "[[\"Sales Invoice\",\"status\",\"!=\",\"Cancelled\",false]]"
+  },
+  {
    "document_type": "Maintenance Schedule",
    "label": "Schedules ending soon",
    "quick_list_filter": "[[\"Maintenance Schedule Item\",\"end_date\",\"Timespan\",\"next 30 days\",false]]"
-  },
-  {
-   "document_type": "Sales Invoice",
-   "label": "Sales",
-   "quick_list_filter": "[]"
   },
   {
    "document_type": "Maintenance Schedule",

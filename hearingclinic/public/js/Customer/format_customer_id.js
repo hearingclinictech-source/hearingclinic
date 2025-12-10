@@ -75,7 +75,8 @@ function format_customer_id(frm) {
     }, 100);
 }
 function add_customer_since_badge(frm) {
-    if (!frm.doc.custom_customer_since || !frm.doc.name) return;
+    // Don't run for new/unsaved customers
+    if (!frm.doc.custom_customer_since || !frm.doc.name || frm.doc.__islocal) return;
     
     // Remove existing badge if any
     frm.get_field('custom_customer_since').$wrapper.find('.customer-since-badge').remove();
