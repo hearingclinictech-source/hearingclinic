@@ -475,7 +475,7 @@ function display_items_table(frm, summary_items, detail_items, total_revenue, in
     summary_items.forEach(item => {
         html += `
             <tr>
-                <td><strong><a href="/app/item/${encodeURIComponent(item.item_code)}" target="_blank">${item.item_code}</a></strong></td>
+                <td><strong><a href="/app/item/${encodeURIComponent(item.item_code)}" >${item.item_code}</a></strong></td>
                 <td>${item.item_name || '-'}</td>
                 <td class="text-right">${format_number(item.total_qty)}</td>
                 <td class="text-right">${format_currency(item.avg_rate)}</td>
@@ -522,13 +522,13 @@ function display_items_table(frm, summary_items, detail_items, total_revenue, in
         }
         
         let dn_link = item.delivery_note ? 
-            `<a href="/app/delivery-note/${item.delivery_note}" target="_blank">${item.delivery_note}</a>` : '-';
+            `<a href="/app/delivery-note/${item.delivery_note}" >${item.delivery_note}</a>` : '-';
         
         html += `
             <tr>
                 <td>${frappe.datetime.str_to_user(item.posting_date)}</td>
-                <td><a href="/app/sales-invoice/${item.parent}" target="_blank">${item.parent}</a></td>
-                <td><a href="/app/item/${encodeURIComponent(item.item_code)}" target="_blank">${item.item_code}</a></td>
+                <td><a href="/app/sales-invoice/${item.parent}" >${item.parent}</a></td>
+                <td><a href="/app/item/${encodeURIComponent(item.item_code)}" >${item.item_code}</a></td>
                 <td>${item.item_name || '-'}</td>
                 <td style="font-family: monospace; font-size: 12px;">${device_serial}</td>
                 <td style="text-align: center;">${ear_display}</td>
@@ -642,7 +642,7 @@ function display_invoice_summary_only(frm, invoices, fieldname) {
     invoices.forEach(inv => {
         html += `
             <tr>
-                <td><a href="/app/sales-invoice/${inv.name}" target="_blank">${inv.name}</a></td>
+                <td><a href="/app/sales-invoice/${inv.name}" >${inv.name}</a></td>
                 <td>${frappe.datetime.str_to_user(inv.posting_date)}</td>
                 <td class="text-right"><strong>${format_currency(inv.grand_total)}</strong></td>
                 <td>${inv.status}</td>

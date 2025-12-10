@@ -171,7 +171,7 @@ function render_display(frm, schedules, allVisits, fieldname) {
     schedules.forEach(s => {
         let rem = get_remaining(s);
         html += '<tr>';
-        html += '<td><a href="/app/maintenance-schedule/' + encodeURIComponent(s.name) + '" target="_blank"><strong>' + s.name + '</strong></a></td>';
+        html += '<td><a href="/app/maintenance-schedule/' + encodeURIComponent(s.name) + '" ><strong>' + s.name + '</strong></a></td>';
         html += '<td>' + frappe.datetime.str_to_user(s.transaction_date) + '</td>';
         html += '<td>' + get_status_badge(s.status, rem.count) + '</td>';
         html += '<td>' + rem.display + '</td>';
@@ -200,12 +200,12 @@ function render_display(frm, schedules, allVisits, fieldname) {
         allVisits.forEach(v => {
             let work = get_work_done(v);
             html += '<tr>';
-            html += '<td><a href="/app/maintenance-visit/' + encodeURIComponent(v.name) + '" target="_blank"><strong>' + v.name + '</strong></a></td>';
+            html += '<td><a href="/app/maintenance-visit/' + encodeURIComponent(v.name) + '" ><strong>' + v.name + '</strong></a></td>';
             html += '<td>' + (v.mntc_date ? frappe.datetime.str_to_user(v.mntc_date) : '-') + '</td>';
             html += '<td>' + (v.maintenance_type || '-') + '</td>';
             html += '<td>' + get_comp_badge(v.completion_status) + '</td>';
             html += '<td class="wdone" title="' + work + '">' + (work || '-') + '</td>';
-            html += '<td>' + (v.maintenance_schedule ? '<a href="/app/maintenance-schedule/' + encodeURIComponent(v.maintenance_schedule) + '" target="_blank">' + v.maintenance_schedule + '</a>' : '<span class="bg bg-err">Unscheduled</span>') + '</td>';
+            html += '<td>' + (v.maintenance_schedule ? '<a href="/app/maintenance-schedule/' + encodeURIComponent(v.maintenance_schedule) + '" >' + v.maintenance_schedule + '</a>' : '<span class="bg bg-err">Unscheduled</span>') + '</td>';
             html += '</tr>';
         });
         
