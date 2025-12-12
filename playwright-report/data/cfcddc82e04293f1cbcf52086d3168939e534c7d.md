@@ -1,0 +1,755 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "App Logo" [ref=e6] [cursor=pointer]:
+          - /url: /app
+          - img "App Logo" [ref=e7]
+        - list [ref=e8]:
+          - listitem [ref=e9]:
+            - link "Stock" [ref=e10] [cursor=pointer]:
+              - /url: /app/stock
+          - listitem [ref=e11]:
+            - link "Delivery Note" [ref=e12] [cursor=pointer]:
+              - /url: /app/delivery-note
+          - listitem [ref=e13]:
+            - link "MAT-DN-2025-00039":
+              - /url: /app/delivery-note/MAT-DN-2025-00039
+        - generic [ref=e14]:
+          - search [ref=e15]:
+            - generic [ref=e16]:
+              - generic [ref=e17]:
+                - combobox "Search or type a command (Ctrl + G)" [ref=e18]
+                - status [ref=e19]: Begin typing for results.
+              - img [ref=e21]
+          - list [ref=e23]:
+            - listitem "Show Chats" [ref=e24] [cursor=pointer]:
+              - img [ref=e25]
+            - listitem [ref=e27]:
+              - button "No new notifications" [ref=e28] [cursor=pointer]:
+                - generic [ref=e29]:
+                  - generic [ref=e30]: No new notifications
+                  - img [ref=e31]
+            - listitem [ref=e33]
+            - listitem [ref=e34]:
+              - button "Help Dropdown" [ref=e35] [cursor=pointer]:
+                - generic [ref=e36]:
+                  - text: Help
+                  - img [ref=e37]
+            - listitem [ref=e39]:
+              - button "User Menu" [ref=e40] [cursor=pointer]:
+                - generic "Administrator" [ref=e41]:
+                  - generic "Administrator" [ref=e42]: A
+    - generic [ref=e43]:
+      - text: "*   * * * * * * * * * * * * * * * Normal Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Normal --- --- 8px 9px 10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 32px 36px 40px 48px 54px 64px 96px 128px Table Insert Table Insert Row Above Insert Row Below Insert Column Right Insert Column Left Delete Row Delete Column Delete Table • • • • • Visit URL: EditRemove • • • • • * * Type a reply / comment ×"
+      - generic [ref=e44]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - button "Toggle Sidebar" [ref=e49] [cursor=pointer]:
+              - img [ref=e50]
+            - generic [ref=e54]:
+              - heading "Test Delivery Customer E2E" [level=3] [ref=e55] [cursor=pointer]
+              - generic [ref=e57]: Draft
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - button "Create" [ref=e61] [cursor=pointer]:
+                - text: Create
+                - img [ref=e62]
+              - button "Get Items From" [ref=e65] [cursor=pointer]:
+                - text: Get Items From
+                - img [ref=e66]
+              - button "Preview" [ref=e69] [cursor=pointer]:
+                - text: Preview
+                - img [ref=e70]
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - button [ref=e74] [cursor=pointer]:
+                  - img [ref=e75]
+                - button [ref=e77] [cursor=pointer]:
+                  - img [ref=e78]
+                - button [ref=e80] [cursor=pointer]:
+                  - img [ref=e81]
+              - button "Menu" [ref=e84] [cursor=pointer]:
+                - img [ref=e87]
+              - button "Submit" [ref=e88] [cursor=pointer]:
+                - generic [ref=e89]: Submit
+        - generic [ref=e93]:
+          - generic [ref=e95]:
+            - list [ref=e96]:
+              - listitem [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]:
+                    - img [ref=e100]
+                    - text: Assigned To
+                  - button [ref=e102] [cursor=pointer]:
+                    - img [ref=e103]
+            - list [ref=e105]:
+              - listitem [ref=e106]:
+                - generic [ref=e107]:
+                  - generic [ref=e108]:
+                    - img [ref=e109]
+                    - text: Attachments
+                  - button [ref=e111] [cursor=pointer]:
+                    - img [ref=e112]
+            - list [ref=e114]:
+              - listitem [ref=e115]:
+                - generic [ref=e116]:
+                  - generic [ref=e117]:
+                    - img [ref=e118]
+                    - text: Tags
+                  - button [ref=e120] [cursor=pointer]:
+                    - img [ref=e121]
+            - list [ref=e123]:
+              - listitem [ref=e124]:
+                - generic [ref=e125]:
+                  - generic [ref=e126]:
+                    - img [ref=e127]
+                    - text: Share
+                  - button [ref=e129] [cursor=pointer]:
+                    - img [ref=e130]
+            - list [ref=e132]:
+              - listitem [ref=e133]
+              - listitem
+            - list [ref=e134]:
+              - generic:
+                - listitem
+              - listitem [ref=e135]
+            - list [ref=e136]:
+              - listitem [ref=e137]:
+                - generic [ref=e138]:
+                  - generic [ref=e140]:
+                    - img [ref=e141]
+                    - generic [ref=e143]: "0"
+                  - generic [ref=e144]: ·
+                  - generic [ref=e145] [cursor=pointer]:
+                    - img [ref=e146]
+                    - generic [ref=e148]: "0"
+                - generic [ref=e149] [cursor=pointer]: Follow
+            - separator [ref=e150]
+            - list [ref=e151]:
+              - listitem
+              - listitem [ref=e152]: You last edited this · just now
+              - listitem [ref=e153]: You created this · just now
+          - generic [ref=e154]:
+            - generic [ref=e158]:
+              - generic [ref=e160]:
+                - generic [ref=e161]: Submit this document to confirm
+                - img [ref=e163] [cursor=pointer]
+              - generic [ref=e165]:
+                - tablist [ref=e167]:
+                  - listitem [ref=e168]:
+                    - tab "Details" [selected] [ref=e169] [cursor=pointer]
+                  - listitem [ref=e170]:
+                    - tab "More Info" [ref=e171] [cursor=pointer]
+                  - listitem [ref=e172]:
+                    - tab "Connections" [ref=e173] [cursor=pointer]
+                - generic [ref=e174]:
+                  - tabpanel "Details" [ref=e175]:
+                    - generic [ref=e177]:
+                      - generic [ref=e179]:
+                        - text: "*"
+                        - generic [ref=e180]:
+                          - generic [ref=e181]:
+                            - generic [ref=e183]: Customer *
+                            - generic [ref=e184]:
+                              - generic [ref=e187]:
+                                - combobox [ref=e188]: Test Delivery Customer E2E
+                                - status [ref=e189]: Begin typing for results.
+                              - paragraph
+                          - generic: customer
+                      - generic [ref=e191]:
+                        - generic [ref=e192]:
+                          - generic [ref=e193]:
+                            - generic [ref=e195]: Date *
+                            - generic [ref=e196]:
+                              - generic [ref=e197]: 11-12-2025
+                              - paragraph
+                          - generic: posting_date
+                        - generic [ref=e198]:
+                          - generic [ref=e199]:
+                            - generic [ref=e201]: Posting Time *
+                            - generic [ref=e202]:
+                              - generic [ref=e203]: 16:50:34
+                              - paragraph
+                          - generic: posting_time
+                        - generic [ref=e204]:
+                          - generic [ref=e205]:
+                            - generic [ref=e206]:
+                              - checkbox "Edit Posting Date and Time" [ref=e208]
+                              - generic [ref=e209]: Edit Posting Date and Time
+                            - paragraph
+                          - generic: set_posting_time
+                      - generic [ref=e211]:
+                        - generic [ref=e212]:
+                          - generic [ref=e213]:
+                            - generic [ref=e215]: Company *
+                            - generic [ref=e216]:
+                              - generic [ref=e219]:
+                                - combobox [ref=e220]: Hearing Clinic Petaling Jaya
+                                - status [ref=e221]: Begin typing for results.
+                              - paragraph
+                          - generic: company
+                        - generic [ref=e222]:
+                          - generic [ref=e223]:
+                            - generic [ref=e224]:
+                              - generic [ref=e225]:
+                                - checkbox "Is Return" [disabled]
+                              - generic [ref=e226]: Is Return
+                            - paragraph
+                          - generic: is_return
+                    - text: "* * * *"
+                    - generic [ref=e231]:
+                      - generic: items
+                      - generic [ref=e232]:
+                        - generic [ref=e233]: Delivery Note Item
+                        - generic [ref=e235]:
+                          - generic [ref=e238]:
+                            - checkbox [ref=e240]
+                            - generic [ref=e241]: No.
+                            - generic "Item Name" [ref=e242]:
+                              - generic [ref=e243]: Item Name *
+                            - generic "Device Serial Number" [ref=e244]:
+                              - generic [ref=e245]: Device Serial Number
+                            - generic "For Ear" [ref=e246]:
+                              - generic [ref=e247]: For Ear
+                            - generic "Quantity" [ref=e248]:
+                              - generic [ref=e249]: Quantity *
+                            - generic "Amount (MYR)" [ref=e250]:
+                              - generic [ref=e251]: Amount (MYR)
+                            - img [ref=e254] [cursor=pointer]
+                          - generic [ref=e257]:
+                            - generic [ref=e259] [cursor=pointer]:
+                              - checkbox [ref=e261]
+                              - generic [ref=e262]: "1"
+                              - generic [ref=e264]: 12 Months Warranty
+                              - generic [ref=e269]: "1"
+                              - generic [ref=e272]: RM 0.00
+                              - img [ref=e276]
+                            - generic [ref=e279] [cursor=pointer]:
+                              - checkbox [ref=e281]
+                              - generic [ref=e282]: "2"
+                              - generic [ref=e284]: Legacy - Legacy - BTE
+                              - generic [ref=e289]: "1"
+                              - generic [ref=e292]: RM 0.00
+                              - img [ref=e296]
+                            - generic [ref=e299] [cursor=pointer]:
+                              - checkbox [ref=e301]
+                              - generic [ref=e302]: "3"
+                              - generic [ref=e304]: Legacy - Legacy - RIC
+                              - generic [ref=e309]: "1"
+                              - generic [ref=e312]: RM 0.00
+                              - img [ref=e316]
+                        - generic [ref=e319]:
+                          - generic [ref=e320]:
+                            - button "Add Row" [ref=e321] [cursor=pointer]
+                            - button "Add Multiple" [ref=e322] [cursor=pointer]
+                          - generic [ref=e323]:
+                            - button "Download" [ref=e324] [cursor=pointer]
+                            - button "Upload" [ref=e325] [cursor=pointer]
+                    - generic [ref=e326]:
+                      - generic [ref=e327]: Taxes and Charges
+                      - generic [ref=e331]:
+                        - generic [ref=e332]:
+                          - generic [ref=e334]: Sales Taxes and Charges Template
+                          - generic [ref=e335]:
+                            - generic [ref=e338]:
+                              - combobox [ref=e339]
+                              - status [ref=e340]: Begin typing for results.
+                            - paragraph
+                        - generic: taxes_and_charges
+                    - generic [ref=e347]:
+                      - generic: taxes
+                      - generic [ref=e348]:
+                        - generic [ref=e349]: Sales Taxes and Charges
+                        - generic [ref=e351]:
+                          - generic [ref=e354]:
+                            - checkbox [ref=e356]
+                            - generic [ref=e357]: No.
+                            - generic "Type" [ref=e358]:
+                              - generic [ref=e359]: Type *
+                            - generic "Account Head" [ref=e360]:
+                              - generic [ref=e361]: Account Head *
+                            - generic "Tax Rate" [ref=e362]:
+                              - generic [ref=e363]: Tax Rate
+                            - generic "Amount" [ref=e364]:
+                              - generic [ref=e365]: Amount
+                            - generic "Total" [ref=e366]:
+                              - generic [ref=e367]: Total
+                            - img [ref=e370] [cursor=pointer]
+                          - generic [ref=e373]:
+                            - img "Grid Empty State" [ref=e374]
+                            - text: No Data
+                        - button "Add Row" [ref=e378] [cursor=pointer]
+                    - generic [ref=e384]:
+                      - generic [ref=e385]:
+                        - generic [ref=e387]: Total Taxes and Charges (MYR)
+                        - generic [ref=e388]:
+                          - generic [ref=e389]: RM 0.00
+                          - paragraph
+                      - generic: total_taxes_and_charges
+                    - generic [ref=e390]:
+                      - generic [ref=e391]: Totals
+                      - generic [ref=e395]:
+                        - generic [ref=e396]:
+                          - generic [ref=e397]:
+                            - generic [ref=e399]: Grand Total (MYR)
+                            - generic [ref=e400]:
+                              - generic [ref=e401]: RM 0.00
+                              - paragraph
+                          - generic: grand_total
+                        - generic [ref=e402]:
+                          - generic [ref=e403]:
+                            - generic [ref=e405]: Rounded Total (MYR)
+                            - generic [ref=e406]:
+                              - generic [ref=e407]: RM 0.00
+                              - paragraph
+                          - generic: rounded_total
+                    - generic [ref=e409] [cursor=pointer]:
+                      - text: Additional Discount
+                      - img [ref=e411]
+                  - text: "Normal Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Normal --- --- 8px 9px 10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 32px 36px 40px 48px 54px 64px 96px 128px Table Insert Table Insert Row Above Insert Row Below Insert Column Right Insert Column Left Delete Row Delete Column Delete Table Visit URL: EditRemove * *"
+            - generic [ref=e414]:
+              - generic [ref=e415]:
+                - generic [ref=e417]:
+                  - generic [ref=e418]: Comments
+                  - generic [ref=e419]:
+                    - generic "Administrator" [ref=e420]:
+                      - generic "Administrator" [ref=e421]: A
+                    - generic [ref=e422]:
+                      - generic: comment
+                      - generic [ref=e423]:
+                        - generic [ref=e424]:
+                          - text: Type a reply / comment
+                          - paragraph [ref=e425]
+                        - text: ×
+                - generic [ref=e426]:
+                  - generic [ref=e427]:
+                    - heading "Activity" [level=4] [ref=e428]
+                    - button "New Email" [ref=e432] [cursor=pointer]:
+                      - img [ref=e433]
+                      - text: New Email
+                  - generic [ref=e435]:
+                    - generic [ref=e438]:
+                      - text: You created this
+                      - generic [ref=e439]: · just now
+                    - generic [ref=e442]:
+                      - text: You last edited this
+                      - generic [ref=e443]: · just now
+              - button [ref=e444] [cursor=pointer]:
+                - img [ref=e445]
+    - contentinfo
+  - generic:
+    - generic "Show Chats"
+  - generic:
+    - generic [ref=e447]:
+      - navigation [ref=e449]:
+        - img [ref=e451] [cursor=pointer]
+        - generic [ref=e453] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e454]: "2025"
+        - img [ref=e456] [cursor=pointer]
+      - generic [ref=e459]:
+        - generic [ref=e460]:
+          - generic [ref=e461]: Su
+          - generic [ref=e462]: Mo
+          - generic [ref=e463]: Tu
+          - generic [ref=e464]: We
+          - generic [ref=e465]: Th
+          - generic [ref=e466]: Fr
+          - generic [ref=e467]: Sa
+        - generic [ref=e468]:
+          - generic [ref=e469] [cursor=pointer]: "30"
+          - generic [ref=e470] [cursor=pointer]: "1"
+          - generic [ref=e471] [cursor=pointer]: "2"
+          - generic [ref=e472] [cursor=pointer]: "3"
+          - generic [ref=e473] [cursor=pointer]: "4"
+          - generic [ref=e474] [cursor=pointer]: "5"
+          - generic [ref=e475] [cursor=pointer]: "6"
+          - generic [ref=e476] [cursor=pointer]: "7"
+          - generic [ref=e477] [cursor=pointer]: "8"
+          - generic [ref=e478] [cursor=pointer]: "9"
+          - generic [ref=e479] [cursor=pointer]: "10"
+          - generic [ref=e480] [cursor=pointer]: "11"
+          - generic [ref=e481] [cursor=pointer]: "12"
+          - generic [ref=e482] [cursor=pointer]: "13"
+          - generic [ref=e483] [cursor=pointer]: "14"
+          - generic [ref=e484] [cursor=pointer]: "15"
+          - generic [ref=e485] [cursor=pointer]: "16"
+          - generic [ref=e486] [cursor=pointer]: "17"
+          - generic [ref=e487] [cursor=pointer]: "18"
+          - generic [ref=e488] [cursor=pointer]: "19"
+          - generic [ref=e489] [cursor=pointer]: "20"
+          - generic [ref=e490] [cursor=pointer]: "21"
+          - generic [ref=e491] [cursor=pointer]: "22"
+          - generic [ref=e492] [cursor=pointer]: "23"
+          - generic [ref=e493] [cursor=pointer]: "24"
+          - generic [ref=e494] [cursor=pointer]: "25"
+          - generic [ref=e495] [cursor=pointer]: "26"
+          - generic [ref=e496] [cursor=pointer]: "27"
+          - generic [ref=e497] [cursor=pointer]: "28"
+          - generic [ref=e498] [cursor=pointer]: "29"
+          - generic [ref=e499] [cursor=pointer]: "30"
+          - generic [ref=e500] [cursor=pointer]: "31"
+          - generic [ref=e501] [cursor=pointer]: "1"
+          - generic [ref=e502] [cursor=pointer]: "2"
+          - generic [ref=e503] [cursor=pointer]: "3"
+      - generic [ref=e505] [cursor=pointer]: Today
+    - generic [ref=e506]:
+      - generic [ref=e508]:
+        - generic [ref=e509]:
+          - generic [ref=e510]: "16"
+          - generic [ref=e511]: ":"
+          - generic [ref=e512]: "50"
+          - generic [ref=e513]: ":"
+          - generic [ref=e514]: "04"
+        - generic [ref=e515]:
+          - slider [ref=e517] [cursor=pointer]: "16"
+          - slider [ref=e519] [cursor=pointer]: "50"
+          - slider [ref=e521] [cursor=pointer]: "4"
+      - generic [ref=e523] [cursor=pointer]: Today
+    - generic [ref=e524]:
+      - navigation [ref=e526]:
+        - img [ref=e528] [cursor=pointer]
+        - generic [ref=e530] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e531]: "2025"
+        - img [ref=e533] [cursor=pointer]
+      - generic [ref=e536]:
+        - generic [ref=e537]:
+          - generic [ref=e538]: Su
+          - generic [ref=e539]: Mo
+          - generic [ref=e540]: Tu
+          - generic [ref=e541]: We
+          - generic [ref=e542]: Th
+          - generic [ref=e543]: Fr
+          - generic [ref=e544]: Sa
+        - generic [ref=e545]:
+          - generic [ref=e546] [cursor=pointer]: "30"
+          - generic [ref=e547] [cursor=pointer]: "1"
+          - generic [ref=e548] [cursor=pointer]: "2"
+          - generic [ref=e549] [cursor=pointer]: "3"
+          - generic [ref=e550] [cursor=pointer]: "4"
+          - generic [ref=e551] [cursor=pointer]: "5"
+          - generic [ref=e552] [cursor=pointer]: "6"
+          - generic [ref=e553] [cursor=pointer]: "7"
+          - generic [ref=e554] [cursor=pointer]: "8"
+          - generic [ref=e555] [cursor=pointer]: "9"
+          - generic [ref=e556] [cursor=pointer]: "10"
+          - generic [ref=e557] [cursor=pointer]: "11"
+          - generic [ref=e558] [cursor=pointer]: "12"
+          - generic [ref=e559] [cursor=pointer]: "13"
+          - generic [ref=e560] [cursor=pointer]: "14"
+          - generic [ref=e561] [cursor=pointer]: "15"
+          - generic [ref=e562] [cursor=pointer]: "16"
+          - generic [ref=e563] [cursor=pointer]: "17"
+          - generic [ref=e564] [cursor=pointer]: "18"
+          - generic [ref=e565] [cursor=pointer]: "19"
+          - generic [ref=e566] [cursor=pointer]: "20"
+          - generic [ref=e567] [cursor=pointer]: "21"
+          - generic [ref=e568] [cursor=pointer]: "22"
+          - generic [ref=e569] [cursor=pointer]: "23"
+          - generic [ref=e570] [cursor=pointer]: "24"
+          - generic [ref=e571] [cursor=pointer]: "25"
+          - generic [ref=e572] [cursor=pointer]: "26"
+          - generic [ref=e573] [cursor=pointer]: "27"
+          - generic [ref=e574] [cursor=pointer]: "28"
+          - generic [ref=e575] [cursor=pointer]: "29"
+          - generic [ref=e576] [cursor=pointer]: "30"
+          - generic [ref=e577] [cursor=pointer]: "31"
+          - generic [ref=e578] [cursor=pointer]: "1"
+          - generic [ref=e579] [cursor=pointer]: "2"
+          - generic [ref=e580] [cursor=pointer]: "3"
+      - generic [ref=e582] [cursor=pointer]: Today
+    - generic [ref=e583]:
+      - navigation [ref=e585]:
+        - img [ref=e587] [cursor=pointer]
+        - generic [ref=e589] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e590]: "2025"
+        - img [ref=e592] [cursor=pointer]
+      - generic [ref=e595]:
+        - generic [ref=e596]:
+          - generic [ref=e597]: Su
+          - generic [ref=e598]: Mo
+          - generic [ref=e599]: Tu
+          - generic [ref=e600]: We
+          - generic [ref=e601]: Th
+          - generic [ref=e602]: Fr
+          - generic [ref=e603]: Sa
+        - generic [ref=e604]:
+          - generic [ref=e605] [cursor=pointer]: "30"
+          - generic [ref=e606] [cursor=pointer]: "1"
+          - generic [ref=e607] [cursor=pointer]: "2"
+          - generic [ref=e608] [cursor=pointer]: "3"
+          - generic [ref=e609] [cursor=pointer]: "4"
+          - generic [ref=e610] [cursor=pointer]: "5"
+          - generic [ref=e611] [cursor=pointer]: "6"
+          - generic [ref=e612] [cursor=pointer]: "7"
+          - generic [ref=e613] [cursor=pointer]: "8"
+          - generic [ref=e614] [cursor=pointer]: "9"
+          - generic [ref=e615] [cursor=pointer]: "10"
+          - generic [ref=e616] [cursor=pointer]: "11"
+          - generic [ref=e617] [cursor=pointer]: "12"
+          - generic [ref=e618] [cursor=pointer]: "13"
+          - generic [ref=e619] [cursor=pointer]: "14"
+          - generic [ref=e620] [cursor=pointer]: "15"
+          - generic [ref=e621] [cursor=pointer]: "16"
+          - generic [ref=e622] [cursor=pointer]: "17"
+          - generic [ref=e623] [cursor=pointer]: "18"
+          - generic [ref=e624] [cursor=pointer]: "19"
+          - generic [ref=e625] [cursor=pointer]: "20"
+          - generic [ref=e626] [cursor=pointer]: "21"
+          - generic [ref=e627] [cursor=pointer]: "22"
+          - generic [ref=e628] [cursor=pointer]: "23"
+          - generic [ref=e629] [cursor=pointer]: "24"
+          - generic [ref=e630] [cursor=pointer]: "25"
+          - generic [ref=e631] [cursor=pointer]: "26"
+          - generic [ref=e632] [cursor=pointer]: "27"
+          - generic [ref=e633] [cursor=pointer]: "28"
+          - generic [ref=e634] [cursor=pointer]: "29"
+          - generic [ref=e635] [cursor=pointer]: "30"
+          - generic [ref=e636] [cursor=pointer]: "31"
+          - generic [ref=e637] [cursor=pointer]: "1"
+          - generic [ref=e638] [cursor=pointer]: "2"
+          - generic [ref=e639] [cursor=pointer]: "3"
+      - generic [ref=e641] [cursor=pointer]: Today
+    - generic [ref=e642]:
+      - navigation [ref=e644]:
+        - img [ref=e646] [cursor=pointer]
+        - generic [ref=e648] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e649]: "2025"
+        - img [ref=e651] [cursor=pointer]
+      - generic [ref=e654]:
+        - generic [ref=e655]:
+          - generic [ref=e656]: Su
+          - generic [ref=e657]: Mo
+          - generic [ref=e658]: Tu
+          - generic [ref=e659]: We
+          - generic [ref=e660]: Th
+          - generic [ref=e661]: Fr
+          - generic [ref=e662]: Sa
+        - generic [ref=e663]:
+          - generic [ref=e664] [cursor=pointer]: "30"
+          - generic [ref=e665] [cursor=pointer]: "1"
+          - generic [ref=e666] [cursor=pointer]: "2"
+          - generic [ref=e667] [cursor=pointer]: "3"
+          - generic [ref=e668] [cursor=pointer]: "4"
+          - generic [ref=e669] [cursor=pointer]: "5"
+          - generic [ref=e670] [cursor=pointer]: "6"
+          - generic [ref=e671] [cursor=pointer]: "7"
+          - generic [ref=e672] [cursor=pointer]: "8"
+          - generic [ref=e673] [cursor=pointer]: "9"
+          - generic [ref=e674] [cursor=pointer]: "10"
+          - generic [ref=e675] [cursor=pointer]: "11"
+          - generic [ref=e676] [cursor=pointer]: "12"
+          - generic [ref=e677] [cursor=pointer]: "13"
+          - generic [ref=e678] [cursor=pointer]: "14"
+          - generic [ref=e679] [cursor=pointer]: "15"
+          - generic [ref=e680] [cursor=pointer]: "16"
+          - generic [ref=e681] [cursor=pointer]: "17"
+          - generic [ref=e682] [cursor=pointer]: "18"
+          - generic [ref=e683] [cursor=pointer]: "19"
+          - generic [ref=e684] [cursor=pointer]: "20"
+          - generic [ref=e685] [cursor=pointer]: "21"
+          - generic [ref=e686] [cursor=pointer]: "22"
+          - generic [ref=e687] [cursor=pointer]: "23"
+          - generic [ref=e688] [cursor=pointer]: "24"
+          - generic [ref=e689] [cursor=pointer]: "25"
+          - generic [ref=e690] [cursor=pointer]: "26"
+          - generic [ref=e691] [cursor=pointer]: "27"
+          - generic [ref=e692] [cursor=pointer]: "28"
+          - generic [ref=e693] [cursor=pointer]: "29"
+          - generic [ref=e694] [cursor=pointer]: "30"
+          - generic [ref=e695] [cursor=pointer]: "31"
+          - generic [ref=e696] [cursor=pointer]: "1"
+          - generic [ref=e697] [cursor=pointer]: "2"
+          - generic [ref=e698] [cursor=pointer]: "3"
+      - generic [ref=e700] [cursor=pointer]: Today
+    - generic [ref=e701]:
+      - navigation [ref=e703]:
+        - img [ref=e705] [cursor=pointer]
+        - generic [ref=e707] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e708]: "2025"
+        - img [ref=e710] [cursor=pointer]
+      - generic [ref=e713]:
+        - generic [ref=e714]:
+          - generic [ref=e715]: Su
+          - generic [ref=e716]: Mo
+          - generic [ref=e717]: Tu
+          - generic [ref=e718]: We
+          - generic [ref=e719]: Th
+          - generic [ref=e720]: Fr
+          - generic [ref=e721]: Sa
+        - generic [ref=e722]:
+          - generic [ref=e723] [cursor=pointer]: "30"
+          - generic [ref=e724] [cursor=pointer]: "1"
+          - generic [ref=e725] [cursor=pointer]: "2"
+          - generic [ref=e726] [cursor=pointer]: "3"
+          - generic [ref=e727] [cursor=pointer]: "4"
+          - generic [ref=e728] [cursor=pointer]: "5"
+          - generic [ref=e729] [cursor=pointer]: "6"
+          - generic [ref=e730] [cursor=pointer]: "7"
+          - generic [ref=e731] [cursor=pointer]: "8"
+          - generic [ref=e732] [cursor=pointer]: "9"
+          - generic [ref=e733] [cursor=pointer]: "10"
+          - generic [ref=e734] [cursor=pointer]: "11"
+          - generic [ref=e735] [cursor=pointer]: "12"
+          - generic [ref=e736] [cursor=pointer]: "13"
+          - generic [ref=e737] [cursor=pointer]: "14"
+          - generic [ref=e738] [cursor=pointer]: "15"
+          - generic [ref=e739] [cursor=pointer]: "16"
+          - generic [ref=e740] [cursor=pointer]: "17"
+          - generic [ref=e741] [cursor=pointer]: "18"
+          - generic [ref=e742] [cursor=pointer]: "19"
+          - generic [ref=e743] [cursor=pointer]: "20"
+          - generic [ref=e744] [cursor=pointer]: "21"
+          - generic [ref=e745] [cursor=pointer]: "22"
+          - generic [ref=e746] [cursor=pointer]: "23"
+          - generic [ref=e747] [cursor=pointer]: "24"
+          - generic [ref=e748] [cursor=pointer]: "25"
+          - generic [ref=e749] [cursor=pointer]: "26"
+          - generic [ref=e750] [cursor=pointer]: "27"
+          - generic [ref=e751] [cursor=pointer]: "28"
+          - generic [ref=e752] [cursor=pointer]: "29"
+          - generic [ref=e753] [cursor=pointer]: "30"
+          - generic [ref=e754] [cursor=pointer]: "31"
+          - generic [ref=e755] [cursor=pointer]: "1"
+          - generic [ref=e756] [cursor=pointer]: "2"
+          - generic [ref=e757] [cursor=pointer]: "3"
+      - generic [ref=e759] [cursor=pointer]: Today
+    - generic [ref=e760]:
+      - generic [ref=e762]:
+        - generic [ref=e763]:
+          - generic [ref=e764]: "16"
+          - generic [ref=e765]: ":"
+          - generic [ref=e766]: "50"
+          - generic [ref=e767]: ":"
+          - generic [ref=e768]: "34"
+        - generic [ref=e769]:
+          - slider [ref=e771] [cursor=pointer]: "16"
+          - slider [ref=e773] [cursor=pointer]: "50"
+          - slider [ref=e775] [cursor=pointer]: "34"
+      - generic [ref=e777] [cursor=pointer]: Today
+    - generic [ref=e778]:
+      - navigation [ref=e780]:
+        - img [ref=e782] [cursor=pointer]
+        - generic [ref=e784] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e785]: "2025"
+        - img [ref=e787] [cursor=pointer]
+      - generic [ref=e790]:
+        - generic [ref=e791]:
+          - generic [ref=e792]: Su
+          - generic [ref=e793]: Mo
+          - generic [ref=e794]: Tu
+          - generic [ref=e795]: We
+          - generic [ref=e796]: Th
+          - generic [ref=e797]: Fr
+          - generic [ref=e798]: Sa
+        - generic [ref=e799]:
+          - generic [ref=e800] [cursor=pointer]: "30"
+          - generic [ref=e801] [cursor=pointer]: "1"
+          - generic [ref=e802] [cursor=pointer]: "2"
+          - generic [ref=e803] [cursor=pointer]: "3"
+          - generic [ref=e804] [cursor=pointer]: "4"
+          - generic [ref=e805] [cursor=pointer]: "5"
+          - generic [ref=e806] [cursor=pointer]: "6"
+          - generic [ref=e807] [cursor=pointer]: "7"
+          - generic [ref=e808] [cursor=pointer]: "8"
+          - generic [ref=e809] [cursor=pointer]: "9"
+          - generic [ref=e810] [cursor=pointer]: "10"
+          - generic [ref=e811] [cursor=pointer]: "11"
+          - generic [ref=e812] [cursor=pointer]: "12"
+          - generic [ref=e813] [cursor=pointer]: "13"
+          - generic [ref=e814] [cursor=pointer]: "14"
+          - generic [ref=e815] [cursor=pointer]: "15"
+          - generic [ref=e816] [cursor=pointer]: "16"
+          - generic [ref=e817] [cursor=pointer]: "17"
+          - generic [ref=e818] [cursor=pointer]: "18"
+          - generic [ref=e819] [cursor=pointer]: "19"
+          - generic [ref=e820] [cursor=pointer]: "20"
+          - generic [ref=e821] [cursor=pointer]: "21"
+          - generic [ref=e822] [cursor=pointer]: "22"
+          - generic [ref=e823] [cursor=pointer]: "23"
+          - generic [ref=e824] [cursor=pointer]: "24"
+          - generic [ref=e825] [cursor=pointer]: "25"
+          - generic [ref=e826] [cursor=pointer]: "26"
+          - generic [ref=e827] [cursor=pointer]: "27"
+          - generic [ref=e828] [cursor=pointer]: "28"
+          - generic [ref=e829] [cursor=pointer]: "29"
+          - generic [ref=e830] [cursor=pointer]: "30"
+          - generic [ref=e831] [cursor=pointer]: "31"
+          - generic [ref=e832] [cursor=pointer]: "1"
+          - generic [ref=e833] [cursor=pointer]: "2"
+          - generic [ref=e834] [cursor=pointer]: "3"
+      - generic [ref=e836] [cursor=pointer]: Today
+    - generic [ref=e837]:
+      - navigation [ref=e839]:
+        - img [ref=e841] [cursor=pointer]
+        - generic [ref=e843] [cursor=pointer]:
+          - text: December,
+          - generic [ref=e844]: "2025"
+        - img [ref=e846] [cursor=pointer]
+      - generic [ref=e849]:
+        - generic [ref=e850]:
+          - generic [ref=e851]: Su
+          - generic [ref=e852]: Mo
+          - generic [ref=e853]: Tu
+          - generic [ref=e854]: We
+          - generic [ref=e855]: Th
+          - generic [ref=e856]: Fr
+          - generic [ref=e857]: Sa
+        - generic [ref=e858]:
+          - generic [ref=e859] [cursor=pointer]: "30"
+          - generic [ref=e860] [cursor=pointer]: "1"
+          - generic [ref=e861] [cursor=pointer]: "2"
+          - generic [ref=e862] [cursor=pointer]: "3"
+          - generic [ref=e863] [cursor=pointer]: "4"
+          - generic [ref=e864] [cursor=pointer]: "5"
+          - generic [ref=e865] [cursor=pointer]: "6"
+          - generic [ref=e866] [cursor=pointer]: "7"
+          - generic [ref=e867] [cursor=pointer]: "8"
+          - generic [ref=e868] [cursor=pointer]: "9"
+          - generic [ref=e869] [cursor=pointer]: "10"
+          - generic [ref=e870] [cursor=pointer]: "11"
+          - generic [ref=e871] [cursor=pointer]: "12"
+          - generic [ref=e872] [cursor=pointer]: "13"
+          - generic [ref=e873] [cursor=pointer]: "14"
+          - generic [ref=e874] [cursor=pointer]: "15"
+          - generic [ref=e875] [cursor=pointer]: "16"
+          - generic [ref=e876] [cursor=pointer]: "17"
+          - generic [ref=e877] [cursor=pointer]: "18"
+          - generic [ref=e878] [cursor=pointer]: "19"
+          - generic [ref=e879] [cursor=pointer]: "20"
+          - generic [ref=e880] [cursor=pointer]: "21"
+          - generic [ref=e881] [cursor=pointer]: "22"
+          - generic [ref=e882] [cursor=pointer]: "23"
+          - generic [ref=e883] [cursor=pointer]: "24"
+          - generic [ref=e884] [cursor=pointer]: "25"
+          - generic [ref=e885] [cursor=pointer]: "26"
+          - generic [ref=e886] [cursor=pointer]: "27"
+          - generic [ref=e887] [cursor=pointer]: "28"
+          - generic [ref=e888] [cursor=pointer]: "29"
+          - generic [ref=e889] [cursor=pointer]: "30"
+          - generic [ref=e890] [cursor=pointer]: "31"
+          - generic [ref=e891] [cursor=pointer]: "1"
+          - generic [ref=e892] [cursor=pointer]: "2"
+          - generic [ref=e893] [cursor=pointer]: "3"
+      - generic [ref=e895] [cursor=pointer]: Today
+  - dialog [active] [ref=e897]:
+    - generic [ref=e898]:
+      - generic [ref=e899]:
+        - heading "Success" [level=4] [ref=e902]
+        - button [ref=e904] [cursor=pointer]:
+          - img [ref=e905]
+      - generic [ref=e909]:
+        - text: Delivery Note
+        - link "MAT-DN-2025-00039" [ref=e910] [cursor=pointer]:
+          - /url: /app/delivery-note/MAT-DN-2025-00039
+        - text: created successfully with 3 items
+```

@@ -66,28 +66,80 @@ function apply_value_add_card(frm, card_name) {
             if (r.message) {
                 let card = r.message;
                 let invoice_total = frm.doc.grand_total || 0;
-                
-                // Warn if balance is insufficient
-                if (card.current_balance < invoice_total) {
-                    frappe.msgprint({
-                        title: __('Insufficient Balance'),
-                        message: __('Card balance ({0}) is less than invoice total ({1}). You will need an additional payment method.', 
-                            [format_currency(card.current_balance), format_currency(invoice_total)]),
-                        indicator: 'orange'
-                    });
-                }
-                
+                let balance_sufficient = card.current_balance >= invoice_total;
+
                 // Store card in custom field
                 frm.set_value('value_add_card', card_name);
-                
-                // Show success message with card details
-                frappe.msgprint({
-                    title: __('Value Add Card Applied'),
-                    message: __('Card: {0}<br>Current Balance: {1}<br>Status: {2}', 
-                        [card.name, format_currency(card.current_balance), card.status]),
-                    indicator: 'green'
-                });
-                
+
+                // Handle POS mode based on whether balance is sufficient
+                if (balance_sufficient) {
+                    // VAC covers full amount - disable POS mode
+                    if (frm.doc.is_pos) {
+                        frm.set_value('is_pos', 0);
+                        frm.clear_table('payments');
+                        frm.refresh_field('payments');
+                        console.log('Disabled POS mode - VAC covers full amount');
+                    }
+
+                    frappe.msgprint({
+                        title: __('Value Add Card Applied'),
+                        message: __('Card: {0}<br>Current Balance: {1}<br>Status: {2}<br><br><strong>Note:</strong> Card balance is sufficient. POS payment mode has been disabled.',
+                            [card.name, format_currency(card.current_balance), card.status]),
+                        indicator: 'green'
+                    });
+                } else {
+                    // VAC balance insufficient - keep POS mode enabled for additional payment
+                    let shortfall = invoice_total - card.current_balance;
+
+                    // Ensure POS mode is enabled
+                    if (!frm.doc.is_pos) {
+                        frm.set_value('is_pos', 1);
+                    }
+
+                    // Store shortfall for later use
+                    frm._vac_shortfall = shortfall;
+
+                    // Set the payment amount to the shortfall only (after a delay to let POS Profile load)
+                    setTimeout(() => {
+                        if (frm.doc.payments && frm.doc.payments.length > 0) {
+                            frm.doc.payments.forEach((payment) => {
+                                if (payment.mode_of_payment !== "Value Add Card") {
+                                    frappe.model.set_value(payment.doctype, payment.name, 'amount', shortfall);
+                                }
+                            });
+                            frm.refresh_field('payments');
+                        }
+                    }, 500);
+
+                    // Remind user to check POS profile
+                    frappe.msgprint({
+                        title: __('Additional Payment Required'),
+                        message: __('Card: {0}<br>Current Balance: {1}<br>Invoice Total: {2}<br>Shortfall: {3}<br><br><strong>Important:</strong> Please ensure your POS Profile is selected to add the additional payment method. The Value Add Card will cover {4} and you need to collect {5} using another payment method.',
+                            [
+                                card.name,
+                                format_currency(card.current_balance),
+                                format_currency(invoice_total),
+                                format_currency(shortfall),
+                                format_currency(card.current_balance),
+                                format_currency(shortfall)
+                            ]),
+                        indicator: 'orange'
+                    });
+
+                    // Highlight the POS Profile field
+                    if (!frm.doc.pos_profile) {
+                        frappe.utils.play_sound('error');
+                        frm.scroll_to_field('pos_profile');
+                        setTimeout(() => {
+                            frappe.msgprint({
+                                title: __('Action Required'),
+                                message: __('Please select a POS Profile to add the additional payment method'),
+                                indicator: 'red'
+                            });
+                        }, 1500);
+                    }
+                }
+
                 show_card_info(frm);
             }
         }

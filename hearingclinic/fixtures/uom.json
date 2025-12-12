@@ -2136,15 +2136,6 @@
   "docstatus": 0,
   "doctype": "UOM",
   "enabled": 1,
-  "modified": "2025-11-30 15:13:04.972179",
-  "must_be_whole_number": 0,
-  "name": "Pcs",
-  "uom_name": "Pcs"
- },
- {
-  "docstatus": 0,
-  "doctype": "UOM",
-  "enabled": 1,
   "modified": "2025-10-20 20:19:53.630740",
   "must_be_whole_number": 1,
   "name": "Set",
@@ -2158,5 +2149,14 @@
   "must_be_whole_number": 1,
   "name": "Nos",
   "uom_name": "Nos"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "UOM",
+  "enabled": 1,
+  "modified": "2025-11-30 15:13:04.972179",
+  "must_be_whole_number": 0,
+  "name": "Pcs",
+  "uom_name": "Pcs"
  }
 ]

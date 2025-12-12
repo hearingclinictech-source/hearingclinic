@@ -27,7 +27,7 @@
   "income_account": null,
   "item_groups": [],
   "letter_head": null,
-  "modified": "2025-10-24 19:26:50.264085",
+  "modified": "2025-12-01 00:00:00",
   "name": "Cash",
   "payments": [
    {
@@ -192,7 +192,7 @@
   "income_account": null,
   "item_groups": [],
   "letter_head": "Hearing Clinic",
-  "modified": "2025-11-30 14:58:41.673466",
+  "modified": "2025-10-24 19:25:00",
   "name": "Bank Transfer",
   "payments": [
    {

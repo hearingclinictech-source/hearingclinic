@@ -123,12 +123,15 @@ def get_payment_history(invoice_name):
     # 1. Get POS payments (from the invoice itself)
     if invoice.payments:
         for payment in invoice.payments:
+            # Determine payment type - special handling for Value Add Card
+            payment_type = "Value Add Card" if payment.mode_of_payment == "Value Add Card" else "POS Payment"
+
             payments.append({
                 "date": formatdate(invoice.posting_date),
                 "reference": invoice.name,
                 "mode_of_payment": payment.mode_of_payment,
                 "amount": flt(payment.amount),
-                "type": "POS Payment"
+                "type": payment_type
             })
     
     # 2. Get Payment Entries linked to this invoice

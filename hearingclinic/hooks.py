@@ -18,6 +18,7 @@ doctype_js = {
            "public/js/Customer/customer_info_maintenance.js",                 
        ],
        "Sales Invoice": [
+           "public/js/Sales_Invoice/fix_pos_profile_payment.js",
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
            "public/js/Sales_Invoice/apply_value_add_card.js",
@@ -63,6 +64,7 @@ fixtures = [
     "Brand",
     "State",
     "Terms and Conditions",
+    "Relationship",
     {"doctype": "Website Settings"},
     {"doctype": "Website Script"},
     {

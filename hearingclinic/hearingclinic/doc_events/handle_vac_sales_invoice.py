@@ -36,9 +36,9 @@ def on_submit(doc, method):
         else:
             doc.db_set("status", "Partly Paid", update_modified=False)
             doc.db_set("outstanding_amount", outstanding, update_modified=False)
-        
-        if doc.is_pos:
-            add_vac_to_pos_payments(doc, amount_to_deduct)
+
+        # Always add VAC payment to payments table (regardless of is_pos status)
+        add_vac_to_pos_payments(doc, amount_to_deduct)
         
         frappe.msgprint(
             f"Value Add Card charged: {frappe.format_value(amount_to_deduct, dict(fieldtype='Currency'))}. "
@@ -72,12 +72,12 @@ def on_cancel(doc, method):
                 f"New balance: {frappe.format_value(result['new_balance'], dict(fieldtype='Currency'))}",
                 indicator="blue"
             )
-        
-        if doc.is_pos:
-            frappe.db.delete("Sales Invoice Payment", {
-                "parent": doc.name,
-                "mode_of_payment": "Value Add Card"
-            })
+
+        # Always remove VAC payment entry (regardless of is_pos status)
+        frappe.db.delete("Sales Invoice Payment", {
+            "parent": doc.name,
+            "mode_of_payment": "Value Add Card"
+        })
             
     except Exception as e:
         frappe.log_error(f"Error cancelling transaction: {str(e)}")

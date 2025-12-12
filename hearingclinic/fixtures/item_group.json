@@ -109,11 +109,11 @@
   "image": null,
   "is_group": 0,
   "item_group_defaults": [],
-  "item_group_name": "Hearing Aids",
-  "modified": "2025-10-21 14:05:49.282671",
-  "name": "Hearing Aids",
-  "old_parent": "Products",
-  "parent_item_group": "Products",
+  "item_group_name": "Warranty",
+  "modified": "2025-11-06 09:40:12.521593",
+  "name": "Warranty",
+  "old_parent": "Services",
+  "parent_item_group": "Services",
   "taxes": []
  },
  {
@@ -122,11 +122,11 @@
   "image": null,
   "is_group": 0,
   "item_group_defaults": [],
-  "item_group_name": "Warranty",
-  "modified": "2025-11-06 09:40:12.521593",
-  "name": "Warranty",
-  "old_parent": "Services",
-  "parent_item_group": "Services",
+  "item_group_name": "Hearing Aids",
+  "modified": "2025-10-21 14:05:49.282671",
+  "name": "Hearing Aids",
+  "old_parent": "Products",
+  "parent_item_group": "Products",
   "taxes": []
  },
  {

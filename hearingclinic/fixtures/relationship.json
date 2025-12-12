@@ -1,0 +1,100 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.468789",
+  "name": "Brother",
+  "relationship_name": "Brother"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.488734",
+  "name": "Daughter",
+  "relationship_name": "Daughter"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.495937",
+  "name": "Daughter in Law",
+  "relationship_name": "Daughter in Law"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.502918",
+  "name": "Father",
+  "relationship_name": "Father"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.509855",
+  "name": "Friend",
+  "relationship_name": "Friend"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.516762",
+  "name": "Landline",
+  "relationship_name": "Landline"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.524247",
+  "name": "Mother",
+  "relationship_name": "Mother"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.535508",
+  "name": "Other",
+  "relationship_name": "Other"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.549177",
+  "name": "Relative",
+  "relationship_name": "Relative"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.555428",
+  "name": "Sister",
+  "relationship_name": "Sister"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.562096",
+  "name": "Son",
+  "relationship_name": "Son"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.569102",
+  "name": "Son in Law",
+  "relationship_name": "Son in Law"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.575527",
+  "name": "Spouse",
+  "relationship_name": "Spouse"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Relationship",
+  "modified": "2025-12-10 11:51:24.542476",
+  "name": "Patient (self)",
+  "relationship_name": "Patient (self)"
+ }
+]

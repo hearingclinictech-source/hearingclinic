@@ -214,9 +214,15 @@ function render_payment_history_table(frm, data) {
             } else {
                 ref_link = `<a href="/app/sales-invoice/${payment.reference}" target="_blank">${payment.reference}</a>`;
             }
-            
-            let badge_class = payment.type === 'POS Payment' ? 'primary' : 'success';
-            
+
+            // Determine badge color based on payment type
+            let badge_class = 'primary'; // Default for POS Payment
+            if (payment.type === 'Payment Entry') {
+                badge_class = 'success';
+            } else if (payment.type === 'Value Add Card') {
+                badge_class = 'warning'; // Yellow/orange badge for VAC
+            }
+
             html += `
                 <tr>
                     <td>${payment.date}</td>

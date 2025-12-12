@@ -1,0 +1,193 @@
+<!-- ! MUST BE COPIED IN THE DIFFERENT BLOCKS ON THE CUSTOM HTML BLOCK EDITOR-->
+<html>
+<style>
+.tutorial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 15px;
+}
+
+.tutorial-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.tutorial-card.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.tutorial-card h4 {
+    margin-top: 0;
+    padding-bottom: 8px;
+}
+
+.tutorial-links {
+    margin-top: 12px;
+}
+
+.tutorial-links a {
+    display: block;
+    padding: 8px 0;
+    text-decoration: none;
+    color: #333;
+}
+
+.tutorial-links a:hover {
+    color: #2490ef;
+}
+
+/* Disabled link styling */
+a.disabled-link {
+    color: #bfbfbf !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: none;
+}
+
+a.disabled-link:hover {
+    color: #bfbfbf !important;
+}
+
+/* Topic-specific colors */
+.getting-started h4 {
+    color: #2490ef;
+    border-bottom: 2px solid #2490ef;
+}
+
+.customer-management h4 {
+    color: #28a745;
+    border-bottom: 2px solid #28a745;
+}
+
+.selling-products h4 {
+    color: #ff6b6b;
+    border-bottom: 2px solid #ff6b6b;
+}
+
+.maintenance-service h4 {
+    color: #9b59b6;
+    border-bottom: 2px solid #9b59b6;
+}
+
+.vac-management h4 {
+    color: #e67e22;
+    border-bottom: 2px solid #e67e22;
+}
+
+.reports-analytics h4 {
+    color: #16a085;
+    border-bottom: 2px solid #16a085;
+}
+
+</style>
+
+<div class="tutorial-grid">
+    
+    <!-- Column 1: Getting Started - ENABLED -->
+    <div class="tutorial-card getting-started">
+        <h4>🚀 Getting Started</h4>
+        <div class="tutorial-links">
+            <a href="https://youtu.be/eJvp8KPMCMI" target="_blank">
+                ▶️ Moving around
+            </a>
+            <a href="https://youtu.be/VfBSloybazc" target="_blank">
+                ▶️ Where did the Excel data go?
+            </a>
+        </div>
+    </div>
+    
+    <!-- Column 2: Customer Management - ENABLED -->
+    <div class="tutorial-card customer-management">
+        <h4>🔧 Customer Management</h4>
+        <div class="tutorial-links">
+            <a href="https://youtu.be/jf0c86uFHME" target="_blank">
+                ▶️ Creating a Customer
+            </a>
+            <a href="https://youtu.be/a8TbZUu-9xI" target="_blank">
+                ▶️ Creating a lead
+            </a>
+            <a href="https://youtu.be/VDCMtFWmbzE" target="_blank">
+                ▶️ Convert Lead to Customer
+            </a>
+            <a href="https://youtu.be/olGnJB9AiMg" target="_blank">
+                ▶️ Disable/Delete customer
+            </a>
+        </div>
+    </div>
+    
+    <!-- Column 3: Selling Products - ENABLED  -->
+    <div class="tutorial-card selling-products">
+        <h4>💳 Selling your Products</h4>
+        <div class="tutorial-links">
+            <a href="https://youtu.be/tTscikOfwZE" target="_blank">
+                ▶️ Sell Hearing Aid Package
+            </a>
+            <a href="https://youtu.be/tTscikOfwZE" target="_blank">
+                ▶️ Handover Hearing Aid to Customer
+            </a>
+            <a href="https://youtu.be/MO8-BCE5XcU" target="_blank">
+                ▶️ Partial Payments (Deposits)
+            </a>
+            <a class="disabled-link" href="https://www.youtube.com/watch?v=VIDEO_ID_10" target="_blank">
+                ▶️ Use Value Add Card in Sales
+            </a>
+            <a class="disabled-link" href="https://www.youtube.com/watch?v=VIDEO_ID_12" target="_blank">
+                ▶️ Manage Returns
+            </a>
+        </div>
+    </div>
+
+    <!-- Column 4: Maintenance & Service - DISABLED -->
+    <div class="tutorial-card maintenance-service disabled">
+        <h4>🛠️ Maintenance & Service</h4>
+        <div class="tutorial-links">
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_11" target="_blank">
+                ▶️ Sell Warranty Extension
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_13" target="_blank">
+                ▶️ Schedule Maintenance Visit
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_14" target="_blank">
+                ▶️ Complete Maintenance Visit
+            </a>
+        </div>
+    </div>
+
+    <!-- Column 5: VAC Management - DISABLED -->
+    <div class="tutorial-card vac-management disabled">
+        <h4>💰 VAC Card Management</h4>
+        <div class="tutorial-links">
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_17" target="_blank">
+                ▶️ Issue New VAC Card
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_19" target="_blank">
+                ▶️ Check VAC Balance
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_20" target="_blank">
+                ▶️ VAC Transaction History
+            </a>
+        </div>
+    </div>
+
+    <!-- Column 6: Reports & Analytics - DISABLED -->
+    <div class="tutorial-card reports-analytics disabled">
+        <h4>📊 Reports & Analytics</h4>
+        <div class="tutorial-links">
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_21" target="_blank">
+                ▶️ Sales Reports
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_22" target="_blank">
+                ▶️ Customer Analytics
+            </a>
+            <a href="https://www.youtube.com/watch?v=VIDEO_ID_23" target="_blank">
+                ▶️ Maintenance Due Report
+            </a>
+        </div>
+    </div>
+    
+</div>
+
+</html>

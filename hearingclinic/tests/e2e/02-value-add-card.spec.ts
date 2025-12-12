@@ -128,9 +128,10 @@ test.describe('Value Add Card Management', () => {
     // Note: In real scenario, this would be done via Sales Invoice
     // For now, we'll add a transaction row directly
     await frappe.addChildRow('card_transactions');
-    await frappe.setChildValue('card_transactions', 1, 'transaction_type', 'Purchase');
+    // transaction_type field is not in the dialog - it's auto-set
     await frappe.setChildValue('card_transactions', 1, 'amount', '500');
     await frappe.setChildValue('card_transactions', 1, 'remarks', 'E2E Test Purchase');
+    await frappe.closeChildDialog(); // Close the child table dialog
 
     // Save to trigger balance update
     await frappe.saveForm();
@@ -158,9 +159,10 @@ test.describe('Value Add Card Management', () => {
 
     // Use entire balance (160)
     await frappe.addChildRow('card_transactions');
-    await frappe.setChildValue('card_transactions', 1, 'transaction_type', 'Purchase');
+    // transaction_type field is not in the dialog - it's auto-set
     await frappe.setChildValue('card_transactions', 1, 'amount', '160');
     await frappe.setChildValue('card_transactions', 1, 'remarks', 'E2E Test Full Purchase');
+    await frappe.closeChildDialog(); // Close the child table dialog
 
     // Save to trigger balance update
     await frappe.saveForm();

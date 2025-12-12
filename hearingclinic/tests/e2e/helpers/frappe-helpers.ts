@@ -267,25 +267,104 @@ export class FrappeHelper {
    * Works with both editable fields (input/textarea) and read-only display fields
    */
   async getFieldValue(fieldname: string): Promise<string> {
-    // Try to get value from Frappe's internal field object first (most reliable for formatted fields)
-    const fieldValue = await this.page.evaluate((fieldname: string) => {
-      // @ts-ignore - frappe.cur_frm is available on form pages
-      if (typeof frappe !== 'undefined' && frappe.cur_frm && frappe.cur_frm.doc) {
-        return frappe.cur_frm.doc[fieldname];
-      }
-      return null;
-    }, fieldname);
+    // Try to close any dialogs/modals that might be blocking form access
+    try {
+      // Close any frappe dialogs
+      await this.page.evaluate(() => {
+        // @ts-ignore
+        if (typeof cur_dialog !== 'undefined' && cur_dialog) {
+          // @ts-ignore
+          cur_dialog.hide();
+        }
+      });
+      await this.page.waitForTimeout(300);
+    } catch (e) {
+      // Ignore any errors
+    }
 
-    if (fieldValue !== null && fieldValue !== undefined) {
-      return String(fieldValue);
+    // Try to close any autocomplete dropdowns that might be open
+    try {
+      await this.page.keyboard.press('Escape');
+      await this.page.waitForTimeout(200);
+    } catch (e) {
+      // Ignore any errors
+    }
+
+    // Wait for frappe.cur_frm to be fully initialized
+    // This is critical for newly created/navigated forms
+    await this.page.waitForFunction(
+      () => {
+        // @ts-ignore
+        return typeof frappe !== 'undefined' &&
+               frappe.cur_frm &&
+               frappe.cur_frm.doc &&
+               frappe.cur_frm.doc.name;
+      },
+      { timeout: 5000 }
+    ).catch(() => {
+      console.log('[getFieldValue] Warning: frappe.cur_frm may not be fully initialized');
+    });
+
+    // Try to get value from Frappe's internal document object (most reliable)
+    // Retry up to 3 times with increasing delays if the field is null
+    // This handles cases where the form is still loading
+    let fieldValue: string | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) {
+        await this.page.waitForTimeout(1000); // Wait before retry
+      }
+
+      fieldValue = await this.page.evaluate((fieldname: string) => {
+        // @ts-ignore - frappe.cur_frm is available on form pages
+        if (typeof frappe !== 'undefined' && frappe.cur_frm && frappe.cur_frm.doc) {
+          const value = frappe.cur_frm.doc[fieldname];
+
+          // Also log the entire doc to see what fields are available
+          const docKeys = Object.keys(frappe.cur_frm.doc);
+          console.log(`[getFieldValue] Doc has ${docKeys.length} fields:`, docKeys.slice(0, 20));
+          console.log(`[getFieldValue] Field: ${fieldname}, Value from doc:`, value, 'Type:', typeof value);
+
+          // Return the raw value from the document
+          if (value !== null && value !== undefined) {
+            return String(value);
+          }
+        }
+        return null;
+      }, fieldname);
+
+      console.log(`[getFieldValue] Attempt ${attempt + 1}: Returned value for ${fieldname}:`, fieldValue);
+
+      if (fieldValue !== null && fieldValue !== undefined) {
+        return fieldValue;
+      }
+    }
+
+    // Fallback: Try select dropdown (for select fields where doc value might not be set yet)
+    const selectField = this.page.locator(`[data-fieldname="${fieldname}"] select`).first();
+    const hasSelect = await selectField.isVisible({ timeout: 1000 }).catch(() => false);
+
+    if (hasSelect) {
+      const selectedValue = await selectField.inputValue();
+      return selectedValue;
     }
 
     // Fallback: Try input/textarea (editable fields)
-    const inputField = this.page.locator(`[data-fieldname="${fieldname}"] input, [data-fieldname="${fieldname}"] textarea`).first();
+    // For link fields, use input.input-with-feedback (Frappe's standard class for link fields)
+    const inputField = this.page.locator(`[data-fieldname="${fieldname}"] input.input-with-feedback, [data-fieldname="${fieldname}"] input[data-doctype], [data-fieldname="${fieldname}"] input, [data-fieldname="${fieldname}"] textarea`).first();
     const hasInput = await inputField.isVisible({ timeout: 2000 }).catch(() => false);
 
     if (hasInput) {
-      return await inputField.inputValue();
+      let inputValue = await inputField.inputValue();
+      console.log(`[getFieldValue] Got value from input element for ${fieldname}:`, inputValue);
+
+      // Remove thousand separators (commas) from numeric/currency fields
+      // This converts "1,600.00" to "1600.00" for proper parsing
+      if (inputValue && /^[\d,]+\.?\d*$/.test(inputValue)) {
+        inputValue = inputValue.replace(/,/g, '');
+        console.log(`[getFieldValue] Cleaned numeric value: ${inputValue}`);
+      }
+
+      return inputValue;
     }
 
     // Otherwise, try to get text content from display field (read-only fields)
@@ -293,15 +372,33 @@ export class FrappeHelper {
     const hasDisplayValue = await displayValue.isVisible({ timeout: 1000 }).catch(() => false);
 
     if (hasDisplayValue) {
-      const textContent = await displayValue.textContent();
-      return textContent?.trim() || '';
+      let textContent = await displayValue.textContent();
+      textContent = textContent?.trim() || '';
+      console.log(`[getFieldValue] Got value from display field for ${fieldname}:`, textContent);
+
+      // Clean currency formatting from display fields (e.g., "RM 1,600.00" -> "1600.00")
+      if (textContent && /^[A-Z]{2,3}\s+[\d,]+\.?\d*$/.test(textContent)) {
+        textContent = textContent.replace(/^[A-Z]{2,3}\s+/, '').replace(/,/g, '');
+        console.log(`[getFieldValue] Cleaned currency display value: ${textContent}`);
+      }
+
+      return textContent;
     }
 
-    // Fallback: get all text content
-    const displayField = this.page.locator(`[data-fieldname="${fieldname}"]`).first();
-    const textContent = await displayField.textContent();
-    const cleanedText = textContent?.replace(/.*?([A-Z0-9-]+)\s*$/s, '$1').trim() || '';
-    return cleanedText;
+    // Final fallback: Try to get the input value directly from any input element in the field
+    // This is the last resort and should work for most editable fields
+    const anyInput = this.page.locator(`[data-fieldname="${fieldname}"] input, [data-fieldname="${fieldname}"] textarea`).first();
+    const hasAnyInput = await anyInput.isVisible({ timeout: 1000 }).catch(() => false);
+
+    if (hasAnyInput) {
+      const anyInputValue = await anyInput.inputValue();
+      console.log(`[getFieldValue] Got value from any input for ${fieldname}:`, anyInputValue);
+      return anyInputValue;
+    }
+
+    // Absolute last resort: return empty string instead of grabbing all text which may include dropdown content
+    console.log(`[getFieldValue] Could not get value for ${fieldname}, returning empty string`);
+    return '';
   }
 
   /**
@@ -324,8 +421,8 @@ export class FrappeHelper {
       await this.page.waitForSelector('.indicator-pill.green', { timeout: 10000 });
     }
 
-    // Give the form a moment to fully load after save
-    await this.page.waitForTimeout(1000);
+    // Give the form a moment to fully load after save and for calculated fields to update
+    await this.page.waitForTimeout(2000);
 
     // Dismiss any dialogs that may appear after save (like duplicate name warnings)
     const dialog = this.page.locator('.modal-dialog:visible, .msgprint:visible');
@@ -351,7 +448,24 @@ export class FrappeHelper {
    */
   async submitForm() {
     await this.page.click('.primary-action:has-text("Submit")');
-    await this.page.waitForSelector('.indicator-pill.blue', { timeout: 10000 });
+
+    // Wait for and handle the confirmation dialog if it appears
+    // ERPNext shows a "Permanently Submit..." confirmation dialog
+    await this.page.waitForTimeout(1000);
+
+    const confirmDialog = this.page.locator('dialog:has-text("Confirm"), .modal-dialog:has-text("Confirm")').first();
+    const hasDialog = await confirmDialog.isVisible({ timeout: 2000 }).catch(() => false);
+
+    if (hasDialog) {
+      console.log('Submit confirmation dialog detected, clicking Yes');
+      // Click "Yes" button to confirm submission
+      await this.page.click('button:has-text("Yes")');
+      await this.page.waitForTimeout(500);
+    }
+
+    // Wait for blue (Submitted) or green (Paid/Completed) indicator
+    // POS invoices go directly to "Paid" status instead of "Submitted"
+    await this.page.waitForSelector('.indicator-pill.blue, .indicator-pill.green', { timeout: 10000 });
   }
 
   /**
@@ -532,21 +646,206 @@ export class FrappeHelper {
   }
 
   /**
+   * Select an item from a specific Item Group in a child table
+   * Opens the item selection dialog and filters by Item Group
+   */
+  async selectItemFromGroup(tablename: string, itemGroup: string) {
+    // Click "Add Row" button - ERPNext opens a dialog for child table editing
+    const addButton = this.page.locator(`[data-fieldname="${tablename}"] .grid-add-row, [data-fieldname="${tablename}"] button:has-text("Add Row")`).first();
+    await addButton.click();
+    await this.page.waitForTimeout(1500);
+
+    // Now we need to fill the item_code field
+    // First check if there's a grid form (dialog-based editing)
+    const gridForm = this.page.locator('[data-fieldtype="Table"] .form-in-grid, .modal-dialog').first();
+    const hasGridForm = await gridForm.isVisible({ timeout: 500 }).catch(() => false);
+
+    if (hasGridForm) {
+      // Click on the item_code link field to open autocomplete
+      const itemCodeField = this.page.locator('.form-in-grid [data-fieldname="item_code"] input, .modal-dialog [data-fieldname="item_code"] input').first();
+      await itemCodeField.click();
+      await this.page.waitForTimeout(500);
+
+      // Check if there's an advanced search link/button
+      const advancedSearch = this.page.locator('.awesomplete button[title="Advanced Search"], .link-field .search-icon').first();
+      const hasAdvancedSearch = await advancedSearch.isVisible({ timeout: 1000 }).catch(() => false);
+
+      if (hasAdvancedSearch) {
+        // Click advanced search to open the item selector dialog
+        await advancedSearch.click();
+        await this.page.waitForTimeout(1000);
+
+        // Now we should have a search dialog - filter by Item Group
+        const itemGroupFilter = this.page.locator('.modal-dialog [data-fieldname="item_group"] input').first();
+        const hasItemGroupFilter = await itemGroupFilter.isVisible({ timeout: 2000 }).catch(() => false);
+
+        if (hasItemGroupFilter) {
+          await itemGroupFilter.fill(itemGroup);
+          await this.page.waitForTimeout(500);
+          await this.page.keyboard.press('Enter');
+          await this.page.waitForTimeout(1000);
+
+          // Select the first item from the filtered results
+          const firstResult = this.page.locator('.modal-dialog .result-row, .modal-dialog .list-row').first();
+          const hasResults = await firstResult.isVisible({ timeout: 2000 }).catch(() => false);
+
+          if (hasResults) {
+            await firstResult.click();
+            await this.page.waitForTimeout(1000);
+            return;
+          }
+        }
+      }
+
+      // Fallback: Just type the item group name in the item_code field
+      // and select the first match
+      console.log(`Advanced search not available, using simple autocomplete for ${itemGroup}`);
+      await itemCodeField.fill(itemGroup);
+      await this.page.waitForTimeout(1000);
+      await this.page.keyboard.press('ArrowDown');
+      await this.page.keyboard.press('Enter');
+      await this.page.waitForTimeout(1500);
+    }
+  }
+
+  /**
    * Add a row to a child table
    */
   async addChildRow(tablename: string) {
-    await this.page.click(`[data-fieldname="${tablename}"] .grid-add-row`);
-    await this.page.waitForTimeout(500);
+    // Click "Add Row" button - ERPNext opens a dialog for child table editing
+    const addButton = this.page.locator(`[data-fieldname="${tablename}"] .grid-add-row, [data-fieldname="${tablename}"] button:has-text("Add Row")`).first();
+    await addButton.click();
+
+    // Wait for the editing dialog to appear
+    // ERPNext child table dialogs appear in a grid-form-container overlay
+    await this.page.waitForTimeout(1500);
+
+    // Try different selectors for child table editing dialog
+    const dialogSelectors = [
+      '.grid-form-container',  // ERPNext grid form overlay
+      '.modal-dialog',
+      '.frappe-dialog',
+      '[data-fieldtype="Table"] .form-in-grid'
+    ];
+
+    let dialogFound = false;
+    for (const selector of dialogSelectors) {
+      const hasDialog = await this.page.locator(selector).isVisible().catch(() => false);
+      if (hasDialog) {
+        console.log(`Child table edit dialog opened (selector: ${selector})`);
+        dialogFound = true;
+        break;
+      }
+    }
+
+    if (!dialogFound) {
+      console.log('No dialog detected, assuming inline grid editing');
+    }
   }
 
   /**
    * Set value in a child table row
+   * Works with both dialog-based editing (ERPNext v14+) and inline grid editing
    */
   async setChildValue(tablename: string, rowIndex: number, fieldname: string, value: string) {
-    const field = this.page.locator(
-      `[data-fieldname="${tablename}"] .grid-row[data-idx="${rowIndex}"] [data-fieldname="${fieldname}"] input`
-    );
-    await field.fill(value);
+    // First check if there's an open child table editing form
+    // ERPNext uses .form-in-grid for child table row editing
+    const gridForm = this.page.locator('[data-fieldtype="Table"] .form-in-grid, .modal-dialog').first();
+    const hasGridForm = await gridForm.isVisible({ timeout: 500 }).catch(() => false);
+
+    console.log(`[setChildValue] Setting ${fieldname} = ${value}, hasGridForm: ${hasGridForm}`);
+
+    if (hasGridForm) {
+      // Use grid form field - check for both regular input and select fields
+      const selectField = this.page.locator(`.form-in-grid [data-fieldname="${fieldname}"] select, .modal-dialog [data-fieldname="${fieldname}"] select`).first();
+      const hasSelect = await selectField.isVisible({ timeout: 2000 }).catch(() => false);
+
+      if (hasSelect) {
+        // It's a select field
+        await selectField.selectOption(value);
+        return;
+      }
+
+      // Otherwise it's an input or textarea field
+      const field = this.page.locator(`.form-in-grid [data-fieldname="${fieldname}"] input, .form-in-grid [data-fieldname="${fieldname}"] textarea, .modal-dialog [data-fieldname="${fieldname}"] input, .modal-dialog [data-fieldname="${fieldname}"] textarea`).first();
+      const hasInput = await field.isVisible({ timeout: 3000 }).catch(() => false);
+
+      if (hasInput) {
+        await field.fill(value);
+        await field.blur();
+        return;
+      }
+
+      // Field not found in grid form - it might be hidden or read-only
+      console.log(`Field ${fieldname} not found in child table grid form (checked input and textarea), skipping`);
+    } else {
+      // Fallback: inline grid editing (older ERPNext or specific configurations)
+      const field = this.page.locator(
+        `[data-fieldname="${tablename}"] .grid-row[data-idx="${rowIndex}"] [data-fieldname="${fieldname}"] input`
+      );
+      await field.fill(value);
+    }
+  }
+
+  /**
+   * Close the child table edit dialog and save the row
+   */
+  async closeChildDialog() {
+    const gridForm = this.page.locator('[data-fieldtype="Table"] .form-in-grid, .modal-dialog').first();
+    const hasGridForm = await gridForm.isVisible().catch(() => false);
+
+    console.log(`[closeChildDialog] Grid form visible: ${hasGridForm}`);
+
+    if (hasGridForm) {
+      // Just press Escape to close and save the current row
+      // Note: "Insert Below" button creates a new empty row which causes validation errors
+      console.log('[closeChildDialog] Pressing Escape to close grid form');
+      await this.page.keyboard.press('Escape');
+      await this.page.waitForTimeout(500);
+
+      // Verify it's actually closed
+      const stillOpen = await this.page.locator('[data-fieldtype="Table"] .form-in-grid').isVisible().catch(() => false);
+      if (stillOpen) {
+        console.log('[closeChildDialog] Grid form still open after Escape, trying again');
+        await this.page.keyboard.press('Escape');
+        await this.page.waitForTimeout(500);
+      } else {
+        console.log('[closeChildDialog] Grid form closed successfully');
+      }
+    } else {
+      console.log('[closeChildDialog] No grid form to close');
+    }
+  }
+
+  /**
+   * Delete empty rows from a child table (rows with no item_code/qty)
+   * Useful for Sales Invoice items table where an empty row is pre-added
+   */
+  async deleteEmptyChildRows(tablename: string) {
+    // Use page.evaluate to delete empty rows via frappe API
+    await this.page.evaluate((tablename: string) => {
+      // @ts-ignore
+      if (typeof frappe !== 'undefined' && frappe.cur_frm) {
+        const table = frappe.cur_frm.fields_dict[tablename];
+        if (table && table.grid) {
+          // Get all rows
+          const rows = table.grid.grid_rows || [];
+
+          // Delete empty rows (rows with no item_code)
+          rows.forEach((row: any) => {
+            if (row.doc && (!row.doc.item_code || row.doc.item_code === '')) {
+              table.grid.grid_rows_by_docname[row.doc.name].remove();
+            }
+          });
+
+          // Refresh the grid
+          table.grid.refresh();
+        }
+      }
+    }, tablename);
+
+    await this.page.waitForTimeout(500);
+    console.log(`[deleteEmptyChildRows] Deleted empty rows from ${tablename}`);
   }
 
   /**
