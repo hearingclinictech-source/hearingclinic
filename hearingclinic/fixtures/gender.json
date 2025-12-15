@@ -1,0 +1,23 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Gender",
+  "gender": "Other",
+  "modified": "2025-10-20 20:19:59.995979",
+  "name": "Other"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Gender",
+  "gender": "Female",
+  "modified": "2025-10-20 20:19:59.994006",
+  "name": "Female"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Gender",
+  "gender": "Male",
+  "modified": "2025-10-20 20:19:59.898269",
+  "name": "Male"
+ }
+]

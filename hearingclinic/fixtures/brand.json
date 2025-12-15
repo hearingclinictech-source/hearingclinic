@@ -1,0 +1,62 @@
+[
+ {
+  "brand": "Rexton",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-10-22 01:20:10.739532",
+  "name": "Rexton"
+ },
+ {
+  "brand": "Signia",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-11-20 12:07:03.308671",
+  "name": "Signia"
+ },
+ {
+  "brand": "Legacy",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-11-20 12:07:12.081816",
+  "name": "Legacy"
+ },
+ {
+  "brand": "Resound",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-10-26 13:56:58.317576",
+  "name": "Resound"
+ },
+ {
+  "brand": "Persona",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-10-26 13:56:49.205876",
+  "name": "Persona"
+ },
+ {
+  "brand": "Phonak",
+  "brand_defaults": [],
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Brand",
+  "image": null,
+  "modified": "2025-10-26 13:57:06.118811",
+  "name": "Phonak"
+ }
+]

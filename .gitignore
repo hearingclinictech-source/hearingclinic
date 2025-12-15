@@ -1,0 +1,24 @@
+.DS_Store
+*.pyc
+*.egg-info
+*.swp
+tags
+node_modules
+__pycache__
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+*.cover
+test-results.xml
+junit.xml
+.nyc_output/
+test-results/
+playwright-report/
+
+# Test data
+_test_*
+test_*.db

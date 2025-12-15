@@ -1,0 +1,327 @@
+<!-- Compact Payment Summary - Works for both screen and PDF print -->
+<!-- Now includes Value Add Card payment details -->
+
+{% if doc.outstanding_amount > 0 %}
+    <!-- PARTIAL PAYMENT -->
+    <div style="margin: 5px 0;">
+        <table style="width: 100%; border-collapse: collapse; line-height: 1.1;">
+            {% if doc.discount_amount and doc.discount_amount != 0 %}
+            <tr>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; width: 70%; color: #dc3545; line-height: 1.1;">
+                    Discount{% if doc.additional_discount_percentage %} ({{ doc.additional_discount_percentage }}%){% endif %}:
+                </td>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; width: 30%; color: #dc3545; line-height: 1.1;">
+                    {{ frappe.format_value(doc.discount_amount * -1, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                </td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                    <strong>Invoice Total:</strong>
+                </td>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                    <strong>{{ doc.get_formatted("grand_total") }}</strong>
+                </td>
+            </tr>
+
+            <!-- VALUE ADD CARD PAYMENT -->
+            {% if doc.value_add_card and doc.card_amount_used %}
+                {% set card_transaction = frappe.get_all("Card Transaction",
+                    filters={"sales_invoice": doc.name, "docstatus": 1},
+                    fields=["balance_before", "balance_after", "amount"],
+                    limit=1) %}
+
+                {% if card_transaction|length > 0 %}
+                    {% set ct = card_transaction[0] %}
+                    <tr>
+                        <td colspan="2" style="padding: 4px 0 2px 0; line-height: 1.1;">
+                            <hr style="border: none; border-top: 1px dashed #666; margin: 2px 0;">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="padding: 2px 0; font-size: 9pt; line-height: 1.1;">
+                            <strong>Value Add Card Payment:</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            Card Number:
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            {{ doc.value_add_card }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            Balance Before:
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            {{ frappe.format_value(ct.balance_before, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            Amount Used:
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            <strong>({{ frappe.format_value(ct.amount, {'fieldtype': 'Currency', 'options': doc.currency}) }})</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            Balance After:
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            <strong>{{ frappe.format_value(ct.balance_after, {'fieldtype': 'Currency', 'options': doc.currency}) }}</strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" style="padding: 2px 0; line-height: 1.1;">
+                            <hr style="border: none; border-top: 1px dashed #666; margin: 2px 0;">
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+
+            <!-- OTHER PAYMENTS -->
+            {% if doc.custom_amount_paid_this_transaction %}
+            <tr>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                    Paid Today:
+                </td>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                    {{ frappe.format_value(doc.custom_amount_paid_this_transaction, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                </td>
+            </tr>
+            {% endif %}
+
+            {% if doc.payments %}
+            <tr>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                    Payment Method:
+                </td>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                    {% for payment in doc.payments %}{{ payment.mode_of_payment }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td colspan="2" style="padding: 2px 0; line-height: 1.1;">
+                    <hr style="border: none; border-top: 1px solid #000; margin: 2px 0;">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                    <strong>Outstanding Balance:</strong>
+                </td>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                    <strong>{{ doc.get_formatted("outstanding_amount") }}</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+{% else %}
+    <!-- FULL PAYMENT -->
+    {% set payment_entries = frappe.get_all("Payment Entry Reference",
+        filters={"reference_name": doc.name, "reference_doctype": "Sales Invoice", "docstatus": 1},
+        fields=["parent", "allocated_amount"]) %}
+
+    {% if payment_entries|length > 0 %}
+        <!-- FINAL PAYMENT with history -->
+        <div style="margin: 5px 0;">
+            <table style="width: 100%; border-collapse: collapse; line-height: 1.1;">
+                <tr>
+                    <td colspan="2" style="padding: 2px 0; font-size: 10pt; line-height: 1.1;">
+                        <strong>Payment History:</strong>
+                    </td>
+                </tr>
+
+                <!-- INITIAL PAYMENTS (from payments table) -->
+                {% if doc.payments %}
+                    {% for payment in doc.payments %}
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            {{ doc.posting_date }} - Initial Payment ({{ payment.mode_of_payment }}{% if payment.mode_of_payment == "Value Add Card" and doc.value_add_card %} {{ doc.value_add_card }}{% endif %})
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            {{ frappe.format_value(payment.amount, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                        </td>
+                    </tr>
+
+                    <!-- Show card balance details for VAC payments -->
+                    {% if payment.mode_of_payment == "Value Add Card" and doc.value_add_card %}
+                        {% set card_transaction = frappe.get_all("Card Transaction",
+                            filters={"sales_invoice": doc.name, "docstatus": 1},
+                            fields=["balance_before", "balance_after", "amount"],
+                            limit=1) %}
+
+                        {% if card_transaction|length > 0 %}
+                            {% set ct = card_transaction[0] %}
+                            <tr>
+                                <td style="padding: 1px 0 1px 24px; font-size: 8pt; color: #666; line-height: 1.1;">
+                                    Card Balance: {{ frappe.format_value(ct.balance_before, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                                    → {{ frappe.format_value(ct.balance_after, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                                </td>
+                                <td style="padding: 1px 0; font-size: 8pt; text-align: right; color: #666; line-height: 1.1;">
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <!-- SUBSEQUENT PAYMENT ENTRIES -->
+                {% for pe_ref in payment_entries %}
+                    {% set pe = frappe.get_doc("Payment Entry", pe_ref.parent) %}
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            {{ pe.posting_date }} - Final Payment ({{ pe.mode_of_payment }})
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            {{ frappe.format_value(pe_ref.allocated_amount, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="2" style="padding: 2px 0; line-height: 1.1;">
+                        <hr style="border: none; border-top: 1px solid #000; margin: 2px 0;">
+                    </td>
+                </tr>
+
+                {% if doc.discount_amount and doc.discount_amount != 0 %}
+                <tr>
+                    <td style="padding: 2px 0; font-size: 10pt; text-align: right; color: #dc3545; line-height: 1.1;">
+                        Discount{% if doc.additional_discount_percentage %} ({{ doc.additional_discount_percentage }}%){% endif %}:
+                    </td>
+                    <td style="padding: 2px 0; font-size: 10pt; text-align: right; color: #dc3545; line-height: 1.1;">
+                        {{ frappe.format_value(doc.discount_amount * -1, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                    </td>
+                </tr>
+                {% endif %}
+
+                <tr>
+                    <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                        <strong>Total:</strong>
+                    </td>
+                    <td style="padding: 2px 0; font-size: 10pt; text-align: right; line-height: 1.1;">
+                        <strong>{{ doc.get_formatted("grand_total") }}</strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                        Status:
+                    </td>
+                    <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                        <strong>PAID IN FULL</strong>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if payment_entries|length == 0 %}
+    <!-- SIMPLE FULL PAYMENT (no payment entries, possibly just VAC) -->
+    <div style="margin: 5px 0;">
+        <table style="width: 100%; border-collapse: collapse; line-height: 1.1;">
+            {% if doc.discount_amount and doc.discount_amount != 0 %}
+            <tr>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; width: 70%; color: #dc3545; line-height: 1.1;">
+                    Discount{% if doc.additional_discount_percentage %} ({{ doc.additional_discount_percentage }}%){% endif %}:
+                </td>
+                <td style="padding: 2px 0; font-size: 9pt; text-align: right; width: 30%; color: #dc3545; line-height: 1.1;">
+                    {{ frappe.format_value(doc.discount_amount * -1, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                </td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; width: 70%; line-height: 1.1;">
+                    <strong>Grand Total:</strong>
+                </td>
+                <td style="padding: 2px 0; font-size: 10pt; text-align: right; width: 30%; line-height: 1.1;">
+                    <strong>{{ doc.get_formatted("grand_total") }}</strong>
+                </td>
+            </tr>
+
+            <!-- Show all payment methods -->
+            {% if doc.value_add_card or doc.payments %}
+                <tr>
+                    <td colspan="2" style="padding: 4px 0 2px 0; line-height: 1.1;">
+                        <hr style="border: none; border-top: 1px dashed #666; margin: 2px 0;">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="padding: 2px 0; font-size: 9pt; line-height: 1.1;">
+                        <strong>Payment received by:</strong>
+                    </td>
+                </tr>
+            {% endif %}
+
+            <!-- ALL PAYMENT METHODS (from POS payments table) -->
+            {% if doc.payments %}
+                {% for payment in doc.payments %}
+                    <tr>
+                        <td style="padding: 1px 0 1px 12px; font-size: 9pt; line-height: 1.1;">
+                            {{ payment.mode_of_payment }}{% if payment.mode_of_payment == "Value Add Card" and doc.value_add_card %} ({{ doc.value_add_card }}){% endif %}
+                        </td>
+                        <td style="padding: 1px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                            {{ frappe.format_value(payment.amount, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                        </td>
+                    </tr>
+
+                    <!-- Show card balance details for VAC payments -->
+                    {% if payment.mode_of_payment == "Value Add Card" and doc.value_add_card %}
+                        {% set card_transaction = frappe.get_all("Card Transaction",
+                            filters={"sales_invoice": doc.name, "docstatus": 1},
+                            fields=["balance_before", "balance_after", "amount"],
+                            limit=1) %}
+
+                        {% if card_transaction|length > 0 %}
+                            {% set ct = card_transaction[0] %}
+                            <tr>
+                                <td style="padding: 1px 0 1px 24px; font-size: 8pt; color: #666; line-height: 1.1;">
+                                    Balance: {{ frappe.format_value(ct.balance_before, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                                    → {{ frappe.format_value(ct.balance_after, {'fieldtype': 'Currency', 'options': doc.currency}) }}
+                                </td>
+                                <td style="padding: 1px 0; font-size: 8pt; text-align: right; color: #666; line-height: 1.1;">
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <!-- TOTAL LINE -->
+            {% if doc.value_add_card or doc.payments %}
+                <tr>
+                    <td colspan="2" style="padding: 2px 0; line-height: 1.1;">
+                        <hr style="border: none; border-top: 1px solid #000; margin: 2px 0;">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                        <strong>Total Paid:</strong>
+                    </td>
+                    <td style="padding: 2px 0; font-size: 9pt; text-align: right; line-height: 1.1;">
+                        <strong>{{ doc.get_formatted("grand_total") }}</strong>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+    {% endif %}
+{% endif %}

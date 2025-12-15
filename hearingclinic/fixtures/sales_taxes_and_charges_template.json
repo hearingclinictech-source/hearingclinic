@@ -1,0 +1,74 @@
+[
+ {
+  "company": "Hearing Clinic",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Sales Taxes and Charges Template",
+  "is_default": 1,
+  "modified": "2025-11-06 07:39:29.379033",
+  "name": "Malaysia GST 6% - HC",
+  "tax_category": null,
+  "taxes": [
+   {
+    "account_currency": null,
+    "account_head": "GST - HC",
+    "base_tax_amount": 0.0,
+    "base_tax_amount_after_discount_amount": 0.0,
+    "base_total": 0.0,
+    "charge_type": "On Net Total",
+    "cost_center": "Main - HC",
+    "description": "GST @ 6.0",
+    "dont_recompute_tax": 0,
+    "included_in_paid_amount": 1,
+    "included_in_print_rate": 1,
+    "item_wise_tax_detail": null,
+    "parent": "Malaysia GST 6% - HC",
+    "parentfield": "taxes",
+    "parenttype": "Sales Taxes and Charges Template",
+    "project": null,
+    "rate": 6.0,
+    "row_id": null,
+    "tax_amount": 0.0,
+    "tax_amount_after_discount_amount": 0.0,
+    "total": 0.0
+   }
+  ],
+  "title": "Malaysia GST 6%"
+ },
+ {
+  "company": "Hearing Clinic Petaling Jaya",
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Sales Taxes and Charges Template",
+  "is_default": 1,
+  "modified": "2025-11-06 07:39:51.265784",
+  "name": "Malaysia GST 6% - HC-PJ",
+  "tax_category": null,
+  "taxes": [
+   {
+    "account_currency": "MYR",
+    "account_head": "GST - HC-PJ",
+    "base_tax_amount": 0.0,
+    "base_tax_amount_after_discount_amount": 0.0,
+    "base_total": 0.0,
+    "charge_type": "On Net Total",
+    "cost_center": "Main - HC-PJ",
+    "description": "GST @ 6.0",
+    "dont_recompute_tax": 0,
+    "included_in_paid_amount": 1,
+    "included_in_print_rate": 1,
+    "item_wise_tax_detail": null,
+    "parent": "Malaysia GST 6% - HC-PJ",
+    "parentfield": "taxes",
+    "parenttype": "Sales Taxes and Charges Template",
+    "project": null,
+    "rate": 6.0,
+    "row_id": null,
+    "tax_amount": 0.0,
+    "tax_amount_after_discount_amount": 0.0,
+    "total": 0.0
+   }
+  ],
+  "title": "Malaysia GST 6%"
+ }
+]

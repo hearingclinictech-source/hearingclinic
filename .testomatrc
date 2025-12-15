@@ -1,0 +1,16 @@
+# Testomat.io Configuration for HearingClinic App
+
+# Project API Key (get from https://app.testomat.io)
+# Set this as environment variable: TESTOMATIO=your-api-key
+# Or uncomment and add your key here:
+# TESTOMATIO=your-api-key-here
+
+# Test Framework
+TESTOMATIO_FRAMEWORK=pytest
+
+# Title for test runs
+TESTOMATIO_TITLE="HearingClinic ERPNext Tests"
+
+# Additional options
+TESTOMATIO_CREATE=1
+TESTOMATIO_PROCEED_ON_FAIL=1

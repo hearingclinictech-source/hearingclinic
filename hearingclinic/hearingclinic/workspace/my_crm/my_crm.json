@@ -1,0 +1,97 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"CuDMBDUdUH\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 18px; letter-spacing: 0.18px;\\\"><b>Hearing Clinic PJ</b></span>\",\"col\":12}},{\"id\":\"CY8L7adv9n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Show Me...</b></span>\",\"col\":12}},{\"id\":\"_g1qKUfBb-\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Customers\",\"col\":4}},{\"id\":\"HDOOMfbtQ6\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Sales\",\"col\":4}},{\"id\":\"LmNEsTMD8l\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Maintenance Schedules\",\"col\":4}},{\"id\":\"DFQ3TX4Ar0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Upcoming</b></span>\",\"col\":12}},{\"id\":\"kzNnJnKOZh\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Upcoming Maintenance\",\"col\":4}},{\"id\":\"qiHsk5pQeT\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Schedules ending soon\",\"col\":4}},{\"id\":\"oRdvZMy_g-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Review...</b></span>\",\"col\":12}},{\"id\":\"wgwiONAEd2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hearing Aids\",\"col\":3}},{\"id\":\"vFIGE4lqVl\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accessories\",\"col\":3}},{\"id\":\"-vEjtdQqSo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Services\",\"col\":3}},{\"id\":\"AEAlyLmeHa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Packages\",\"col\":3}},{\"id\":\"Ao57DRYqpG\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Llv0_ztv1x\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Tutorials</b></span>\",\"col\":12}},{\"id\":\"yFPCKRLVso\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Get Started\",\"col\":12}}]",
+ "creation": "2025-11-03 08:12:41.078114",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Tutorials",
+   "label": "Get Started"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "heart",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "My CRM",
+ "links": [],
+ "modified": "2025-12-09 11:00:49.544479",
+ "modified_by": "Administrator",
+ "module": "Hearingclinic",
+ "name": "My CRM",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Customer",
+   "label": "Customers",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Sales Invoice",
+   "label": "Sales",
+   "quick_list_filter": "[[\"Sales Invoice\",\"status\",\"!=\",\"Cancelled\",false]]"
+  },
+  {
+   "document_type": "Maintenance Schedule",
+   "label": "Schedules ending soon",
+   "quick_list_filter": "[[\"Maintenance Schedule Item\",\"end_date\",\"Timespan\",\"next 30 days\",false]]"
+  },
+  {
+   "document_type": "Maintenance Schedule",
+   "label": "Maintenance Schedules",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Maintenance Schedule",
+   "label": "Upcoming Maintenance",
+   "quick_list_filter": "[[\"Maintenance Schedule Detail\",\"scheduled_date\",\"Timespan\",\"next 30 days\",false]]"
+  }
+ ],
+ "roles": [
+  {
+   "role": "Hearing Clinic User"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Hearing Aids",
+   "link_to": "Item",
+   "stats_filter": "[[\"Item\",\"item_group\",\"=\",\"Hearing Aids\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Packages",
+   "link_to": "Product Bundle",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Accessories",
+   "link_to": "Item",
+   "stats_filter": "[[\"Item\",\"item_group\",\"=\",\"Accessories\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Services",
+   "link_to": "Item",
+   "stats_filter": "[[\"Item\",\"item_group\",\"=\",\"Services\",false]]",
+   "type": "DocType"
+  }
+ ],
+ "title": "My CRM"
+}

@@ -1,0 +1,22 @@
+# Testing dependencies for HearingClinic app
+
+# Core testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-xdist>=3.3.0
+
+# Testomat.io integration
+# Install via: pip install git+https://github.com/testomatio/pytestomat.git
+# Or use check-tests CLI tool: npx @testomatio/check-tests
+check-tests>=1.0.0
+
+# Code quality
+flake8>=6.0.0
+black>=23.0.0
+pylint>=2.17.0
+
+# Additional testing utilities
+faker>=18.0.0
+factory-boy>=3.2.0
+freezegun>=1.2.0
+responses>=0.23.0

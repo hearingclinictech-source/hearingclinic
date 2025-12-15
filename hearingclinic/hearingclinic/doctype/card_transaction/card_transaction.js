@@ -1,0 +1,8 @@
+// Copyright (c) 2025, Thomas Roch and contributors
+// For license information, please see license.txt
+
+// frappe.ui.form.on("Card Transaction", {
+// 	refresh(frm) {
+
+// 	},
+// });
