@@ -16,6 +16,8 @@ coverage/
 test-results.xml
 junit.xml
 .nyc_output/
+test-results/
+playwright-report/
 
 # Test data
 _test_*

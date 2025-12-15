@@ -163,40 +163,67 @@ test.describe('Delivery Note from Sales Invoice', () => {
     // Wait for Delivery Note form to load
     await page.waitForLoadState('networkidle', { timeout: 10000 });
 
-    // Close any dialogs that might have appeared after navigation
-    // Try multiple methods to close dialogs
-    try {
-      // Method 1: Press Escape key
-      await page.keyboard.press('Escape');
-      await page.waitForTimeout(500);
-
-      // Method 2: Close via frappe's dialog API
-      await page.evaluate(() => {
-        // @ts-ignore
-        if (typeof cur_dialog !== 'undefined' && cur_dialog) {
-          // @ts-ignore
-          cur_dialog.hide();
-        }
-      });
-      await page.waitForTimeout(500);
-
-      // Method 3: Click close button if still visible
-      const modalCloseButton = page.locator('.modal-header .close, .modal-header button[data-dismiss="modal"], .modal .btn-modal-close').first();
-      if (await modalCloseButton.isVisible({ timeout: 1000 })) {
-        await modalCloseButton.click();
-        await page.waitForTimeout(500);
-      }
-    } catch (e) {
-      // No dialog to close, continue
-      console.log('Dialog close attempt:', e);
-    }
-
     // Verify we're on a Delivery Note form - check URL instead of title
     const currentUrl = page.url();
     expect(currentUrl).toContain('/delivery-note/');
 
+    // Wait for any modal dialogs to appear and then close them
+    // The "Submit this document to confirm" dialog appears after the form loads
+    await page.waitForTimeout(1000); // Give the dialog time to appear
+
+    // Close the dialog using multiple methods
+    let dialogClosed = false;
+    for (let attempt = 0; attempt < 3 && !dialogClosed; attempt++) {
+      try {
+        // Check if modal is visible
+        const modal = page.locator('.modal.show, .modal.in').first();
+        const isModalVisible = await modal.isVisible({ timeout: 1000 }).catch(() => false);
+
+        if (isModalVisible) {
+          console.log(`Attempt ${attempt + 1}: Modal dialog detected, closing...`);
+
+          // Use frappe's dialog hide method - most reliable
+          await page.evaluate(() => {
+            // @ts-ignore
+            if (typeof cur_dialog !== 'undefined' && cur_dialog && cur_dialog.hide) {
+              // @ts-ignore
+              cur_dialog.hide();
+              console.log('[Browser] Called cur_dialog.hide()');
+            }
+          });
+          await page.waitForTimeout(1000);
+
+          // Wait for modal to disappear
+          await modal.waitFor({ state: 'hidden', timeout: 3000 }).catch(() => {
+            console.log('Modal did not hide after cur_dialog.hide()');
+          });
+
+          // Double-check the modal is gone
+          const stillVisible = await modal.isVisible({ timeout: 500 }).catch(() => false);
+          if (!stillVisible) {
+            dialogClosed = true;
+            console.log('Modal successfully closed');
+          }
+        } else {
+          dialogClosed = true;
+          console.log('No modal dialog detected');
+        }
+      } catch (e) {
+        console.log(`Dialog close attempt ${attempt + 1} error:`, e);
+      }
+    }
+
+    // Wait for the items grid to be fully visible and interactive
+    await page.waitForSelector('[data-fieldname="items"] .grid-row', { state: 'visible', timeout: 5000 }).catch(() => {
+      console.log('Warning: Items grid may not be fully visible yet');
+    });
+
     // Step 8: Verify customer is pre-filled
-    const customer = await frappe.getFieldValue('customer');
+    // Read directly from the DOM since frappe.cur_frm may not be accessible due to modal
+    // Use .last() to get the Delivery Note customer field (not the Sales Invoice one that might be in the modal)
+    const customerValue = await page.locator('[data-fieldname="customer"] .control-value').last().textContent();
+    const customer = customerValue?.trim() || '';
+    console.log(`Customer field value from DOM: "${customer}"`);
     expect(customer).toBe(testCustomer);
 
     // Step 9: Verify only Warranty and Hearing Aid items copied (not batteries, maintenance kit, etc.)

@@ -43,7 +43,10 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
-        "validate": "hearingclinic.hearingclinic.doc_events.sales_invoice_partial_payment.override_pos_payment_amount",
+        "validate": [
+            "hearingclinic.hearingclinic.doc_events.sales_invoice_partial_payment.override_pos_payment_amount",
+            "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.validate",
+        ],
         "on_submit": [
             "hearingclinic.hearingclinic.doc_events.create_warranty_extension.create_maintenance_schedule_from_sales_invoice",
             "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.on_submit",

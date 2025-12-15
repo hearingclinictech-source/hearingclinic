@@ -72,7 +72,7 @@ class ValueAddCard(Document):
         
         # Save the card with transactions
         self.save(ignore_permissions=True)
-        
+
         return {
             "balance_before": balance_before,
             "balance_after": self.current_balance,
@@ -105,12 +105,15 @@ class ValueAddCard(Document):
                 break
         
         if transaction_to_remove is not None:
+            # Get transaction name before removing
+            transaction_name = self.card_transactions[transaction_to_remove].name
+
             # Remove the transaction
             self.remove(self.card_transactions[transaction_to_remove])
-            
+
             # Restore balance
             self.current_balance = float(self.current_balance) + amount_to_restore
-            
+
             # Update status
             if self.current_balance >= self.card_value:
                 self.status = "Active"
@@ -118,9 +121,9 @@ class ValueAddCard(Document):
                 self.status = "Partially Used"
             else:
                 self.status = "Fully Used"
-            
+
             self.save(ignore_permissions=True)
-            
+
             return {
                 "amount_restored": amount_to_restore,
                 "new_balance": self.current_balance
