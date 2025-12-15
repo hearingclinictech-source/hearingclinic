@@ -7,15 +7,19 @@ def before_insert(doc, method):
     
 def check_for_duplicates_before_insert(doc):
     """Check for duplicates and provide helpful message"""
-    
+
     # Check by NRIC/Passport (exact match - hard stop)
-    if doc.get("custom_nricpassport"):
+    # Only check if NRIC is provided and not empty/whitespace
+    if doc.get("custom_nricpassport") and str(doc.custom_nricpassport).strip():
         nric_matches = frappe.get_all(
             "Customer",
-            filters={"custom_nricpassport": doc.custom_nricpassport},
+            filters={
+                "custom_nricpassport": doc.custom_nricpassport,
+                "name": ["!=", doc.name]  # Exclude the current document if updating
+            },
             fields=["name", "customer_name", "custom_date_of_birth", "custom_nricpassport"]
         )
-        
+
         if nric_matches:
             existing = nric_matches[0]
             frappe.throw(
@@ -31,17 +35,18 @@ def check_for_duplicates_before_insert(doc):
             )
     
     # Check by Name (similar name match - soft warning)
-    if doc.get("customer_name"):
+    if doc.get("customer_name") and str(doc.customer_name).strip():
         # Search for similar names (case-insensitive, partial match)
         name_matches = frappe.get_all(
             "Customer",
             filters={
-                "customer_name": ["like", f"%{doc.customer_name}%"]
+                "customer_name": ["like", f"%{doc.customer_name}%"],
+                "name": ["!=", doc.name]  # Exclude the current document
             },
             fields=["name", "customer_name", "custom_nricpassport", "custom_date_of_birth"],
             limit=5
         )
-        
+
         if name_matches:
             match_list = []
             for m in name_matches:

@@ -99,18 +99,6 @@ function apply_value_add_card(frm, card_name) {
                     // Store shortfall for later use
                     frm._vac_shortfall = shortfall;
 
-                    // Set the payment amount to the shortfall only (after a delay to let POS Profile load)
-                    setTimeout(() => {
-                        if (frm.doc.payments && frm.doc.payments.length > 0) {
-                            frm.doc.payments.forEach((payment) => {
-                                if (payment.mode_of_payment !== "Value Add Card") {
-                                    frappe.model.set_value(payment.doctype, payment.name, 'amount', shortfall);
-                                }
-                            });
-                            frm.refresh_field('payments');
-                        }
-                    }, 500);
-
                     // Remind user to check POS profile
                     frappe.msgprint({
                         title: __('Additional Payment Required'),
@@ -151,7 +139,7 @@ function apply_value_add_card(frm, card_name) {
  */
 function show_card_info(frm) {
     if (!frm.doc.value_add_card) return;
-    
+
     frappe.call({
         method: 'frappe.client.get',
         args: {
@@ -161,7 +149,7 @@ function show_card_info(frm) {
         callback: function(r) {
             if (r.message) {
                 let card = r.message;
-                
+
                 // Create info display in the form
                 let info_html = `
                     <div class="alert alert-info">
@@ -170,10 +158,57 @@ function show_card_info(frm) {
                         ${__('Status')}: ${card.status}
                     </div>
                 `;
-                
+
                 // You can add this to a custom HTML field or show as message
                 frm.dashboard.add_comment(info_html, 'blue', true);
             }
         }
     });
+}
+
+/**
+ * Handle payments table changes to apply VAC shortfall
+ * This event fires after POS Profile loads payment methods
+ */
+frappe.ui.form.on('Sales Invoice Payment', {
+    payments_add: function(frm) {
+        apply_vac_shortfall_to_payments(frm);
+    },
+
+    amount: function(frm, cdt, cdn) {
+        // Only auto-adjust if we have a VAC shortfall stored and this isn't a VAC payment
+        let row = locals[cdt][cdn];
+        if (frm._vac_shortfall && row.mode_of_payment !== "Value Add Card") {
+            // Prevent infinite loops
+            if (!frm._adjusting_vac_payment) {
+                apply_vac_shortfall_to_payments(frm);
+            }
+        }
+    }
+});
+
+/**
+ * Apply the stored VAC shortfall to non-VAC payment entries
+ */
+function apply_vac_shortfall_to_payments(frm) {
+    if (!frm._vac_shortfall || !frm.doc.payments) return;
+
+    // Set flag to prevent infinite loops
+    frm._adjusting_vac_payment = true;
+
+    // Update all non-VAC payments to use the shortfall amount
+    frm.doc.payments.forEach((payment) => {
+        if (payment.mode_of_payment !== "Value Add Card") {
+            if (payment.amount !== frm._vac_shortfall) {
+                frappe.model.set_value(payment.doctype, payment.name, 'amount', frm._vac_shortfall);
+            }
+        }
+    });
+
+    frm.refresh_field('payments');
+
+    // Clear flag after a short delay
+    setTimeout(() => {
+        frm._adjusting_vac_payment = false;
+    }, 100);
 }
