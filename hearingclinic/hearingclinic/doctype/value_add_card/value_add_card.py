@@ -7,15 +7,16 @@ class ValueAddCard(Document):
         """Validate and calculate values - only for NEW cards"""
         # Only auto-calculate for new cards
         if self.is_new():
-            # Auto-calculate card value when amount paid is entered
-            if self.amount_paid:
+            # Auto-suggest card value when amount paid is entered
+            # Only auto-calculate if card_value is not manually set
+            if self.amount_paid and not self.card_value:
                 calculated_value = float(self.amount_paid) * 1.6
                 self.card_value = calculated_value
-            
+
             # Set initial balance
             if self.card_value and not self.current_balance:
                 self.current_balance = float(self.card_value)
-            
+
             # Set initial status
             if not self.status:
                 self.status = "Active"

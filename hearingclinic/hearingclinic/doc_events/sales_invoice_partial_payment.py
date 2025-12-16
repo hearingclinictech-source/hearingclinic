@@ -172,18 +172,22 @@ def override_pos_payment_amount(doc, method=None):
     """
     Hook function to override POS payment amount when partial payment is specified
     Called via validate hook
-    
+
     Args:
         doc: Sales Invoice document
         method: Hook method name (unused)
     """
     if not doc.is_pos:
         return
-    
+
     # Only process for unsaved/unsubmitted documents
     if doc.docstatus != 0:
         return
-    
+
+    # Skip for return invoices - ERPNext handles payment copying correctly
+    if doc.is_return:
+        return
+
     # Check if partial payment amount is specified
     partial_amount = flt(doc.get("custom_partial_payment_amount"))
     grand_total = flt(doc.grand_total)
@@ -241,7 +245,11 @@ def ensure_partial_payment_flag(doc, method=None):
     """
     if not doc.is_pos:
         return
-    
+
+    # Skip for return invoices
+    if doc.is_return:
+        return
+
     # Check if there's an outstanding amount
     if flt(doc.outstanding_amount) > 0 and flt(doc.paid_amount) > 0:
         # There's both payment and outstanding - this is partial payment

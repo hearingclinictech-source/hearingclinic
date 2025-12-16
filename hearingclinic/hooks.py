@@ -88,6 +88,10 @@ fixtures = [
         "filters": [["name", "in", ["Tutorials"]]],
     },
     {
+    "dt": "Mode of Payment",
+    "filters": [["name", "in", ["Value Add Card"]]]
+    },
+    {
         "doctype": "Letter Head",
         "filters": [["name", "in", ["Hearing Clinic"]]],
     },

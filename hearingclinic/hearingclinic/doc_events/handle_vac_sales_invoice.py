@@ -14,6 +14,11 @@ def validate(doc, method):
     if doc.docstatus != 0:
         return
 
+    # For return invoices, don't recalculate - ERPNext copies the payment entries
+    # from the original invoice with negative amounts, which is correct
+    if doc.is_return:
+        return
+
     try:
         card = frappe.get_doc("Value Add Card", doc.value_add_card)
 
@@ -54,13 +59,46 @@ def on_submit(doc, method):
     """Handle Value Add Card payment on invoice submission"""
     if not doc.value_add_card:
         return
-    
+
     try:
         card = frappe.get_doc("Value Add Card", doc.value_add_card)
-        
+
+        # For return invoices, we need to credit back the card
+        if doc.is_return:
+            # Get the VAC payment amount from the return invoice (will be negative)
+            vac_payment_amount = 0
+            for payment in doc.payments:
+                if payment.mode_of_payment == "Value Add Card":
+                    vac_payment_amount = abs(payment.amount)  # Convert negative to positive for refund
+                    break
+
+            if vac_payment_amount > 0:
+                # Add refund transaction to the card
+                result = card.add_transaction(
+                    transaction_type="Refund",
+                    amount=vac_payment_amount,
+                    reference_doctype="Sales Invoice",
+                    reference_name=doc.name,
+                    remarks=f"Refund for return invoice {doc.name} (against {doc.return_against})"
+                )
+
+                # Update sales invoice
+                doc.db_set("card_amount_used", -vac_payment_amount, update_modified=False)
+
+                # Ensure VAC payment entry exists with negative amount
+                add_vac_to_pos_payments(doc, -vac_payment_amount)
+
+                frappe.msgprint(
+                    f"Value Add Card credited: {frappe.format_value(vac_payment_amount, dict(fieldtype='Currency'))}. "
+                    f"New balance: {frappe.format_value(result['balance_after'], dict(fieldtype='Currency'))}",
+                    indicator="blue"
+                )
+            return
+
+        # For regular invoices (not returns)
         # Determine amount to deduct from card
         amount_to_deduct = min(card.current_balance, doc.grand_total)
-        
+
         # Use the card's add_transaction method with "Purchase" type
         result = card.add_transaction(
             transaction_type="Purchase",  # Changed from "Debit"
@@ -69,15 +107,15 @@ def on_submit(doc, method):
             reference_name=doc.name,
             remarks=f"Payment for invoice {doc.name}"
         )
-        
+
         # Update sales invoice
         doc.db_set("card_amount_used", amount_to_deduct, update_modified=False)
-        
+
         # Calculate payments (exclude VAC payment to avoid double-counting)
         other_payments = sum([flt(p.amount) for p in doc.payments if p.mode_of_payment != "Value Add Card"]) if doc.payments else 0
         total_paid = amount_to_deduct + other_payments
         outstanding = doc.grand_total - total_paid
-        
+
         # Update invoice status
         if outstanding <= 0:
             doc.db_set("status", "Paid", update_modified=False)
@@ -89,14 +127,14 @@ def on_submit(doc, method):
         # Add VAC payment to payments table only if amount > 0 (regardless of is_pos status)
         if amount_to_deduct > 0:
             add_vac_to_pos_payments(doc, amount_to_deduct)
-        
+
         frappe.msgprint(
             f"Value Add Card charged: {frappe.format_value(amount_to_deduct, dict(fieldtype='Currency'))}. "
             f"Remaining balance: {frappe.format_value(result['balance_after'], dict(fieldtype='Currency'))}. "
             f"Outstanding: {frappe.format_value(outstanding if outstanding > 0 else 0, dict(fieldtype='Currency'))}",
             indicator="green"
         )
-        
+
     except Exception as e:
         frappe.log_error(f"Error processing Value Add Card: {str(e)}")
         frappe.throw(f"Failed to process Value Add Card payment: {str(e)}")
@@ -106,29 +144,38 @@ def on_cancel(doc, method):
     """Reverse Value Add Card transaction on invoice cancellation"""
     if not doc.value_add_card:
         return
-    
+
     try:
         card = frappe.get_doc("Value Add Card", doc.value_add_card)
-        
+
         # Use the card's remove_transaction method
         result = card.remove_transaction(
             reference_doctype="Sales Invoice",
             reference_name=doc.name
         )
-        
+
         if result:
-            frappe.msgprint(
-                f"Amount {frappe.format_value(result['amount_restored'], dict(fieldtype='Currency'))} restored. "
-                f"New balance: {frappe.format_value(result['new_balance'], dict(fieldtype='Currency'))}",
-                indicator="blue"
-            )
+            # For return invoices, cancellation means we remove the credit (deduct from card)
+            # For regular invoices, cancellation means we restore the amount (credit to card)
+            if doc.is_return:
+                frappe.msgprint(
+                    f"Return cancelled: Amount {frappe.format_value(result['amount_restored'], dict(fieldtype='Currency'))} deducted from card. "
+                    f"New balance: {frappe.format_value(result['new_balance'], dict(fieldtype='Currency'))}",
+                    indicator="orange"
+                )
+            else:
+                frappe.msgprint(
+                    f"Amount {frappe.format_value(result['amount_restored'], dict(fieldtype='Currency'))} restored. "
+                    f"New balance: {frappe.format_value(result['new_balance'], dict(fieldtype='Currency'))}",
+                    indicator="blue"
+                )
 
         # Always remove VAC payment entry (regardless of is_pos status)
         frappe.db.delete("Sales Invoice Payment", {
             "parent": doc.name,
             "mode_of_payment": "Value Add Card"
         })
-            
+
     except Exception as e:
         frappe.log_error(f"Error cancelling transaction: {str(e)}")
         frappe.throw(f"Failed to cancel transaction: {str(e)}")
