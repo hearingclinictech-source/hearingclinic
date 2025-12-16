@@ -3447,13 +3447,13 @@
   "doctype_or_field": "DocField",
   "field_name": "naming_series",
   "is_system_generated": 1,
-  "modified": "2025-12-16 12:51:38.955250",
+  "modified": "2025-12-16 13:05:10.581891",
   "module": null,
   "name": "Delivery Note-naming_series-options",
   "property": "options",
   "property_type": "Text",
   "row_name": null,
-  "value": "MAT-DN-.YYYY.-\nMAT-DN-RET-.YYYY.-\nMAT-DN-L-RET-.YYYY.-"
+  "value": "MAT-DN-.YYYY.-\nMAT-DN-RET-.YYYY.-\nMAT-DN-L-.YYYY.-"
  },
  {
   "default_value": null,
@@ -3463,7 +3463,7 @@
   "doctype_or_field": "DocField",
   "field_name": "naming_series",
   "is_system_generated": 1,
-  "modified": "2025-12-16 12:51:39.008484",
+  "modified": "2025-12-16 13:05:10.636969",
   "module": null,
   "name": "Delivery Note-naming_series-default",
   "property": "default",
