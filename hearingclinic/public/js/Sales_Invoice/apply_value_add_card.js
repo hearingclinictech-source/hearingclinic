@@ -6,6 +6,126 @@
 frappe.ui.form.on('Sales Invoice', {
     refresh: function(frm) {
         add_value_add_card_button(frm);
+
+        // Clear any stale VAC shortfall data when form refreshes
+        // This prevents amounts from previous transactions persisting
+        if (!frm.doc.value_add_card) {
+            console.log('Clearing stale VAC shortfall on refresh');
+            frm._vac_shortfall = null;
+        }
+    },
+
+    pos_profile: function(frm) {
+        if (frm.doc.pos_profile && frm.doc.is_pos) {
+            console.log('POS Profile changed:', frm.doc.pos_profile, 'VAC shortfall:', frm._vac_shortfall);
+
+            // If VAC is applied with insufficient balance, we need to handle partial payment
+            if (frm.doc.value_add_card && frm._vac_shortfall) {
+                console.log('Value Add Card with shortfall - loading POS Profile payment methods');
+
+                // Load POS Profile to get payment methods
+                frappe.call({
+                    method: 'frappe.client.get',
+                    args: {
+                        doctype: 'POS Profile',
+                        name: frm.doc.pos_profile
+                    },
+                    callback: function(r) {
+                        if (r.message) {
+                            let pos_profile = r.message;
+
+                            // Clear existing payments
+                            frm.clear_table('payments');
+
+                            // Add payments from POS Profile with shortfall amount
+                            if (pos_profile.payments && pos_profile.payments.length > 0) {
+                                pos_profile.payments.forEach(function(payment_method) {
+                                    let payment_row = frm.add_child('payments');
+                                    payment_row.mode_of_payment = payment_method.mode_of_payment;
+                                    payment_row.default = payment_method.default || 0;
+                                    // Set amount to shortfall for non-VAC payments
+                                    payment_row.amount = frm._vac_shortfall;
+
+                                    // Get the account for this payment method
+                                    frappe.call({
+                                        method: 'erpnext.accounts.doctype.sales_invoice.sales_invoice.get_bank_cash_account',
+                                        args: {
+                                            mode_of_payment: payment_method.mode_of_payment,
+                                            company: frm.doc.company
+                                        },
+                                        async: false,
+                                        callback: function(r2) {
+                                            if (r2.message) {
+                                                payment_row.account = r2.message.account;
+                                                payment_row.type = r2.message.account_type;
+                                            }
+                                        }
+                                    });
+                                });
+
+                                // Refresh the payments table
+                                frm.refresh_field('payments');
+                                console.log('POS Profile payments applied with shortfall amount:', frm._vac_shortfall);
+                            }
+                        }
+                    }
+                });
+                return;
+            }
+
+            // Don't override payments if a Value Add Card is applied (with sufficient balance)
+            if (frm.doc.value_add_card) {
+                console.log('Value Add Card already applied with sufficient balance, skipping POS Profile payment override');
+                return;
+            }
+
+            // Standard POS Profile handling (no VAC)
+            // Force reload the POS Profile and apply its payment methods
+            frappe.call({
+                method: 'frappe.client.get',
+                args: {
+                    doctype: 'POS Profile',
+                    name: frm.doc.pos_profile
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        let pos_profile = r.message;
+
+                        // Clear existing payments
+                        frm.clear_table('payments');
+
+                        // Add payments from POS Profile
+                        if (pos_profile.payments && pos_profile.payments.length > 0) {
+                            pos_profile.payments.forEach(function(payment_method) {
+                                let payment_row = frm.add_child('payments');
+                                payment_row.mode_of_payment = payment_method.mode_of_payment;
+                                payment_row.default = payment_method.default || 0;
+
+                                // Get the account for this payment method
+                                frappe.call({
+                                    method: 'erpnext.accounts.doctype.sales_invoice.sales_invoice.get_bank_cash_account',
+                                    args: {
+                                        mode_of_payment: payment_method.mode_of_payment,
+                                        company: frm.doc.company
+                                    },
+                                    async: false,
+                                    callback: function(r2) {
+                                        if (r2.message) {
+                                            payment_row.account = r2.message.account;
+                                            payment_row.type = r2.message.account_type;
+                                        }
+                                    }
+                                });
+                            });
+
+                            // Refresh the payments table
+                            frm.refresh_field('payments');
+                            console.log('POS Profile payments applied:', pos_profile.name);
+                        }
+                    }
+                }
+            });
+        }
     }
 });
 
@@ -99,23 +219,32 @@ function apply_value_add_card(frm, card_name) {
                     // Store shortfall for later use
                     frm._vac_shortfall = shortfall;
 
-                    // Remind user to check POS profile
+                    // Set the partial payment amount field so backend validation works correctly
+                    frm.set_value('custom_partial_payment_amount', shortfall);
+
+                    // Show message about partial payment
                     frappe.msgprint({
                         title: __('Additional Payment Required'),
-                        message: __('Card: {0}<br>Current Balance: {1}<br>Invoice Total: {2}<br>Shortfall: {3}<br><br><strong>Important:</strong> Please ensure your POS Profile is selected to add the additional payment method. The Value Add Card will cover {4} and you need to collect {5} using another payment method.',
+                        message: __('Card: {0}<br>Current Balance: {1}<br>Invoice Total: {2}<br>Shortfall: {3}<br><br><strong>Important:</strong> The Value Add Card will cover {4}. Please {5} a POS Profile to add the payment method for the remaining {6}.',
                             [
                                 card.name,
                                 format_currency(card.current_balance),
                                 format_currency(invoice_total),
                                 format_currency(shortfall),
                                 format_currency(card.current_balance),
+                                frm.doc.pos_profile ? 'change or re-select' : 'select',
                                 format_currency(shortfall)
                             ]),
                         indicator: 'orange'
                     });
 
-                    // Highlight the POS Profile field
-                    if (!frm.doc.pos_profile) {
+                    // If POS Profile is already selected, trigger it to reload with correct amounts
+                    if (frm.doc.pos_profile) {
+                        console.log('POS Profile already selected, triggering reload with VAC shortfall');
+                        // Trigger the pos_profile event handler to reload payments with shortfall
+                        frm.trigger('pos_profile');
+                    } else {
+                        // Highlight the POS Profile field
                         frappe.utils.play_sound('error');
                         frm.scroll_to_field('pos_profile');
                         setTimeout(() => {
@@ -166,49 +295,3 @@ function show_card_info(frm) {
     });
 }
 
-/**
- * Handle payments table changes to apply VAC shortfall
- * This event fires after POS Profile loads payment methods
- */
-frappe.ui.form.on('Sales Invoice Payment', {
-    payments_add: function(frm) {
-        apply_vac_shortfall_to_payments(frm);
-    },
-
-    amount: function(frm, cdt, cdn) {
-        // Only auto-adjust if we have a VAC shortfall stored and this isn't a VAC payment
-        let row = locals[cdt][cdn];
-        if (frm._vac_shortfall && row.mode_of_payment !== "Value Add Card") {
-            // Prevent infinite loops
-            if (!frm._adjusting_vac_payment) {
-                apply_vac_shortfall_to_payments(frm);
-            }
-        }
-    }
-});
-
-/**
- * Apply the stored VAC shortfall to non-VAC payment entries
- */
-function apply_vac_shortfall_to_payments(frm) {
-    if (!frm._vac_shortfall || !frm.doc.payments) return;
-
-    // Set flag to prevent infinite loops
-    frm._adjusting_vac_payment = true;
-
-    // Update all non-VAC payments to use the shortfall amount
-    frm.doc.payments.forEach((payment) => {
-        if (payment.mode_of_payment !== "Value Add Card") {
-            if (payment.amount !== frm._vac_shortfall) {
-                frappe.model.set_value(payment.doctype, payment.name, 'amount', frm._vac_shortfall);
-            }
-        }
-    });
-
-    frm.refresh_field('payments');
-
-    // Clear flag after a short delay
-    setTimeout(() => {
-        frm._adjusting_vac_payment = false;
-    }, 100);
-}
