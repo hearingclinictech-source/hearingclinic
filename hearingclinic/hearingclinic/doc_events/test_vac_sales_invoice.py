@@ -222,6 +222,9 @@ class TestVACSalesInvoice(FrappeTestCase):
 		# Apply VAC
 		si.value_add_card = self.vac.name
 
+		# Set the partial payment amount (this would be set by JavaScript in UI)
+		si.custom_partial_payment_amount = 400  # Shortfall amount (2000 - 1600)
+
 		# Add additional payment method for shortfall
 		si.append("payments", {
 			"mode_of_payment": "Cash",
@@ -356,6 +359,9 @@ class TestVACSalesInvoice(FrappeTestCase):
 		# Create invoice with both VAC and Cash (is_pos will be 1 by default)
 		si = self.create_test_invoice(amount=2000)
 		si.value_add_card = self.vac.name
+
+		# Set the partial payment amount (this would be set by JavaScript in UI)
+		si.custom_partial_payment_amount = 400  # Shortfall amount (2000 - 1600)
 
 		# Add cash payment for shortfall
 		si.append("payments", {

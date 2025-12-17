@@ -18,6 +18,7 @@ doctype_js = {
            "public/js/Customer/customer_info_maintenance.js",                 
        ],
        "Sales Invoice": [
+           "public/js/Sales_Invoice/clear_default_pos_profile.js",
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
            "public/js/Sales_Invoice/apply_value_add_card.js",
@@ -42,6 +43,7 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
+        "onload": "hearingclinic.hearingclinic.doc_events.clear_default_pos_profile.onload",
         "validate": [
             "hearingclinic.hearingclinic.doc_events.sales_invoice_partial_payment.override_pos_payment_amount",
             "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.validate",

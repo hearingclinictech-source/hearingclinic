@@ -18,14 +18,15 @@ function load_purchased_items(frm, fieldname) {
     
     // console.log('Loading purchase history for customer:', frm.doc.name);
     
-    // Query Sales Invoice with items
+    // Query Sales Invoice with items (exclude returns/credit notes)
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
             doctype: 'Sales Invoice',
             filters: {
                 'customer': frm.doc.name,
-                'docstatus': 1
+                'docstatus': 1,
+                'is_return': 0
             },
             fields: ['name', 'posting_date', 'grand_total', 'status'],
             limit_page_length: 500
