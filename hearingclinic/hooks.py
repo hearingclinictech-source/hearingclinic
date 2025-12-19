@@ -221,6 +221,8 @@ fixtures = [
                 "Sales Invoice",
                 "Delivery Note",
                 "Address",
+                "Contact",
+                "Contact Phone",
                 "Lead",
                 "Maintenance Schedule",
                 "Maintenance Visit",

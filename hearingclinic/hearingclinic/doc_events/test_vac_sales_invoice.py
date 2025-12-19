@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # See license.txt
+# @S Value Add Card
 
 """
 Test cases for Value Add Card integration with Sales Invoice

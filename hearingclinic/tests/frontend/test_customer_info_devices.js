@@ -4,8 +4,8 @@
  * @S Customer UI Tests
  */
 
-describe('Customer', () => {
-describe('Customer Info Devices', () => {
+describe('Customer @S35e4d8ca', () => {
+describe('Customer Info Devices @S23b19672', () => {
     let frm;
     let mockField;
 
@@ -69,7 +69,7 @@ describe('Customer Info Devices', () => {
         jest.clearAllMocks();
     });
 
-    test('should load purchase history when customer form refreshes', () => {
+    test('should load purchase history when customer form refreshes @T6c214ccb', () => {
         // Test that the module calls load_purchased_items when form is refreshed
         expect(frm.get_field).toBeDefined();
     });
@@ -81,7 +81,7 @@ describe('Customer Info Devices', () => {
         expect(mockField.$wrapper.html).toBeDefined();
     });
 
-    test('should handle no purchase history gracefully', () => {
+    test('should handle no purchase history gracefully @T864e1b35', () => {
         frappe.call.mockImplementation((args) => {
             args.callback({ message: [] });
         });
@@ -92,7 +92,7 @@ describe('Customer Info Devices', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should load sales invoices for customer', () => {
+    test('should load sales invoices for customer @T8bea7b82', () => {
         const mockInvoices = [
             { name: 'SI-001', posting_date: '2025-01-01', grand_total: 5000, status: 'Paid' },
             { name: 'SI-002', posting_date: '2025-01-02', grand_total: 3000, status: 'Paid' }
@@ -109,7 +109,7 @@ describe('Customer Info Devices', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should load delivery notes for tracking device serials', () => {
+    test('should load delivery notes for tracking device serials @Taf018854', () => {
         const mockDeliveryNotes = [
             { name: 'DN-001', posting_date: '2025-01-01' }
         ];
@@ -124,7 +124,7 @@ describe('Customer Info Devices', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should filter items to show only Hearing Aids group', () => {
+    test('should filter items to show only Hearing Aids group @T6a405808', () => {
         // Test that only items with item_group = 'Hearing Aids' are displayed
         const allItems = [
             { item_code: 'HA-001', item_group: 'Hearing Aids', amount: 2000 },
@@ -137,7 +137,7 @@ describe('Customer Info Devices', () => {
         expect(expectedFiltered.length).toBe(2);
     });
 
-    test('should calculate total revenue from all items', () => {
+    test('should calculate total revenue from all items @Td267bc22', () => {
         const allItems = [
             { item_code: 'HA-001', item_group: 'Hearing Aids', amount: 2000 },
             { item_code: 'BATT-001', item_group: 'Accessories', amount: 50 },
@@ -148,7 +148,7 @@ describe('Customer Info Devices', () => {
         expect(totalRevenue).toBe(2350);
     });
 
-    test('should display summary statistics', () => {
+    test('should display summary statistics @T64f8c9c6', () => {
         // Test that stats are displayed correctly:
         // - Total Value (from all items)
         // - Total Invoices
@@ -165,7 +165,7 @@ describe('Customer Info Devices', () => {
         expect(stats.totalDevices).toBeGreaterThan(0);
     });
 
-    test('should display device serial numbers from delivery notes', () => {
+    test('should display device serial numbers from delivery notes @T750b529d', () => {
         const deliveryNoteMap = {
             'SI-ITEM-001': {
                 device_serial: 'SN123456',
@@ -180,7 +180,7 @@ describe('Customer Info Devices', () => {
         expect(deliveryNoteMap['SI-ITEM-001'].for_ear).toBe('R');
     });
 
-    test('should display ear information with color coding', () => {
+    test('should display ear information with color coding @T5fbb7800', () => {
         // Right ear should be red, Left ear should be blue
         const rightEarColor = '#dc3545'; // Red
         const leftEarColor = '#007bff';  // Blue
@@ -189,7 +189,7 @@ describe('Customer Info Devices', () => {
         expect(leftEarColor).toBe('#007bff');
     });
 
-    test('should format currency values correctly', () => {
+    test('should format currency values correctly @Tdb9df6ce', () => {
         frappe.format = jest.fn((value, opts) => {
             if (opts.fieldtype === 'Currency') {
                 return `RM ${value.toFixed(2)}`;
@@ -201,14 +201,14 @@ describe('Customer Info Devices', () => {
         expect(formatted).toBe('RM 1234.56');
     });
 
-    test('should handle tab switching between Summary and Details', () => {
+    test('should handle tab switching between Summary and Details @T11b4160c', () => {
         // Test that clicking on tabs switches between summary and detail views
         const tabs = ['summary', 'details'];
         expect(tabs).toContain('summary');
         expect(tabs).toContain('details');
     });
 
-    test('should handle errors gracefully', () => {
+    test('should handle errors gracefully @T835999ba', () => {
         frappe.call.mockImplementation((args) => {
             if (args.error) {
                 args.error({ message: 'Network error' });
@@ -220,7 +220,7 @@ describe('Customer Info Devices', () => {
         expect(errorMessage).toContain('Error loading');
     });
 
-    test('should group items by item_code for summary', () => {
+    test('should group items by item_code for summary @Td00948e6', () => {
         const items = [
             { item_code: 'HA-001', qty: 1, amount: 2000, posting_date: '2025-01-01' },
             { item_code: 'HA-001', qty: 1, amount: 2100, posting_date: '2025-02-01' },
@@ -248,7 +248,7 @@ describe('Customer Info Devices', () => {
         expect(summary['HA-001'].purchase_count).toBe(2);
     });
 
-    test('should create clickable links to related documents', () => {
+    test('should create clickable links to related documents @Tbd749922', () => {
         const invoiceLink = '<a href="/app/sales-invoice/SI-001" target="_blank">SI-001</a>';
         const deliveryNoteLink = '<a href="/app/delivery-note/DN-001" target="_blank">DN-001</a>';
         const itemLink = '<a href="/app/item/HA-001" target="_blank">HA-001</a>';
@@ -258,7 +258,7 @@ describe('Customer Info Devices', () => {
         expect(itemLink).toContain('/app/item/');
     });
 
-    test('should sort items by total amount descending', () => {
+    test('should sort items by total amount descending @Ta70e7dbd', () => {
         const items = [
             { item_code: 'HA-001', total_amount: 2000 },
             { item_code: 'HA-002', total_amount: 5000 },
@@ -272,7 +272,7 @@ describe('Customer Info Devices', () => {
         expect(items[2].item_code).toBe('HA-003');
     });
 
-    test('should calculate average rate correctly', () => {
+    test('should calculate average rate correctly @Tfe8fa1f6', () => {
         const item = {
             total_amount: 4100,
             total_qty: 2
@@ -282,7 +282,7 @@ describe('Customer Info Devices', () => {
         expect(avgRate).toBe(2050);
     });
 
-    test('should handle items without delivery notes', () => {
+    test('should handle items without delivery notes @T1647b872', () => {
         const item = {
             device_serial: '',
             for_ear: '',

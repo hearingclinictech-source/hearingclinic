@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Test cases for Customer primary address and contact creation logic
+# @S Customer Management
 
 import frappe
 from frappe.tests.utils import FrappeTestCase

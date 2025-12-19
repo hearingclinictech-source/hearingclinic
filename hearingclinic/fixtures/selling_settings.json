@@ -8,7 +8,7 @@
   "allow_zero_qty_in_sales_order": 0,
   "blanket_order_allowance": 0.0,
   "cust_master_name": "Customer Name",
-  "customer_group": null,
+  "customer_group": "All Customer Groups",
   "dn_required": "No",
   "docstatus": 0,
   "doctype": "Selling Settings",
@@ -20,13 +20,13 @@
   "hide_tax_id": 0,
   "maintain_same_rate_action": "Stop",
   "maintain_same_sales_rate": 0,
-  "modified": "2025-10-24 18:41:05.982901",
+  "modified": "2025-12-18 12:50:59.138657",
   "name": "Selling Settings",
   "role_to_override_stop_action": null,
   "sales_update_frequency": "Each Transaction",
   "selling_price_list": "Hearing Clinic Products",
   "so_required": "No",
-  "territory": "Malaysia",
+  "territory": "All Territories",
   "validate_selling_price": 0
  }
 ]

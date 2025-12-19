@@ -4,9 +4,10 @@
  *
  * This tests that when a POS Profile is selected on a Sales Invoice,
  * the correct payment method from the POS Profile is applied.
+ * @S Sales Invoice Tests
  */
 
-describe('POS Profile Payment Fix', () => {
+describe('POS Profile Payment Fix @Se74d5538', () => {
     let frm;
     let mockPosProfile;
     let mockBankAccount;
@@ -77,8 +78,8 @@ describe('POS Profile Payment Fix', () => {
         // In actual implementation, the script would be loaded via hooks
     });
 
-    describe('when POS Profile is selected', () => {
-        test('should fetch the POS Profile details', (done) => {
+    describe('when POS Profile is selected @S0411ed10', () => {
+        test('should fetch the POS Profile details @T4abf3057', (done) => {
             // Simulate the pos_profile field change event
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
@@ -108,7 +109,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should clear existing payments table', (done) => {
+        test('should clear existing payments table @T6cc6d592', (done) => {
             // Add some existing payments
             frm.doc.payments = [
                 { mode_of_payment: 'Bank Transfer', default: 1 }
@@ -139,7 +140,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should add payment method from POS Profile', (done) => {
+        test('should add payment method from POS Profile @T10d1e47c', (done) => {
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
                     frappe.call({
@@ -175,7 +176,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should fetch and set bank account for payment method', (done) => {
+        test('should fetch and set bank account for payment method @Tc4882055', (done) => {
             let asyncCallsCompleted = 0;
             const totalAsyncCalls = 1;
 
@@ -239,7 +240,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should refresh payments field after applying changes', (done) => {
+        test('should refresh payments field after applying changes @T1e628063', (done) => {
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
                     frappe.call({
@@ -276,7 +277,7 @@ describe('POS Profile Payment Fix', () => {
         });
     });
 
-    describe('when POS Profile has multiple payment methods', () => {
+    describe('when POS Profile has multiple payment methods @S46a1563c', () => {
         beforeEach(() => {
             mockPosProfile = {
                 name: 'Multi Payment',
@@ -293,7 +294,7 @@ describe('POS Profile Payment Fix', () => {
             };
         });
 
-        test('should add all payment methods from POS Profile', (done) => {
+        test('should add all payment methods from POS Profile @T4e9e9873', (done) => {
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
                     frappe.call({
@@ -332,12 +333,12 @@ describe('POS Profile Payment Fix', () => {
         });
     });
 
-    describe('when is_pos is false', () => {
+    describe('when is_pos is false @S7a0c221b', () => {
         beforeEach(() => {
             frm.doc.is_pos = 0;
         });
 
-        test('should not apply POS Profile payments', () => {
+        test('should not apply POS Profile payments @T2ed143d2', () => {
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
                     frappe.call({
@@ -356,12 +357,12 @@ describe('POS Profile Payment Fix', () => {
         });
     });
 
-    describe('when POS Profile is not set', () => {
+    describe('when POS Profile is not set @S32cae03d', () => {
         beforeEach(() => {
             frm.doc.pos_profile = null;
         });
 
-        test('should not apply any payments', () => {
+        test('should not apply any payments @T50b40f27', () => {
             const pos_profile_handler = (frm) => {
                 if (frm.doc.pos_profile && frm.doc.is_pos) {
                     frappe.call({
@@ -380,8 +381,8 @@ describe('POS Profile Payment Fix', () => {
         });
     });
 
-    describe('edge cases', () => {
-        test('should handle POS Profile with no payment methods', (done) => {
+    describe('edge cases @S19bac83d', () => {
+        test('should handle POS Profile with no payment methods @T1e5a89da', (done) => {
             mockPosProfile.payments = [];
 
             const pos_profile_handler = (frm) => {
@@ -413,7 +414,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should handle API error when fetching POS Profile', (done) => {
+        test('should handle API error when fetching POS Profile @Te920cb81', (done) => {
             global.frappe.call = jest.fn((opts) => {
                 if (opts.method === 'frappe.client.get') {
                     if (opts.callback) {
@@ -445,7 +446,7 @@ describe('POS Profile Payment Fix', () => {
             pos_profile_handler(frm);
         });
 
-        test('should handle API error when fetching bank account', (done) => {
+        test('should handle API error when fetching bank account @T72ddb0a6', (done) => {
             global.frappe.call = jest.fn((opts) => {
                 if (opts.method === 'frappe.client.get') {
                     if (opts.callback) {
@@ -501,8 +502,8 @@ describe('POS Profile Payment Fix', () => {
         });
     });
 
-    describe('integration scenarios', () => {
-        test('should correctly handle switching from Bank Transfer to Credit Card POS Profile', (done) => {
+    describe('integration scenarios @Sf8d109b1', () => {
+        test('should correctly handle switching from Bank Transfer to Credit Card POS Profile @T32ecf54e', (done) => {
             // Start with Bank Transfer
             frm.doc.pos_profile = 'Bank Transfer';
             frm.doc.payments = [

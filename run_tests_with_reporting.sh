@@ -4,6 +4,16 @@
 
 set -e
 
+# Get the real path of the script, resolving symlinks
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+
+# Load .env file if it exists
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+    echo "Loaded environment variables from .env"
+fi
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -33,10 +43,30 @@ SITE_NAME=${1:-development.localhost}
 echo -e "${BLUE}Site:${NC} $SITE_NAME"
 echo ""
 
+# Sync tests with Testomat.io if enabled
+if [ "$TESTOMAT_ENABLED" = true ]; then
+    echo -e "${GREEN}Syncing tests with Testomat.io...${NC}"
+    echo "========================================"
+
+    if command -v npx &> /dev/null; then
+        cd "$SCRIPT_DIR"
+
+        # Update test IDs in frontend tests
+        echo -e "${BLUE}Updating frontend test IDs...${NC}"
+        npx check-tests@latest jest 'hearingclinic/tests/frontend/**/*.js' --update-ids 2>&1 | grep -v "warn" || true
+
+        # Update test IDs in backend tests
+        echo -e "${BLUE}Updating backend test IDs...${NC}"
+        npx check-tests@latest pytest 'hearingclinic/**/*.py' --update-ids 2>&1 | grep -v "warn" || true
+
+        echo -e "${GREEN}✓${NC} Tests synced with Testomat.io"
+    else
+        echo -e "${YELLOW}Warning: npx not found. Skipping test sync.${NC}"
+    fi
+    echo ""
+fi
+
 # Ensure we're in the bench directory
-# Get the real path of the script, resolving symlinks
-SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
-SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 BENCH_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$BENCH_DIR" || exit 1
 

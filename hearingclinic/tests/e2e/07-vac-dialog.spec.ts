@@ -60,6 +60,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Add item
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
@@ -106,6 +110,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
     await page.keyboard.press('ArrowDown');
@@ -140,6 +148,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
     await page.keyboard.press('ArrowDown');
@@ -169,6 +181,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.createNewDoc('Sales Invoice', true);
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
+
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
 
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
@@ -233,6 +249,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
     await page.keyboard.press('ArrowDown');
@@ -296,6 +316,10 @@ test.describe('VAC Selection Dialog', () => {
     await frappe.createNewDoc('Sales Invoice', true);
     await frappe.selectLinkValue('customer', differentCustomer);
     await page.waitForTimeout(1000);
+
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
 
     await frappe.addChildRow('items');
     await page.locator('[data-fieldname="items"] .grid-row[data-idx="1"] [data-fieldname="item_code"] input').fill('Hearing Aid');
