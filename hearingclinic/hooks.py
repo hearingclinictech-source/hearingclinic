@@ -10,6 +10,8 @@ app_include_js = [
     "/assets/hearingclinic/js/Customer/customer_quick_entry.js",
 ]
 
+app_include_css = ["/assets/hearingclinic/css/desk-dev.css"]
+
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
