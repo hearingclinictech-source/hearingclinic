@@ -230,7 +230,8 @@ fixtures = [
                 "Maintenance Visit",
                 "Maintenance Visit Purpose",
                 "Delivery Note Item",
-                "Value Add Card"
+                "Value Add Card",
+                "Print Format",
             ]]
         ]
     },
