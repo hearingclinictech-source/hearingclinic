@@ -227,7 +227,8 @@ fixtures = [
                 "Maintenance Schedule",
                 "Maintenance Visit",
                 "Maintenance Visit Purpose",
-                "Delivery Note Item"
+                "Delivery Note Item",
+                "Value Add Card"
             ]]
         ]
     },
