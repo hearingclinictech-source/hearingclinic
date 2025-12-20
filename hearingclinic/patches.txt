@@ -6,3 +6,4 @@ hearingclinic.patches.create_role
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated
 hearingclinic.patches.remove_contact_type_fields
+hearingclinic.patches.fix_value_add_card_list_view
