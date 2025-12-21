@@ -15,6 +15,71 @@ frappe.ui.form.on('Sales Invoice', {
         }
     },
 
+    value_add_card: function(frm) {
+        // When VAC is removed, restore POS Profile requirement
+        if (!frm.doc.value_add_card) {
+            console.log('VAC removed - restoring POS Profile requirement');
+            frm.set_value('custom_partial_payment_amount', 0);
+            frm._vac_shortfall = null;
+
+            // Restore POS Profile requirement if POS mode is enabled
+            if (frm.doc.is_pos) {
+                frm.set_df_property('pos_profile', 'reqd', 1);
+            }
+        }
+    },
+
+    grand_total: function(frm) {
+        // Recalculate VAC shortfall if VAC is applied and grand total changes
+        if (frm.doc.value_add_card && frm.doc.docstatus === 0) {
+            console.log('Grand total changed with VAC applied - recalculating shortfall');
+
+            // Fetch current card balance and recalculate
+            frappe.call({
+                method: 'frappe.client.get',
+                args: {
+                    doctype: 'Value Add Card',
+                    name: frm.doc.value_add_card
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        let card = r.message;
+                        let invoice_total = frm.doc.grand_total || 0;
+                        let balance_sufficient = card.current_balance >= invoice_total;
+
+                        if (balance_sufficient) {
+                            // VAC now covers full amount
+                            frm.set_value('is_pos', 0);
+                            frm.set_value('custom_partial_payment_amount', 0);
+                            frm._vac_shortfall = null;
+                            frm.clear_table('payments');
+                            frm.refresh_field('payments');
+                            frm.set_df_property('pos_profile', 'reqd', 0);
+                            console.log('VAC now covers full amount - disabled POS mode');
+                        } else {
+                            // VAC insufficient - recalculate shortfall
+                            let shortfall = invoice_total - card.current_balance;
+                            frm._vac_shortfall = shortfall;
+                            frm.set_value('custom_partial_payment_amount', shortfall);
+
+                            // Ensure POS mode is enabled
+                            if (!frm.doc.is_pos) {
+                                frm.set_value('is_pos', 1);
+                            }
+
+                            // Reload POS Profile payments with new shortfall
+                            if (frm.doc.pos_profile) {
+                                frm.trigger('pos_profile');
+                            }
+
+                            console.log('VAC insufficient - updated shortfall to', shortfall);
+                        }
+                    }
+                }
+            });
+        }
+    },
+
     pos_profile: function(frm) {
         if (frm.doc.pos_profile && frm.doc.is_pos) {
             console.log('POS Profile changed:', frm.doc.pos_profile, 'VAC shortfall:', frm._vac_shortfall);
@@ -193,13 +258,16 @@ function apply_value_add_card(frm, card_name) {
 
                 // Handle POS mode based on whether balance is sufficient
                 if (balance_sufficient) {
-                    // VAC covers full amount - disable POS mode
+                    // VAC covers full amount - disable POS mode and make POS Profile optional
                     if (frm.doc.is_pos) {
                         frm.set_value('is_pos', 0);
                         frm.clear_table('payments');
                         frm.refresh_field('payments');
                         console.log('Disabled POS mode - VAC covers full amount');
                     }
+
+                    // Make POS Profile optional since VAC covers everything
+                    frm.set_df_property('pos_profile', 'reqd', 0);
 
                     frappe.msgprint({
                         title: __('Value Add Card Applied'),

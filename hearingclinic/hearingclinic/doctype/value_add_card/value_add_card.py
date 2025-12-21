@@ -23,19 +23,29 @@ class ValueAddCard(Document):
     
     def add_transaction(self, transaction_type, amount, reference_doctype=None, reference_name=None, remarks=None):
         """Add a transaction to the card and update balance
-        
+
         Args:
             transaction_type: 'Purchase' or 'Refund'
             amount: Amount to deduct (Purchase) or add (Refund)
             reference_doctype: DocType of reference document (e.g., 'Sales Invoice')
             reference_name: Name of reference document
             remarks: Transaction remarks
-            
+
         Returns:
             dict: balance_before, balance_after, transaction details
         """
+        # Lock the card document to prevent concurrent modifications
+        # Use SELECT FOR UPDATE to ensure we have the latest balance
+        frappe.db.sql(
+            "SELECT current_balance FROM `tabValue Add Card` WHERE name=%s FOR UPDATE",
+            self.name
+        )
+
+        # Reload to get latest balance from database
+        self.reload()
+
         balance_before = self.current_balance
-        
+
         # Calculate new balance
         if transaction_type == "Purchase":
             new_balance = float(self.current_balance) - float(amount)
@@ -43,8 +53,16 @@ class ValueAddCard(Document):
             new_balance = float(self.current_balance) + float(amount)
         else:
             frappe.throw(f"Invalid transaction type: {transaction_type}")
-        
-        # Ensure balance doesn't go negative
+
+        # Validate sufficient balance for purchases
+        if transaction_type == "Purchase" and new_balance < 0:
+            frappe.throw(
+                f"Insufficient card balance. "
+                f"Available: {frappe.format_value(self.current_balance, dict(fieldtype='Currency'))}, "
+                f"Required: {frappe.format_value(amount, dict(fieldtype='Currency'))}"
+            )
+
+        # Ensure refund balance doesn't go negative
         if new_balance < 0:
             new_balance = 0
         
