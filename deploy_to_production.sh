@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Production Deployment Script
-# Moves all changes from develop to production in a squash commit
+# Replaces production branch with exact copy of develop branch
 
 set -e  # Exit on error
 
@@ -70,17 +70,20 @@ git checkout production
 echo -e "${YELLOW}Pulling latest production...${NC}"
 git pull origin production
 
-# Squash merge develop into production with theirs strategy
-echo -e "${YELLOW}Squashing all changes from develop into production...${NC}"
-git merge --squash -X theirs develop
+# Replace production branch content with exact copy of develop
+echo -e "${YELLOW}Replacing production with current develop state...${NC}"
+# Remove all files except .git directory
+git rm -rf . ':!.git' 2>/dev/null || true
+# Copy everything from develop
+git checkout develop -- .
 
 # Update version in __init__.py
 echo -e "${YELLOW}Updating version to $VERSION in __init__.py...${NC}"
 sed -i "s/__version__ = \".*\"/__version__ = \"$VERSION\"/" hearingclinic/__init__.py
 
-# Remove app_include_css from hooks.py
+# Remove app_include_css from hooks.py if it exists
 echo -e "${YELLOW}Removing app_include_css from hooks.py...${NC}"
-sed -i '/^app_include_css = /d' hearingclinic/hooks.py
+sed -i '/^app_include_css = /d' hearingclinic/hooks.py 2>/dev/null || true
 
 # Stage all changes
 git add -A
