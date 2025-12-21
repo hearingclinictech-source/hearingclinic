@@ -15,9 +15,9 @@ app_include_css = ["/assets/hearingclinic/css/desk-dev.css"]
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
-           "public/js/Customer/format_sales_button.js",                 
-           "public/js/Customer/customer_info_devices.js",                 
-           "public/js/Customer/customer_info_maintenance.js",                 
+           "public/js/Customer/format_sales_button.js",
+           "public/js/Customer/customer_info_devices.js",
+           "public/js/Customer/customer_info_maintenance.js",
        ],
        "Sales Invoice": [
            "public/js/Sales_Invoice/clear_default_pos_profile.js",

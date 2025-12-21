@@ -4,7 +4,7 @@ from frappe import _
 def before_insert(doc, method):
     """Check for potential duplicates before creating customer"""
     check_for_duplicates_before_insert(doc)
-    
+
 def check_for_duplicates_before_insert(doc):
     """Check for duplicates and provide helpful message"""
 
@@ -33,7 +33,9 @@ def check_for_duplicates_before_insert(doc):
                 ),
                 title=_("Duplicate Customer Found")
             )
-    
+
+    all_matches = []
+
     # Check by Name (similar name match - soft warning)
     if doc.get("customer_name") and str(doc.customer_name).strip():
         # Search for similar names (case-insensitive, partial match)
@@ -48,26 +50,54 @@ def check_for_duplicates_before_insert(doc):
         )
 
         if name_matches:
-            match_list = []
             for m in name_matches:
                 dob_str = frappe.format(m.custom_date_of_birth, {"fieldtype": "Date"}) if m.custom_date_of_birth else "N/A"
                 nric_str = m.custom_nricpassport or "N/A"
-                match_list.append(
-                    f"• <a href='/app/customer/{m.name}' target='_blank'>{m.customer_name}</a> "
-                    f"(NRIC: {nric_str}, DOB: {dob_str})"
-                )
-            
-            match_html = "<br>".join(match_list)
-            
-            frappe.msgprint(
-                _("Found {0} customer(s) with similar names:<br><br>{1}<br><br>"
-                  "Please verify this is not a duplicate before continuing.").format(
-                    len(name_matches),
-                    match_html
-                ),
-                title=_("Possible Duplicate Customers"),
-                indicator="orange"
-            )
+                all_matches.append({
+                    "name": m.name,
+                    "type": "Similar Name",
+                    "html": f"• <a href='/app/customer/{m.name}' target='_blank'>{m.customer_name}</a> "
+                            f"(NRIC: {nric_str}, DOB: {dob_str})"
+                })
+
+    # Check by Date of Birth (exact match - soft warning)
+    if doc.get("custom_date_of_birth"):
+        dob_matches = frappe.get_all(
+            "Customer",
+            filters={
+                "custom_date_of_birth": doc.custom_date_of_birth,
+                "name": ["!=", doc.name]  # Exclude the current document
+            },
+            fields=["name", "customer_name", "custom_nricpassport", "custom_date_of_birth"],
+            limit=5
+        )
+
+        if dob_matches:
+            for m in dob_matches:
+                dob_str = frappe.format(m.custom_date_of_birth, {"fieldtype": "Date"}) if m.custom_date_of_birth else "N/A"
+                nric_str = m.custom_nricpassport or "N/A"
+                # Check if this match is already in the list (from name matching)
+                if not any(match["name"] == m.name for match in all_matches):
+                    all_matches.append({
+                        "name": m.name,
+                        "type": "Same Date of Birth",
+                        "html": f"• <a href='/app/customer/{m.name}' target='_blank'>{m.customer_name}</a> "
+                                f"(NRIC: {nric_str}, DOB: {dob_str})"
+                    })
+
+    # If we found any potential duplicates, show warning (but allow creation)
+    if all_matches:
+        match_html = "<br>".join([match["html"] for match in all_matches])
+
+        frappe.msgprint(
+            _("Found {0} potential duplicate customer(s):<br><br>{1}<br><br>"
+              "Please verify this is not a duplicate. Customer will be created anyhow - if duplicated please DELETE immediately").format(
+                len(all_matches),
+                match_html
+            ),
+            title=_("Possible Duplicate Customers"),
+            indicator="orange"
+        )
 
 def validate(doc, method):
     """Additional validation on save (for updates)"""

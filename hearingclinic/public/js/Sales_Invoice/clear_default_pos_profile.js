@@ -15,6 +15,11 @@
             erpnext.accounts.SalesInvoiceController.prototype.set_pos_data = function() {
                 const frm = this.frm;
 
+                // Don't interfere with return invoices - they need their POS Profile cleared differently
+                if (frm.doc.is_return) {
+                    return original_set_pos_data.apply(this, arguments);
+                }
+
                 // Store original callback
                 const original_args = arguments;
 
@@ -50,6 +55,11 @@ frappe.ui.form.on('Sales Invoice', {
             const original_set_pos_data = erpnext.accounts.SalesInvoiceController.prototype.set_pos_data;
 
             erpnext.accounts.SalesInvoiceController.prototype.set_pos_data = function() {
+                // Don't interfere with return invoices
+                if (this.frm.doc.is_return) {
+                    return original_set_pos_data.apply(this, arguments);
+                }
+
                 const promise = original_set_pos_data.apply(this, arguments);
 
                 if (promise && promise.then && this.frm.is_new() && !this.frm._user_selected_pos_profile) {
@@ -75,6 +85,17 @@ frappe.ui.form.on('Sales Invoice', {
     },
 
     onload: function(frm) {
+        // For return invoices, always clear POS Profile and make it optional
+        if (frm.doc.is_return) {
+            console.log('Return invoice detected - clearing POS Profile to prevent payment recalculation');
+            frm.doc.pos_profile = null;
+            frm.refresh_field('pos_profile');
+            frm.set_df_property('pos_profile', 'reqd', 0);
+            // Block user from manually selecting POS Profile on returns
+            frm.set_df_property('pos_profile', 'read_only', 1);
+            return;
+        }
+
         // Clear any auto-populated POS Profile on new documents
         if (frm.is_new() && frm.doc.is_pos && frm.doc.pos_profile && !frm._user_selected_pos_profile) {
             console.log('Clearing auto-populated POS Profile in onload:', frm.doc.pos_profile);
@@ -91,6 +112,16 @@ frappe.ui.form.on('Sales Invoice', {
     },
 
     refresh: function(frm) {
+        // For return invoices, always clear POS Profile and make it optional
+        if (frm.doc.is_return) {
+            console.log('Return invoice refresh - clearing POS Profile');
+            frm.doc.pos_profile = null;
+            frm.refresh_field('pos_profile');
+            frm.set_df_property('pos_profile', 'reqd', 0);
+            frm.set_df_property('pos_profile', 'read_only', 1);
+            return;
+        }
+
         // Ensure POS Profile is mandatory when POS is enabled on unsaved docs
         if (frm.doc.is_pos && frm.doc.docstatus === 0) {
             frm.set_df_property('pos_profile', 'reqd', 1);
