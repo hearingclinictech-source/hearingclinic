@@ -74,7 +74,7 @@ describe('Customer Info Devices @S23b19672', () => {
         expect(frm.get_field).toBeDefined();
     });
 
-    test('should display loading message initially', () => {
+    test('should display loading message initially @T4e81b91a', () => {
         // Verify loading message is shown before data loads
         const loadingMessage = '<p class="text-muted">Loading purchase history...</p>';
         // This would be set when load_purchased_items is called

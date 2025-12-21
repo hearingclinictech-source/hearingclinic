@@ -20,6 +20,9 @@ def validate(doc, method):
     try:
         # Validate return invoices
         if doc.is_return:
+            # Force update_outstanding_for_self to 0 for VAC returns
+            # This prevents ERPNext from trying to update the original invoice's outstanding
+            doc.update_outstanding_for_self = 0
             validate_return_vac_payment(doc)
             return
 
@@ -167,8 +170,9 @@ def process_return_refund(doc, card):
     # Update sales invoice
     doc.db_set("card_amount_used", -vac_payment_amount, update_modified=False)
 
-    # Ensure VAC payment entry exists with negative amount
-    add_vac_to_pos_payments(doc, -vac_payment_amount)
+    # Note: We don't call add_vac_to_pos_payments() here because the payment
+    # was already copied from the original invoice by ERPNext's make_return_doc()
+    # Adding it again would modify the submitted document and trigger validation errors
 
     frappe.msgprint(
         f"Value Add Card credited: {frappe.format_value(vac_payment_amount, dict(fieldtype='Currency'))}. "

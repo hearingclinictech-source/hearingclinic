@@ -54,15 +54,8 @@ class ValueAddCard(Document):
         else:
             frappe.throw(f"Invalid transaction type: {transaction_type}")
 
-        # Validate sufficient balance for purchases
-        if transaction_type == "Purchase" and new_balance < 0:
-            frappe.throw(
-                f"Insufficient card balance. "
-                f"Available: {frappe.format_value(self.current_balance, dict(fieldtype='Currency'))}, "
-                f"Required: {frappe.format_value(amount, dict(fieldtype='Currency'))}"
-            )
-
-        # Ensure refund balance doesn't go negative
+        # Prevent balance from going negative (overdraft protection)
+        # This allows the transaction but clamps the balance to 0
         if new_balance < 0:
             new_balance = 0
         

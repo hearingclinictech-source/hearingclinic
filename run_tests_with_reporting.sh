@@ -14,6 +14,20 @@ if [ -f "$SCRIPT_DIR/.env" ]; then
     echo "Loaded environment variables from .env"
 fi
 
+# Detect if we're running in Docker environment (hc-staging)
+DOCKER_PREFIX=""
+if [ -f "/.dockerenv" ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
+    # We're inside a Docker container, run commands directly
+    DOCKER_PREFIX=""
+elif docker compose -p frappe ps 2>/dev/null | grep -q "backend.*running"; then
+    # We're on hc-staging host and backend container is RUNNING
+    DOCKER_PREFIX="docker compose -p frappe exec -T backend"
+    echo "Detected hc-staging environment - using Docker exec"
+else
+    # Local environment or backend not running
+    DOCKER_PREFIX=""
+fi
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -41,6 +55,14 @@ echo ""
 # Get site name
 SITE_NAME=${1:-development.localhost}
 echo -e "${BLUE}Site:${NC} $SITE_NAME"
+
+# Show environment info
+if [ -n "$DOCKER_PREFIX" ]; then
+    echo -e "${BLUE}Environment:${NC} hc-staging (Docker)"
+    echo -e "${BLUE}Command prefix:${NC} $DOCKER_PREFIX"
+else
+    echo -e "${BLUE}Environment:${NC} Local"
+fi
 echo ""
 
 # Sync tests with Testomat.io if enabled
@@ -53,11 +75,11 @@ if [ "$TESTOMAT_ENABLED" = true ]; then
 
         # Update test IDs in frontend tests
         echo -e "${BLUE}Updating frontend test IDs...${NC}"
-        npx check-tests@latest jest 'hearingclinic/tests/frontend/**/*.js' --update-ids 2>&1 | grep -v "warn" || true
+        npx -y check-tests@latest jest 'hearingclinic/tests/frontend/**/*.js' --update-ids 2>&1 | grep -v "warn" || true
 
         # Update test IDs in backend tests
         echo -e "${BLUE}Updating backend test IDs...${NC}"
-        npx check-tests@latest pytest 'hearingclinic/**/*.py' --update-ids 2>&1 | grep -v "warn" || true
+        npx -y check-tests@latest pytest 'hearingclinic/**/*.py' --update-ids 2>&1 | grep -v "warn" || true
 
         echo -e "${GREEN}✓${NC} Tests synced with Testomat.io"
     else
@@ -76,7 +98,11 @@ echo "========================================"
 
 # Ensure required dependencies are installed
 echo -e "${BLUE}Checking dependencies...${NC}"
-./env/bin/pip install unittest-xml-reporting -q 2>/dev/null || true
+if [ -z "$DOCKER_PREFIX" ]; then
+    ./env/bin/pip install unittest-xml-reporting -q 2>/dev/null || true
+else
+    $DOCKER_PREFIX pip install unittest-xml-reporting -q 2>/dev/null || true
+fi
 
 # Create test results directory (use absolute path)
 TEST_RESULTS_DIR="$BENCH_DIR/test-results/backend"
@@ -86,6 +112,7 @@ mkdir -p "$TEST_RESULTS_DIR"
 TEST_MODULES=(
     "hearingclinic.hearingclinic.doc_events.test_customer_id"
     "hearingclinic.hearingclinic.doc_events.test_customer_duplicate_check"
+    "hearingclinic.hearingclinic.doc_events.test_vac_sales_invoice"
     "hearingclinic.hearingclinic.doctype.value_add_card.test_value_add_card"
     "hearingclinic.hearingclinic.doctype.card_transaction.test_card_transaction"
     "hearingclinic.hearingclinic.api.test_api"
@@ -107,7 +134,7 @@ for module in "${TEST_MODULES[@]}"; do
     xml_file="$TEST_RESULTS_DIR/${module_name}.xml"
 
     # Run test with XML output
-    if bench --site "$SITE_NAME" run-tests --module "$module" --junit-xml-output "$xml_file" 2>&1 | tee /tmp/test_output.txt; then
+    if $DOCKER_PREFIX bench --site "$SITE_NAME" run-tests --module "$module" --junit-xml-output "$xml_file" 2>&1 | tee /tmp/test_output.txt; then
         test_passed=true
     else
         test_passed=false
