@@ -292,51 +292,66 @@ export class FrappeHelper {
 
     // Wait for frappe.cur_frm to be fully initialized
     // This is critical for newly created/navigated forms
-    await this.page.waitForFunction(
-      () => {
-        // @ts-ignore
-        return typeof frappe !== 'undefined' &&
-               frappe.cur_frm &&
-               frappe.cur_frm.doc &&
-               frappe.cur_frm.doc.name;
-      },
-      { timeout: 5000 }
-    ).catch(() => {
-      console.log('[getFieldValue] Warning: frappe.cur_frm may not be fully initialized');
-    });
+    try {
+      await this.page.waitForFunction(
+        () => {
+          // @ts-ignore - frappe is available in browser context
+          return typeof frappe !== 'undefined' &&
+                 // @ts-ignore
+                 frappe.cur_frm &&
+                 // @ts-ignore
+                 frappe.cur_frm.doc &&
+                 // @ts-ignore
+                 frappe.cur_frm.doc.name;
+        },
+        { timeout: 5000 }
+      );
+    } catch (e: any) {
+      console.log('[getFieldValue] Warning: frappe.cur_frm may not be fully initialized or page closed:', e.message);
+    }
 
     // Try to get value from Frappe's internal document object (most reliable)
     // Retry up to 3 times with increasing delays if the field is null
     // This handles cases where the form is still loading
     let fieldValue: string | null = null;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      if (attempt > 0) {
-        await this.page.waitForTimeout(1000); // Wait before retry
-      }
-
-      fieldValue = await this.page.evaluate((fieldname: string) => {
-        // @ts-ignore - frappe.cur_frm is available on form pages
-        if (typeof frappe !== 'undefined' && frappe.cur_frm && frappe.cur_frm.doc) {
-          const value = frappe.cur_frm.doc[fieldname];
-
-          // Also log the entire doc to see what fields are available
-          const docKeys = Object.keys(frappe.cur_frm.doc);
-          console.log(`[getFieldValue] Doc has ${docKeys.length} fields:`, docKeys.slice(0, 20));
-          console.log(`[getFieldValue] Field: ${fieldname}, Value from doc:`, value, 'Type:', typeof value);
-
-          // Return the raw value from the document
-          if (value !== null && value !== undefined) {
-            return String(value);
-          }
+    try {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0) {
+          await this.page.waitForTimeout(1000); // Wait before retry
         }
-        return null;
-      }, fieldname);
 
-      console.log(`[getFieldValue] Attempt ${attempt + 1}: Returned value for ${fieldname}:`, fieldValue);
+        fieldValue = await this.page.evaluate((fieldname: string) => {
+          // @ts-ignore - frappe.cur_frm is available on form pages
+          if (typeof frappe !== 'undefined' && frappe.cur_frm && frappe.cur_frm.doc) {
+            // @ts-ignore
+            const value = frappe.cur_frm.doc[fieldname];
 
-      if (fieldValue !== null && fieldValue !== undefined) {
-        return fieldValue;
+            // Also log the entire doc to see what fields are available
+            // @ts-ignore
+            const docKeys = Object.keys(frappe.cur_frm.doc);
+            console.log(`[getFieldValue] Doc has ${docKeys.length} fields:`, docKeys.slice(0, 20));
+            console.log(`[getFieldValue] Field: ${fieldname}, Value from doc:`, value, 'Type:', typeof value);
+
+            // Return the raw value from the document
+            if (value !== null && value !== undefined) {
+              return String(value);
+            }
+          }
+          return null;
+        }, fieldname);
+
+        console.log(`[getFieldValue] Attempt ${attempt + 1}: Returned value for ${fieldname}:`, fieldValue);
+
+        if (fieldValue !== null && fieldValue !== undefined) {
+          return fieldValue;
+        }
       }
+    } catch (e: any) {
+      // Page closed or context destroyed
+      if (e.message?.includes('Target page, context or browser has been closed')) {
+        throw new Error(`Cannot get field value - page has been closed: ${e.message}`);
+      }
+      console.log('[getFieldValue] Error evaluating field value:', e.message);
     }
 
     // Fallback: Try select dropdown (for select fields where doc value might not be set yet)
@@ -853,6 +868,67 @@ export class FrappeHelper {
    */
   async waitForIndicator(color: 'green' | 'blue' | 'orange' | 'red' | 'gray') {
     await this.page.waitForSelector(`.indicator-pill.${color}`, { timeout: 10000 });
+  }
+
+  /**
+   * Select a link field value in a child table row
+   * Handles Frappe's autocomplete for link fields in grid rows
+   */
+  async selectChildLinkValue(tablename: string, rowIndex: number, fieldname: string, value: string) {
+    console.log(`[selectChildLinkValue] Selecting ${fieldname} = ${value} in row ${rowIndex} of ${tablename}`);
+
+    // The child table row selector
+    const rowSelector = `[data-fieldname="${tablename}"] .grid-row[data-idx="${rowIndex}"]`;
+
+    // Find the input field for this link field
+    const input = this.page.locator(`${rowSelector} [data-fieldname="${fieldname}"] input`).first();
+
+    // Click the input to focus it and trigger the autocomplete
+    await input.click();
+    await this.page.waitForTimeout(300);
+
+    // Clear any existing value
+    await input.fill('');
+    await this.page.waitForTimeout(200);
+
+    // Type the value to trigger autocomplete
+    await input.fill(value);
+    await this.page.waitForTimeout(500);
+
+    // Wait for the autocomplete dropdown to appear
+    // Try different selectors for the autocomplete listbox
+    const autocompleteSelectors = [
+      `${rowSelector} [data-fieldname="${fieldname}"] ul[role="listbox"]`, // Modern Frappe
+      `${rowSelector} [data-fieldname="${fieldname}"] .awesomplete ul[role="listbox"]`, // Older Frappe
+      `ul[role="listbox"]:visible` // Fallback: any visible listbox
+    ];
+
+    let hasAutocomplete = false;
+    for (const selector of autocompleteSelectors) {
+      hasAutocomplete = await this.page.locator(selector).isVisible({ timeout: 1000 }).catch(() => false);
+      if (hasAutocomplete) {
+        console.log(`[selectChildLinkValue] Autocomplete dropdown visible (selector: ${selector})`);
+        break;
+      }
+    }
+
+    if (hasAutocomplete) {
+      console.log('[selectChildLinkValue] Selecting first option from dropdown');
+      // Press ArrowDown to select the first option, then Enter to confirm
+      await this.page.keyboard.press('ArrowDown');
+      await this.page.waitForTimeout(200);
+      await this.page.keyboard.press('Enter');
+      await this.page.waitForTimeout(500);
+    } else {
+      console.log('[selectChildLinkValue] No autocomplete dropdown visible, pressing Enter to confirm typed value');
+      // Just press Enter to confirm the typed value
+      await this.page.keyboard.press('Enter');
+      await this.page.waitForTimeout(500);
+    }
+
+    // Blur the field to trigger any onChange events
+    await input.blur();
+    await this.page.waitForTimeout(300);
   }
 
   /**

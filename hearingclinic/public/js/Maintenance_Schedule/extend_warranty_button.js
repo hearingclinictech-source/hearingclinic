@@ -61,7 +61,7 @@ function show_extension_dialog(frm) {
                             </tr>
                             <tr>
                                 <td><b>Customer:</b></td>
-                                <td>${frm.doc.customer_name}</td>
+                                <td>${frm.doc.customer_name || frm.doc.customer || ''}</td>
                             </tr>
                             <tr>
                                 <td><b>Serial Number(s):</b></td>
@@ -130,7 +130,7 @@ function show_extension_dialog(frm) {
                 fieldtype: 'Check',
                 fieldname: 'create_draft',
                 label: __('Create Sales Invoice as Draft'),
-                default: 0,
+                default: 1,
                 description: __('If checked, Sales Invoice will be created as draft for review before submission')
             },
             {

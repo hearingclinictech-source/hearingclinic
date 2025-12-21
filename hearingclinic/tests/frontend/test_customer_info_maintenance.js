@@ -4,8 +4,8 @@
  * @S Customer UI Tests
  */
 
-describe('Customer', () => {
-describe('Customer Info Maintenance', () => {
+describe('Customer @Sed9122a8', () => {
+describe('Customer Info Maintenance @S1dc08d7d', () => {
     let frm;
     let mockField;
 
@@ -63,17 +63,17 @@ describe('Customer Info Maintenance', () => {
         jest.clearAllMocks();
     });
 
-    test('should load maintenance schedules on customer form refresh', () => {
+    test('should load maintenance schedules on customer form refresh @Taf92d54f', () => {
         expect(frm.get_field).toBeDefined();
         expect(frm.doc.name).toBe('CUST-001');
     });
 
-    test('should display loading message initially', () => {
+    test('should display loading message initially @T4e81b91a', () => {
         const loadingMessage = '<p class="text-muted">Loading...</p>';
         expect(mockField.$wrapper.html).toBeDefined();
     });
 
-    test('should handle no maintenance schedules gracefully', () => {
+    test('should handle no maintenance schedules gracefully @T6bee2314', () => {
         frappe.call.mockImplementation((args) => {
             args.callback({ message: [] });
         });
@@ -82,7 +82,7 @@ describe('Customer Info Maintenance', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should load maintenance schedules for customer', () => {
+    test('should load maintenance schedules for customer @T2279aaf0', () => {
         const mockSchedules = [
             { name: 'MS-001', transaction_date: '2025-01-01', status: 'Submitted' },
             { name: 'MS-002', transaction_date: '2025-02-01', status: 'Submitted' }
@@ -97,7 +97,7 @@ describe('Customer Info Maintenance', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should load maintenance visits for customer', () => {
+    test('should load maintenance visits for customer @T657f0be2', () => {
         const mockVisits = [
             {
                 name: 'MV-001',
@@ -117,7 +117,7 @@ describe('Customer Info Maintenance', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should calculate remaining schedule items correctly', () => {
+    test('should calculate remaining schedule items correctly @T47d9596d', () => {
         const schedule = {
             schedule_items: [
                 { completion_status: 'Fully Completed' },
@@ -133,7 +133,7 @@ describe('Customer Info Maintenance', () => {
         expect(remaining).toBe(2);
     });
 
-    test('should identify active schedules', () => {
+    test('should identify active schedules @T938f3236', () => {
         const schedules = [
             {
                 status: 'Submitted',
@@ -164,7 +164,7 @@ describe('Customer Info Maintenance', () => {
         expect(active.length).toBe(1);
     });
 
-    test('should identify expired schedules', () => {
+    test('should identify expired schedules @T82ebc680', () => {
         const schedules = [
             {
                 status: 'Submitted',
@@ -184,7 +184,7 @@ describe('Customer Info Maintenance', () => {
         expect(expired.length).toBe(1);
     });
 
-    test('should count cancelled schedules', () => {
+    test('should count cancelled schedules @T4e95453f', () => {
         const schedules = [
             { status: 'Submitted' },
             { status: 'Cancelled' },
@@ -196,7 +196,7 @@ describe('Customer Info Maintenance', () => {
         expect(cancelled.length).toBe(2);
     });
 
-    test('should get status badge for schedules', () => {
+    test('should get status badge for schedules @Tc1b50d09', () => {
         const statuses = [
             { status: 'Submitted', remaining: 5, expected: 'Submitted' },
             { status: 'Submitted', remaining: 0, expected: 'Expired' },
@@ -216,7 +216,7 @@ describe('Customer Info Maintenance', () => {
         });
     });
 
-    test('should get completion status badge for visits', () => {
+    test('should get completion status badge for visits @T91ad3c51', () => {
         const statuses = [
             { status: 'Fully Completed', expected: 'Full' },
             { status: 'Partially Completed', expected: 'Partial' },
@@ -239,7 +239,7 @@ describe('Customer Info Maintenance', () => {
         });
     });
 
-    test('should find last completed visit date', () => {
+    test('should find last completed visit date @T6716e5b0', () => {
         const schedule = {
             actual_visits: [
                 { completion_status: 'Fully Completed', mntc_date: '2025-01-10' },
@@ -255,7 +255,7 @@ describe('Customer Info Maintenance', () => {
         expect(done[0].mntc_date).toBe('2025-01-10');
     });
 
-    test('should find next scheduled visit', () => {
+    test('should find next scheduled visit @Tf1fa1caf', () => {
         const today = '2025-01-15';
         const schedule = {
             schedule_items: [
@@ -277,7 +277,7 @@ describe('Customer Info Maintenance', () => {
         expect(next[0].scheduled_date).toBe('2025-01-20');
     });
 
-    test('should extract work done from visit', () => {
+    test('should extract work done from visit @T030e0311', () => {
         const visits = [
             {
                 description: 'Cleaned device',
@@ -305,7 +305,7 @@ describe('Customer Info Maintenance', () => {
         expect(workDone[2]).toBe('Tested device');
     });
 
-    test('should handle work done from purposes array', () => {
+    test('should handle work done from purposes array @T2e39a3eb', () => {
         const visit = {
             purposes: [
                 { work_done: 'Task 1', description: 'Desc 1' },
@@ -323,7 +323,7 @@ describe('Customer Info Maintenance', () => {
         expect(work).toBe('Task 1 - Desc 1 | Task 2 - Desc 2');
     });
 
-    test('should count visit statistics', () => {
+    test('should count visit statistics @T065ba625', () => {
         const visits = [
             { completion_status: 'Fully Completed' },
             { completion_status: 'Fully Completed' },
@@ -345,13 +345,13 @@ describe('Customer Info Maintenance', () => {
         expect(stats.pending).toBe(2);
     });
 
-    test('should support tab switching between schedules and visits', () => {
+    test('should support tab switching between schedules and visits @T4474f777', () => {
         const tabs = ['sched', 'visit'];
         expect(tabs).toContain('sched');
         expect(tabs).toContain('visit');
     });
 
-    test('should sort visits by date descending', () => {
+    test('should sort visits by date descending @T2361c080', () => {
         const visits = [
             { mntc_date: '2025-01-10' },
             { mntc_date: '2025-01-20' },
@@ -365,7 +365,7 @@ describe('Customer Info Maintenance', () => {
         expect(visits[2].mntc_date).toBe('2025-01-05');
     });
 
-    test('should handle unscheduled visits', () => {
+    test('should handle unscheduled visits @Tae9679d5', () => {
         const visit = {
             name: 'MV-001',
             maintenance_schedule: null
@@ -375,7 +375,7 @@ describe('Customer Info Maintenance', () => {
         expect(isUnscheduled).toBe(true);
     });
 
-    test('should create clickable links to schedules and visits', () => {
+    test('should create clickable links to schedules and visits @T6857bf5b', () => {
         const scheduleLink = '<a href="/app/maintenance-schedule/MS-001" target="_blank"><strong>MS-001</strong></a>';
         const visitLink = '<a href="/app/maintenance-visit/MV-001" target="_blank"><strong>MV-001</strong></a>';
 
@@ -383,7 +383,7 @@ describe('Customer Info Maintenance', () => {
         expect(visitLink).toContain('/app/maintenance-visit/');
     });
 
-    test('should handle promises for loading multiple schedules', async () => {
+    test('should handle promises for loading multiple schedules @Tf47d4673', async () => {
         const schedules = [
             { name: 'MS-001' },
             { name: 'MS-002' },
@@ -398,7 +398,7 @@ describe('Customer Info Maintenance', () => {
         expect(results.length).toBe(3);
     });
 
-    test('should handle error when loading schedules', () => {
+    test('should handle error when loading schedules @T50ccef8d', () => {
         frappe.call.mockImplementation((args) => {
             if (args.error) {
                 args.error({ message: 'Network error' });
@@ -409,7 +409,7 @@ describe('Customer Info Maintenance', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should escape HTML in work done descriptions', () => {
+    test('should escape HTML in work done descriptions @Td8636e4f', () => {
         const work = '<script>alert("XSS")</script>';
         const escaped = work
             .replace(/"/g, '&quot;')
@@ -419,7 +419,7 @@ describe('Customer Info Maintenance', () => {
         expect(escaped).toBe('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;');
     });
 
-    test('should handle empty schedule_items array', () => {
+    test('should handle empty schedule_items array @T3a0e8eb9', () => {
         const schedule = {
             schedule_items: []
         };
@@ -431,7 +431,7 @@ describe('Customer Info Maintenance', () => {
         expect(remaining).toBe(0);
     });
 
-    test('should filter visits by maintenance schedule', () => {
+    test('should filter visits by maintenance schedule @T165a3a68', () => {
         const allVisits = [
             { name: 'MV-001', maintenance_schedule: 'MS-001' },
             { name: 'MV-002', maintenance_schedule: 'MS-002' },

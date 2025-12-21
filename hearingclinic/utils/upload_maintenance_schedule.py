@@ -13,7 +13,7 @@ import frappe
 from openpyxl import load_workbook
 from collections import defaultdict
 
-file_path = '/home/frappe/frappe-bench/backups/11_maintenance_schedule_item_THROUGH_CONSOLE.xlsx'
+file_path = '/home/frappe/frappe-bench/backups/OUT_08_schedule_item_load.xlsx'
 wb = load_workbook(file_path)
 ws = wb.active
 headers = [cell.value for cell in ws[1]]

@@ -7,34 +7,45 @@ class ValueAddCard(Document):
         """Validate and calculate values - only for NEW cards"""
         # Only auto-calculate for new cards
         if self.is_new():
-            # Auto-calculate card value when amount paid is entered
-            if self.amount_paid:
+            # Auto-suggest card value when amount paid is entered
+            # Only auto-calculate if card_value is not manually set
+            if self.amount_paid and not self.card_value:
                 calculated_value = float(self.amount_paid) * 1.6
                 self.card_value = calculated_value
-            
+
             # Set initial balance
             if self.card_value and not self.current_balance:
                 self.current_balance = float(self.card_value)
-            
+
             # Set initial status
             if not self.status:
                 self.status = "Active"
     
     def add_transaction(self, transaction_type, amount, reference_doctype=None, reference_name=None, remarks=None):
         """Add a transaction to the card and update balance
-        
+
         Args:
             transaction_type: 'Purchase' or 'Refund'
             amount: Amount to deduct (Purchase) or add (Refund)
             reference_doctype: DocType of reference document (e.g., 'Sales Invoice')
             reference_name: Name of reference document
             remarks: Transaction remarks
-            
+
         Returns:
             dict: balance_before, balance_after, transaction details
         """
+        # Lock the card document to prevent concurrent modifications
+        # Use SELECT FOR UPDATE to ensure we have the latest balance
+        frappe.db.sql(
+            "SELECT current_balance FROM `tabValue Add Card` WHERE name=%s FOR UPDATE",
+            self.name
+        )
+
+        # Reload to get latest balance from database
+        self.reload()
+
         balance_before = self.current_balance
-        
+
         # Calculate new balance
         if transaction_type == "Purchase":
             new_balance = float(self.current_balance) - float(amount)
@@ -42,8 +53,9 @@ class ValueAddCard(Document):
             new_balance = float(self.current_balance) + float(amount)
         else:
             frappe.throw(f"Invalid transaction type: {transaction_type}")
-        
-        # Ensure balance doesn't go negative
+
+        # Prevent balance from going negative (overdraft protection)
+        # This allows the transaction but clamps the balance to 0
         if new_balance < 0:
             new_balance = 0
         

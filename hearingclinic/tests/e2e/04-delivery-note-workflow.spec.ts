@@ -46,6 +46,10 @@ test.describe('Delivery Note from Sales Invoice', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Step 2: Use the existing empty row to add package item
     // The package will unfold into bundle items (warranty, batteries, maintenance kit) with rate 0
     await page.click('[data-fieldname="items"] .grid-row[data-idx="1"]');
@@ -272,6 +276,10 @@ test.describe('Delivery Note from Sales Invoice', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Add package item in existing row
     await page.click('[data-fieldname="items"] .grid-row[data-idx="1"]');
     await page.waitForTimeout(500);
@@ -450,6 +458,10 @@ test.describe('Delivery Note from Sales Invoice', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Add package item in existing row
     await page.click('[data-fieldname="items"] .grid-row[data-idx="1"]');
     await page.waitForTimeout(500);
@@ -491,6 +503,10 @@ test.describe('Delivery Note from Sales Invoice', () => {
     await frappe.createNewDoc('Sales Invoice', true);
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
+
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
 
     // Add package item in existing row
     await page.click('[data-fieldname="items"] .grid-row[data-idx="1"]');

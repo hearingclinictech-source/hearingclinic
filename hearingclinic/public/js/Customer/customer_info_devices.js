@@ -18,14 +18,15 @@ function load_purchased_items(frm, fieldname) {
     
     // console.log('Loading purchase history for customer:', frm.doc.name);
     
-    // Query Sales Invoice with items
+    // Query Sales Invoice with items (exclude returns/credit notes)
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
             doctype: 'Sales Invoice',
             filters: {
                 'customer': frm.doc.name,
-                'docstatus': 1
+                'docstatus': 1,
+                'is_return': 0
             },
             fields: ['name', 'posting_date', 'grand_total', 'status'],
             limit_page_length: 500
@@ -68,95 +69,119 @@ function load_purchased_items(frm, fieldname) {
 }
 
 function load_all_invoice_items(frm, invoice_names, invoices, fieldname) {
-    let all_items = [];
-    let completed = 0;
-    
-    // First, get all delivery notes for this customer
+    // First, check for return invoices to exclude returned items
     frappe.call({
         method: 'frappe.client.get_list',
         args: {
-            doctype: 'Delivery Note',
+            doctype: 'Sales Invoice',
             filters: {
                 'customer': frm.doc.name,
-                'docstatus': 1
+                'docstatus': 1,
+                'is_return': 1
             },
-            fields: ['name', 'posting_date'],
+            fields: ['name', 'return_against'],
             limit_page_length: 500
         },
-        callback: function(dn_response) {
-            // console.log('Delivery Notes found:', dn_response.message ? dn_response.message.length : 0);
-            
-            let delivery_note_map = {};
-            
-            // Create map of delivery notes by invoice reference
-            if (dn_response.message && dn_response.message.length > 0) {
-                let dn_completed = 0;
-                let total_dns = dn_response.message.length;
-                
-                dn_response.message.forEach(function(dn) {
-                    let dn_name = dn.name;
-                    // console.log('Loading Delivery Note:', dn_name);
-                    
-                    frappe.call({
-                        method: 'frappe.client.get',
-                        args: {
-                            doctype: 'Delivery Note',
-                            name: dn_name,
-                            fields: ['name', 'items']
-                        },
-                        callback: function(dn_detail) {
-                            if (dn_detail.message && dn_detail.message.items) {
-                                dn_detail.message.items.forEach(function(dn_item) {
-                                    // Map by si_detail (the link to the specific Sales Invoice Item)
-                                    if (dn_item.si_detail) {
-                                        let key = dn_item.si_detail;
-                                        delivery_note_map[key] = {
-                                            device_serial: dn_item.serial_no || dn_item.custom_device_serial_number || '',
-                                            for_ear: dn_item.custom_for_ear || '',
-                                            delivery_note: dn_name,
-                                            item_code: dn_item.item_code
-                                        };
-                                    }
-                                });
-                            }
-                            
-                            dn_completed++;
-                            
-                            // When all delivery notes are loaded, load invoice items
-                            if (dn_completed === total_dns) {
-                                // console.log('All DNs loaded. Final DN Map:', delivery_note_map);
-                                load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname);
-                            }
-                        },
-                        error: function(r) {
-                            console.error('Error loading DN details for', dn_name, ':', r);
-                            dn_completed++;
-                            if (dn_completed === total_dns) {
-                                load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname);
-                            }
-                        }
-                    });
+        callback: function(return_inv_response) {
+            let invoices_with_returns = new Set();
+
+            // Track which invoices have returns
+            if (return_inv_response.message && return_inv_response.message.length > 0) {
+                return_inv_response.message.forEach(function(ret_inv) {
+                    if (ret_inv.return_against) {
+                        invoices_with_returns.add(ret_inv.return_against);
+                    }
                 });
-            } else {
-                // No delivery notes found, load items without serial numbers
-                // console.log('No delivery notes found, loading items without serial data');
-                load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, fieldname);
             }
-        },
-        error: function(r) {
-            console.error('Error loading delivery notes:', r);
-            load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, fieldname);
+
+            // Now get all delivery notes for this customer (only submitted ones)
+            frappe.call({
+                method: 'frappe.client.get_list',
+                args: {
+                    doctype: 'Delivery Note',
+                    filters: {
+                        'customer': frm.doc.name,
+                        'docstatus': 1
+                    },
+                    fields: ['name', 'posting_date'],
+                    limit_page_length: 500
+                },
+                callback: function(dn_response) {
+                    // console.log('Delivery Notes found:', dn_response.message ? dn_response.message.length : 0);
+
+                    let delivery_note_map = {};
+
+                    // Create map of delivery notes by invoice reference
+                    if (dn_response.message && dn_response.message.length > 0) {
+                        let dn_completed = 0;
+                        let total_dns = dn_response.message.length;
+
+                        dn_response.message.forEach(function(dn) {
+                            let dn_name = dn.name;
+                            // console.log('Loading Delivery Note:', dn_name);
+
+                            frappe.call({
+                                method: 'frappe.client.get',
+                                args: {
+                                    doctype: 'Delivery Note',
+                                    name: dn_name,
+                                    fields: ['name', 'items']
+                                },
+                                callback: function(dn_detail) {
+                                    if (dn_detail.message && dn_detail.message.items) {
+                                        dn_detail.message.items.forEach(function(dn_item) {
+                                            // Map by si_detail (the link to the specific Sales Invoice Item)
+                                            if (dn_item.si_detail) {
+                                                let key = dn_item.si_detail;
+                                                delivery_note_map[key] = {
+                                                    device_serial: dn_item.serial_no || dn_item.custom_device_serial_number || '',
+                                                    for_ear: dn_item.custom_for_ear || '',
+                                                    delivery_note: dn_name,
+                                                    item_code: dn_item.item_code
+                                                };
+                                            }
+                                        });
+                                    }
+
+                                    dn_completed++;
+
+                                    // When all delivery notes are loaded, load invoice items
+                                    if (dn_completed === total_dns) {
+                                        // console.log('All DNs loaded. Final DN Map:', delivery_note_map);
+                                        load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, invoices_with_returns, fieldname);
+                                    }
+                                },
+                                error: function(r) {
+                                    console.error('Error loading DN details for', dn_name, ':', r);
+                                    dn_completed++;
+                                    if (dn_completed === total_dns) {
+                                        load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, invoices_with_returns, fieldname);
+                                    }
+                                }
+                            });
+                        });
+                    } else {
+                        // No delivery notes found, load items without serial numbers
+                        // console.log('No delivery notes found, loading items without serial data');
+                        load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, invoices_with_returns, fieldname);
+                    }
+                },
+                error: function(r) {
+                    console.error('Error loading delivery notes:', r);
+                    load_invoice_items_with_dn_data(frm, invoice_names, invoices, {}, invoices_with_returns, fieldname);
+                }
+            });
         }
     });
 }
 
-function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, fieldname) {
+function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_note_map, invoices_with_returns, fieldname) {
     // console.log('Loading invoice items with DN data');
-    
+
     let all_items = [];
     let items_to_check = new Set();
     let completed = 0;
-    
+
     // Load each invoice's items
     invoice_names.forEach(invoice_name => {
         frappe.call({
@@ -168,44 +193,57 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
             },
             callback: function(r) {
                 // console.log('Invoice loaded:', invoice_name);
-                
+
                 if (r.message && r.message.items) {
-                    r.message.items.forEach(item => {
-                        // Look up delivery note data using the Sales Invoice Item's unique name
-                        let dn_key = item.name;
-                        let dn_data = delivery_note_map[dn_key] || {};
-                        
-                        all_items.push({
-                            item_code: item.item_code,
-                            item_name: item.item_name,
-                            qty: item.qty,
-                            rate: item.rate,
-                            amount: item.amount,
-                            parent: r.message.name,
-                            posting_date: r.message.posting_date,
-                            device_serial: dn_data.device_serial || '',
-                            for_ear: dn_data.for_ear || '',
-                            delivery_note: dn_data.delivery_note || ''
+                    // Skip items from invoices that have been returned
+                    if (!invoices_with_returns.has(invoice_name)) {
+                        r.message.items.forEach(item => {
+                            // Look up delivery note data using the Sales Invoice Item's unique name
+                            let dn_key = item.name;
+                            let dn_data = delivery_note_map[dn_key] || {};
+
+                            // Only include items that either:
+                            // 1. Have a valid delivery note (in delivery_note_map), OR
+                            // 2. Don't require a delivery note (no DN tracking for this item)
+                            // This automatically excludes items with cancelled delivery notes
+                            // since cancelled DNs are not in delivery_note_map (we only loaded docstatus=1)
+
+                            all_items.push({
+                                item_code: item.item_code,
+                                item_name: item.item_name,
+                                qty: item.qty,
+                                rate: item.rate,
+                                amount: item.amount,
+                                parent: r.message.name,
+                                posting_date: r.message.posting_date,
+                                device_serial: dn_data.device_serial || '',
+                                for_ear: dn_data.for_ear || '',
+                                delivery_note: dn_data.delivery_note || ''
+                            });
+
+                            // Track unique items to check their groups
+                            items_to_check.add(item.item_code);
                         });
-                        
-                        // Track unique items to check their groups
-                        items_to_check.add(item.item_code);
-                    });
+                    }
                 }
-                
+
                 completed++;
                 // console.log('Invoice items completed:', completed, 'of', invoice_names.length);
-                
+
                 // When all invoices are loaded, check item groups
                 if (completed === invoice_names.length) {
                     // console.log('All items loaded. Total items:', all_items.length);
                     // console.log('Unique items to check:', items_to_check.size);
-                    
+
                     if (all_items.length > 0 && items_to_check.size > 0) {
+                        // Filter out invoices that have been returned
+                        let valid_invoices = invoices.filter(inv => !invoices_with_returns.has(inv.name));
                         // Load item groups for filtering
-                        check_item_groups(frm, all_items, Array.from(items_to_check), invoices, fieldname);
+                        check_item_groups(frm, all_items, Array.from(items_to_check), valid_invoices, fieldname);
                     } else {
-                        display_invoice_summary_only(frm, invoices, fieldname);
+                        // Filter out invoices that have been returned
+                        let valid_invoices = invoices.filter(inv => !invoices_with_returns.has(inv.name));
+                        display_invoice_summary_only(frm, valid_invoices, fieldname);
                     }
                 }
             },
@@ -213,10 +251,12 @@ function load_invoice_items_with_dn_data(frm, invoice_names, invoices, delivery_
                 console.error('Error loading invoice items for', invoice_name, ':', r);
                 completed++;
                 if (completed === invoice_names.length) {
+                    // Filter out invoices that have been returned
+                    let valid_invoices = invoices.filter(inv => !invoices_with_returns.has(inv.name));
                     if (all_items.length > 0) {
-                        check_item_groups(frm, all_items, Array.from(items_to_check), invoices, fieldname);
+                        check_item_groups(frm, all_items, Array.from(items_to_check), valid_invoices, fieldname);
                     } else {
-                        display_invoice_summary_only(frm, invoices, fieldname);
+                        display_invoice_summary_only(frm, valid_invoices, fieldname);
                     }
                 }
             }

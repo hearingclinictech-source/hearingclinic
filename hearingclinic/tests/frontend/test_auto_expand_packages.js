@@ -4,8 +4,8 @@
  * @S Sales Invoice Tests
  */
 
-describe('Sales Invoice', () => {
-describe('Auto Expand Packages', () => {
+describe('Sales Invoice @Sa4b64427', () => {
+describe('Auto Expand Packages @S243253be', () => {
     let frm;
     let mockLocals;
 
@@ -71,7 +71,7 @@ describe('Auto Expand Packages', () => {
         jest.clearAllMocks();
     });
 
-    test('should check if item has Product Bundle when item_code is set', () => {
+    test('should check if item has Product Bundle when item_code is set @T562d78fd', () => {
         const row = {
             item_code: 'PKG-BASIC'
         };
@@ -89,7 +89,7 @@ describe('Auto Expand Packages', () => {
         expect(row.item_code).toBe('PKG-BASIC');
     });
 
-    test('should fetch Product Bundle details when bundle exists', () => {
+    test('should fetch Product Bundle details when bundle exists @Tcdc43e78', () => {
         const bundleName = 'PB-001';
 
         frappe.call.mockImplementation((args) => {
@@ -110,7 +110,7 @@ describe('Auto Expand Packages', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should prevent duplicate component additions', () => {
+    test('should prevent duplicate component additions @T4b151d3f', () => {
         const existingItems = ['HA-LEFT', 'HA-RIGHT'];
         const bundleComponents = [
             { item_code: 'HA-LEFT', qty: 1 },
@@ -124,7 +124,7 @@ describe('Auto Expand Packages', () => {
         expect(componentsExist).toBe(true);
     });
 
-    test('should determine if item rate should be set to zero', () => {
+    test('should determine if item rate should be set to zero @Tfeb2fe0b', () => {
         const testCases = [
             { item_code: 'PKG-BASIC', item_group: 'Packages', expected: false },
             { item_code: 'HA-PAIR', item_group: 'Hearing Aids', expected: false }, // ends with -PAIR, keeps rate
@@ -139,7 +139,7 @@ describe('Auto Expand Packages', () => {
         });
     });
 
-    test('should add bundle components as child rows', () => {
+    test('should add bundle components as child rows @Tc1f9dc01', () => {
         const bundle = {
             new_item_code: 'PKG-BASIC',
             items: [
@@ -159,7 +159,7 @@ describe('Auto Expand Packages', () => {
         expect(addedItems[2].qty).toBe(10);
     });
 
-    test('should set component rates to zero after price is loaded', async () => {
+    test('should set component rates to zero after price is loaded @T43205dd0', async () => {
         const component = {
             item_code: 'HA-LEFT',
             item_group: 'Hearing Aids'
@@ -178,7 +178,7 @@ describe('Auto Expand Packages', () => {
         }
     });
 
-    test('should wait for ERPNext to set rate before overriding', () => {
+    test('should wait for ERPNext to set rate before overriding @T4c60099a', () => {
         // Test that we poll for rate to be set
         let checkCount = 0;
         const maxChecks = 20;
@@ -203,7 +203,7 @@ describe('Auto Expand Packages', () => {
         });
     });
 
-    test('should show success alert when components are added', () => {
+    test('should show success alert when components are added @Td47add41', () => {
         const bundleItemCode = 'PKG-BASIC';
 
         frappe.show_alert.mockImplementation((options) => {
@@ -215,17 +215,17 @@ describe('Auto Expand Packages', () => {
         expect(frappe.show_alert).toBeDefined();
     });
 
-    test('should add custom button for setting component rates to zero', () => {
+    test('should add custom button for setting component rates to zero @T1b69810c', () => {
         // Test that button is added in draft mode only
         expect(frm.doc.docstatus).toBe(0); // Draft
     });
 
-    test('should add custom button for expanding all bundles', () => {
+    test('should add custom button for expanding all bundles @Tf414030e', () => {
         // Test that expand all bundles button exists
         expect(frm.doc.docstatus).toBe(0); // Draft
     });
 
-    test('should handle expand all bundles functionality', () => {
+    test('should handle expand all bundles functionality @T31d33d02', () => {
         frm.doc.items = [
             { item_code: 'PKG-BASIC' },
             { item_code: 'PKG-PREMIUM' },
@@ -250,7 +250,7 @@ describe('Auto Expand Packages', () => {
         expect(packageItems.length).toBe(2);
     });
 
-    test('should not expand already expanded bundles', () => {
+    test('should not expand already expanded bundles @Tde5c74f4', () => {
         frm.doc.items = [
             { item_code: 'PKG-BASIC' },
             { item_code: 'HA-LEFT' },  // Component from PKG-BASIC
@@ -272,7 +272,7 @@ describe('Auto Expand Packages', () => {
         expect(isExpanded).toBe(true);
     });
 
-    test('should show dialog when manually setting component rates to zero', () => {
+    test('should show dialog when manually setting component rates to zero @Tee97eb07', () => {
         global.frappe.ui.Dialog = jest.fn(function(opts) {
             this.opts = opts;
             this.show = jest.fn();
@@ -283,7 +283,7 @@ describe('Auto Expand Packages', () => {
         expect(frappe.ui.Dialog).toBeDefined();
     });
 
-    test('should count items updated when setting rates to zero', () => {
+    test('should count items updated when setting rates to zero @T01e18a8d', () => {
         frm.doc.items = [
             { item_code: 'PKG-BASIC', item_group: 'Packages', rate: 1000 },
             { item_code: 'HA-LEFT', item_group: 'Hearing Aids', rate: 800 },
@@ -303,14 +303,14 @@ describe('Auto Expand Packages', () => {
         expect(updated).toBe(3); // HA-LEFT, HA-RIGHT, BATT-001
     });
 
-    test('should handle no items in invoice gracefully', () => {
+    test('should handle no items in invoice gracefully @Td86275d4', () => {
         frm.doc.items = [];
 
         const itemCount = frm.doc.items.length;
         expect(itemCount).toBe(0);
     });
 
-    test('should handle no bundles found', () => {
+    test('should handle no bundles found @T9f106211', () => {
         frappe.call.mockImplementation((args) => {
             args.callback({ message: [] });
         });
@@ -319,7 +319,7 @@ describe('Auto Expand Packages', () => {
         expect(frappe.call).toBeDefined();
     });
 
-    test('should show appropriate alert for all bundles already expanded', () => {
+    test('should show appropriate alert for all bundles already expanded @T345880fd', () => {
         frappe.show_alert.mockImplementation((options) => {
             if (options.message.includes('already expanded')) {
                 expect(options.indicator).toBe('blue');
@@ -329,7 +329,7 @@ describe('Auto Expand Packages', () => {
         expect(frappe.show_alert).toBeDefined();
     });
 
-    test('should fetch item_group before setting item_code', async () => {
+    test('should fetch item_group before setting item_code @Td4ed483b', async () => {
         const itemCode = 'HA-LEFT';
 
         const itemGroup = await frappe.db.get_value('Item', itemCode, ['item_group']);
@@ -337,7 +337,7 @@ describe('Auto Expand Packages', () => {
         expect(itemGroup.message.item_group).toBe('Hearing Aids');
     });
 
-    test('should set quantity from bundle component', () => {
+    test('should set quantity from bundle component @T54b392b9', () => {
         const component = {
             item_code: 'BATT-001',
             qty: 10
@@ -353,7 +353,7 @@ describe('Auto Expand Packages', () => {
         // Would set qty to 10
     });
 
-    test('should refresh items field after adding components', () => {
+    test('should refresh items field after adding components @Tf8bb0540', () => {
         frm.refresh_field = jest.fn((fieldname) => {
             expect(fieldname).toBe('items');
         });
@@ -361,7 +361,7 @@ describe('Auto Expand Packages', () => {
         // Would call frm.refresh_field('items')
     });
 
-    test('should handle promise chain for adding multiple components', async () => {
+    test('should handle promise chain for adding multiple components @T5ef65ec4', async () => {
         const components = [
             { item_code: 'HA-LEFT', qty: 1 },
             { item_code: 'HA-RIGHT', qty: 1 },
@@ -376,7 +376,7 @@ describe('Auto Expand Packages', () => {
         expect(results.length).toBe(3);
     });
 
-    test('should handle -PAIR items specially', () => {
+    test('should handle -PAIR items specially @Tb830910b', () => {
         const pairItem = {
             item_code: 'HA-PREMIUM-PAIR',
             item_group: 'Hearing Aids'
@@ -387,7 +387,7 @@ describe('Auto Expand Packages', () => {
         expect(shouldSetToZero).toBe(false); // Should NOT set to zero
     });
 
-    test('should check for disabled Product Bundles', () => {
+    test('should check for disabled Product Bundles @Tec4e11c5', () => {
         const filters = {
             'new_item_code': 'PKG-BASIC',
             'disabled': 0
@@ -396,7 +396,7 @@ describe('Auto Expand Packages', () => {
         expect(filters.disabled).toBe(0); // Only active bundles
     });
 
-    test('should handle items without item_code', () => {
+    test('should handle items without item_code @T8981375a', () => {
         const items = [
             { item_code: 'PKG-BASIC' },
             { item_code: null },

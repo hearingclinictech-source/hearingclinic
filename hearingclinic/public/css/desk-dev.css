@@ -1,0 +1,27 @@
+:root {
+    --bg-color: #A5D6A7; /* Light grayish blue */
+    --layout-bg: #FFE0B2;
+}
+
+/* Optional: Target specific Desk containers if variables aren't enough */
+.page-container {
+    background-color: #C8E6C9 !important;
+}
+
+/* Optional: Change the Sidebar background */
+.layout-side-section {
+    background-color: #A5D6A7 !important;
+}
+/* Force apply to the Navbar container */
+.navbar {
+    background-color:  #A5D6A7  !important;
+    border-bottom: 1px solid var(--navbar-border) !important;
+}
+
+/* Fix for icons and text color */
+.navbar .navbar-item, 
+.navbar .nav-link, 
+.navbar .navbar-brand,
+.navbar .awesome-bar input {
+    color: #A5D6A7 important;
+}

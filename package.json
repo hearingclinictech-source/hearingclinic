@@ -55,5 +55,8 @@
       "default",
       "@testomatio/reporter/lib/adapter/jest.js"
     ]
+  },
+  "dependencies": {
+    "check-tests": "^0.15.1"
   }
 }

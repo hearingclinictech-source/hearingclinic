@@ -1,3 +1,4 @@
+import re
 import frappe
 from frappe import _
 from frappe.utils import add_months, getdate, today
@@ -149,38 +150,66 @@ def extract_sale_information(doc):
     }
 
 
+def sanitize_naming_series_text(text):
+    """
+    Sanitize text for use in naming series.
+
+    Frappe naming series only allows: - # . / { }
+    All other special characters are removed or replaced.
+
+    Args:
+        text: The text to sanitize
+
+    Returns:
+        str: Sanitized text safe for naming series
+    """
+    # Remove any character that is not alphanumeric, space, or allowed special chars (- # . / { })
+    # Replace spaces with hyphens for readability
+    sanitized = re.sub(r"[^a-zA-Z0-9\s\-#.\/{}]", "", text)
+    sanitized = sanitized.replace(" ", "-")
+    # Remove consecutive hyphens
+    sanitized = re.sub(r"-+", "-", sanitized)
+    # Remove leading/trailing hyphens
+    sanitized = sanitized.strip("-")
+    return sanitized
+
+
 def create_maintenance_schedule_doc(doc, serial_numbers, warranty_months, start_date, reference_item):
     """
     Create and submit the maintenance schedule document for initial sale.
-    
+
     Business Logic:
     - Creates schedule with visits at: 1 month, 4 months, then recurring (6, 12, 18...)
     - Stores concatenated serial numbers for future reference
     - End date is warranty_months from start date
-    
+
     Args:
         doc: Source Delivery Note
         serial_numbers: Device serial numbers (concatenated with " | ")
         warranty_months: Duration of warranty in months
         start_date: Start date for schedule (posting date)
         reference_item: The first hearing aid item (for naming/reference)
-    
+
     Returns:
         Maintenance Schedule document
     """
     customer_doc = frappe.get_doc("Customer", doc.customer)
-    
+
     # Calculate number of visits
     # Initial visits: 1 month, 4 months (2 visits)
     # Recurring visits: starting at 6 months, every 6 months thereafter
     recurring_visits = calculate_recurring_visits(warranty_months, 4)
     total_visits = 2 + recurring_visits
-    
+
     frappe.log_error(
         f"Creating schedule - Duration: {warranty_months} months, Total visits: {total_visits}",
         "Schedule Creation"
     )
-    
+
+    # Sanitize names for naming series (only allow: - # . / { })
+    sanitized_customer_name = sanitize_naming_series_text(customer_doc.customer_name)
+    sanitized_item_name = sanitize_naming_series_text(reference_item.item_name)
+
     # Create maintenance schedule document
     maintenance_schedule = frappe.new_doc("Maintenance Schedule")
     maintenance_schedule.customer = doc.customer
@@ -188,7 +217,7 @@ def create_maintenance_schedule_doc(doc, serial_numbers, warranty_months, start_
     maintenance_schedule.transaction_date = start_date
     maintenance_schedule.company = doc.company
     maintenance_schedule.custom_device_serial_number = serial_numbers  # Store serial numbers
-    maintenance_schedule.naming_series = f'{customer_doc.customer_name}-{reference_item.item_name}-.YYYY.'
+    maintenance_schedule.naming_series = f'{sanitized_customer_name}-{sanitized_item_name}-.YYYY.'
     
     # Add maintenance schedule item
     maintenance_schedule.append("items", {

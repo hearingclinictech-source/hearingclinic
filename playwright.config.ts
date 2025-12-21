@@ -28,15 +28,13 @@ export default defineConfig({
   workers: 1, // Single worker to avoid database conflicts
 
   // Reporter configuration
-  reporter: [
+  reporter: process.env.TESTOMATIO ? [
     ['list'],
-    ['html', { outputFolder: 'playwright-report' }],
-    // Testomat.io reporter (enabled when TESTOMATIO env var is set)
-    ...(process.env.TESTOMATIO ? [
-      ['@testomatio/reporter/lib/adapter/playwright.js', {
-        apiKey: process.env.TESTOMATIO
-      }]
-    ] : [])
+    ['@testomatio/reporter/lib/adapter/playwright.js', {
+      apiKey: process.env.TESTOMATIO
+    }]
+  ] : [
+    ['list']
   ],
 
   // Shared settings for all projects

@@ -28,8 +28,8 @@ const mockFrappe = {
 	throw: jest.fn()
 };
 
-describe('Customer ID Formatting', () => {
-	test('should format male customer ID with blue badge', () => {
+describe('Customer ID Formatting @S73cf4bf5', () => {
+	test('should format male customer ID with blue badge @T74e7b893', () => {
 		const customerId = 'M-0001';
 		const expectedColor = '#3498db'; // Blue for male
 
@@ -37,7 +37,7 @@ describe('Customer ID Formatting', () => {
 		expect(customerId.startsWith('M-')).toBe(true);
 	});
 
-	test('should format female customer ID with pink badge', () => {
+	test('should format female customer ID with pink badge @Ta846b4ff', () => {
 		const customerId = 'F-0001';
 		const expectedColor = '#e91e63'; // Pink for female
 
@@ -45,7 +45,7 @@ describe('Customer ID Formatting', () => {
 		expect(customerId.startsWith('F-')).toBe(true);
 	});
 
-	test('should handle missing customer ID gracefully', () => {
+	test('should handle missing customer ID gracefully @T6164eca2', () => {
 		const customerId = null;
 
 		// Should not throw error when ID is null
@@ -57,8 +57,8 @@ describe('Customer ID Formatting', () => {
 	});
 });
 
-describe('Customer Since Badge', () => {
-	test('should display customer since date', () => {
+describe('Customer Since Badge @S97cb0ace', () => {
+	test('should display customer since date @T2103617c', () => {
 		const creationDate = '2023-01-15';
 		const badge = {
 			date: creationDate,
@@ -68,7 +68,7 @@ describe('Customer Since Badge', () => {
 		expect(badge.date).toBe(creationDate);
 	});
 
-	test('should show P for customers with purchases', () => {
+	test('should show P for customers with purchases @T490819b3', () => {
 		const badge = {
 			purchaseStatus: 'P'
 		};
@@ -76,7 +76,7 @@ describe('Customer Since Badge', () => {
 		expect(badge.purchaseStatus).toBe('P');
 	});
 
-	test('should show NP for customers without purchases', () => {
+	test('should show NP for customers without purchases @T277907a5', () => {
 		const badge = {
 			purchaseStatus: 'NP'
 		};
@@ -85,13 +85,13 @@ describe('Customer Since Badge', () => {
 	});
 });
 
-describe('Value Add Card Application', () => {
+describe('Value Add Card Application @S7274f52b', () => {
 	beforeEach(() => {
 		// Reset mocks
 		jest.clearAllMocks();
 	});
 
-	test('should validate card has sufficient balance', () => {
+	test('should validate card has sufficient balance @T6c2a0293', () => {
 		const card = {
 			name: 'TEST-VAC-0001',
 			current_balance: 1000,
@@ -103,7 +103,7 @@ describe('Value Add Card Application', () => {
 		expect(card.current_balance).toBeGreaterThanOrEqual(invoiceAmount);
 	});
 
-	test('should warn when card balance is insufficient', () => {
+	test('should warn when card balance is insufficient @T6cbe78c5', () => {
 		const card = {
 			name: 'TEST-VAC-0001',
 			current_balance: 300,
@@ -115,7 +115,7 @@ describe('Value Add Card Application', () => {
 		expect(card.current_balance).toBeLessThan(invoiceAmount);
 	});
 
-	test('should filter active cards with balance > 0', () => {
+	test('should filter active cards with balance > 0 @T50000b2d', () => {
 		const cards = [
 			{ name: 'VAC-1', current_balance: 1000, status: 'Active' },
 			{ name: 'VAC-2', current_balance: 0, status: 'Fully Used' },
@@ -129,7 +129,7 @@ describe('Value Add Card Application', () => {
 		expect(activeCards[1].name).toBe('VAC-3');
 	});
 
-	test('should display card selection dialog with customer filter', () => {
+	test('should display card selection dialog with customer filter @Tf56a5832', () => {
 		const customer = '_Test Customer';
 		const filters = {
 			customer: customer,
@@ -143,8 +143,8 @@ describe('Value Add Card Application', () => {
 	});
 });
 
-describe('Sales Invoice Partial Payment', () => {
-	test('should calculate remaining balance correctly', () => {
+describe('Sales Invoice Partial Payment @Scfa1f263', () => {
+	test('should calculate remaining balance correctly @T2fd387c2', () => {
 		const grandTotal = 2000;
 		const paidAmount = 500;
 		const remaining = grandTotal - paidAmount;
@@ -152,7 +152,7 @@ describe('Sales Invoice Partial Payment', () => {
 		expect(remaining).toBe(1500);
 	});
 
-	test('should mark invoice as partially paid', () => {
+	test('should mark invoice as partially paid @Tb467b0de', () => {
 		const invoice = {
 			grand_total: 2000,
 			paid_amount: 500,
@@ -164,7 +164,7 @@ describe('Sales Invoice Partial Payment', () => {
 		expect(invoice.outstanding_amount).toBeGreaterThan(0);
 	});
 
-	test('should validate payment does not exceed grand total', () => {
+	test('should validate payment does not exceed grand total @Td7333653', () => {
 		const grandTotal = 1000;
 		const paymentAmount = 1200;
 
@@ -174,8 +174,8 @@ describe('Sales Invoice Partial Payment', () => {
 	});
 });
 
-describe('Delivery Note Creation', () => {
-	test('should extract items from sales invoice', () => {
+describe('Delivery Note Creation @Se70e76b3', () => {
+	test('should extract items from sales invoice @T5db9b630', () => {
 		const salesInvoice = {
 			items: [
 				{ item_code: 'HEARING-AID-1', qty: 1, rate: 1000 },
@@ -187,7 +187,7 @@ describe('Delivery Note Creation', () => {
 		expect(salesInvoice.items[0].item_code).toBe('HEARING-AID-1');
 	});
 
-	test('should allow adding serial numbers to delivery note items', () => {
+	test('should allow adding serial numbers to delivery note items @T18c6b0a2', () => {
 		const deliveryNoteItem = {
 			item_code: 'HEARING-AID-1',
 			qty: 1,
@@ -200,8 +200,8 @@ describe('Delivery Note Creation', () => {
 	});
 });
 
-describe('Warranty Extension', () => {
-	test('should calculate warranty end date', () => {
+describe('Warranty Extension @S00b1167b', () => {
+	test('should calculate warranty end date @T717b18e5', () => {
 		const startDate = new Date('2024-01-01');
 		const warrantyMonths = 12;
 		const endDate = new Date(startDate);
@@ -211,7 +211,7 @@ describe('Warranty Extension', () => {
 		expect(endDate.getTime()).toBe(expectedEnd.getTime());
 	});
 
-	test('should allow selecting warranty duration', () => {
+	test('should allow selecting warranty duration @T55c32082', () => {
 		const warrantyOptions = [
 			{ label: '1 Year', value: 12 },
 			{ label: '2 Years', value: 24 },
@@ -223,8 +223,8 @@ describe('Warranty Extension', () => {
 	});
 });
 
-describe('Customer Quick Entry', () => {
-	test('should validate required fields', () => {
+describe('Customer Quick Entry @Sb1ed5948', () => {
+	test('should validate required fields @T4a71072b', () => {
 		const customer = {
 			customer_name: '_Test Customer',
 			gender: 'Male'
@@ -235,7 +235,7 @@ describe('Customer Quick Entry', () => {
 		expect(customer.gender).toBeTruthy();
 	});
 
-	test('should accept optional NRIC field', () => {
+	test('should accept optional NRIC field @T56a22271', () => {
 		const customer = {
 			customer_name: '_Test Customer',
 			gender: 'Female',
@@ -246,15 +246,15 @@ describe('Customer Quick Entry', () => {
 	});
 });
 
-describe('UI Helper Functions', () => {
-	test('should format currency correctly', () => {
+describe('UI Helper Functions @S9d4b1aa2', () => {
+	test('should format currency correctly @T0e381f78', () => {
 		const amount = 1234.56;
 		const formatted = amount.toFixed(2);
 
 		expect(formatted).toBe('1234.56');
 	});
 
-	test('should format date for display', () => {
+	test('should format date for display @Tddd44489', () => {
 		const date = '2024-01-15';
 		const parts = date.split('-');
 
@@ -264,7 +264,7 @@ describe('UI Helper Functions', () => {
 		expect(parts[2]).toBe('15');
 	});
 
-	test('should safely handle null values', () => {
+	test('should safely handle null values @T8381defd', () => {
 		const value = null;
 		const display = value || 'N/A';
 

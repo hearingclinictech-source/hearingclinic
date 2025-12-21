@@ -51,6 +51,10 @@ test.describe('Sales Invoice Package Unfolding', () => {
     // Wait for customer to be set
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Verify customer was set
     const customer = await frappe.getFieldValue('customer');
     expect(customer).toBe(testCustomer);
@@ -73,6 +77,10 @@ test.describe('Sales Invoice Package Unfolding', () => {
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
 
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
+
     // Add item row
     await frappe.addChildRow('items');
 
@@ -89,6 +97,10 @@ test.describe('Sales Invoice Package Unfolding', () => {
     await frappe.createNewDoc('Sales Invoice', true);
     await frappe.selectLinkValue('customer', testCustomer);
     await page.waitForTimeout(1000);
+
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
 
     // This is a simplified test
     // In a real scenario, you would:
@@ -124,6 +136,11 @@ test.describe('Sales Invoice Package Unfolding', () => {
 
     await frappe.createNewDoc('Sales Invoice', true);
     await frappe.selectLinkValue('customer', testCustomer);
+    await page.waitForTimeout(1000);
+
+    // Set POS Profile to valid payment mode
+    await frappe.selectFieldValue('pos_profile', 'Cash');
+    await page.waitForTimeout(500);
 
     // Add package item
     // await frappe.addChildRow('items');

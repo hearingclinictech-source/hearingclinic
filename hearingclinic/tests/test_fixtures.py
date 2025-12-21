@@ -1,5 +1,6 @@
 # Copyright (c) 2025, Thomas Roch and Contributors
 # Test fixtures and utilities for hearingclinic app
+# @S Integration Tests
 
 import frappe
 from frappe.utils import nowdate, add_days, add_months, random_string

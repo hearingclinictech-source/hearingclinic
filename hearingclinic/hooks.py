@@ -10,15 +10,16 @@ app_include_js = [
     "/assets/hearingclinic/js/Customer/customer_quick_entry.js",
 ]
 
+
 doctype_js = {
        "Customer": [
            "public/js/Customer/format_customer_id.js",
-           "public/js/Customer/format_sales_button.js",                 
-           "public/js/Customer/customer_info_devices.js",                 
-           "public/js/Customer/customer_info_maintenance.js",                 
+           "public/js/Customer/format_sales_button.js",
+           "public/js/Customer/customer_info_devices.js",
+           "public/js/Customer/customer_info_maintenance.js",
        ],
        "Sales Invoice": [
-           "public/js/Sales_Invoice/fix_pos_profile_payment.js",
+           "public/js/Sales_Invoice/clear_default_pos_profile.js",
            "public/js/Sales_Invoice/auto_expand_packages.js",
            "public/js/Sales_Invoice/create_delivery_note.js",
            "public/js/Sales_Invoice/apply_value_add_card.js",
@@ -43,6 +44,7 @@ doc_events = {
         "on_submit": "hearingclinic.hearingclinic.doc_events.create_maintenance_schedule.create_hearing_aid_maintenance_schedule"
     },
     "Sales Invoice": {
+        "onload": "hearingclinic.hearingclinic.doc_events.clear_default_pos_profile.onload",
         "validate": [
             "hearingclinic.hearingclinic.doc_events.sales_invoice_partial_payment.override_pos_payment_amount",
             "hearingclinic.hearingclinic.doc_events.handle_vac_sales_invoice.validate",
@@ -86,6 +88,10 @@ fixtures = [
     {
         "doctype": "Custom HTML Block",
         "filters": [["name", "in", ["Tutorials"]]],
+    },
+    {
+    "dt": "Mode of Payment",
+    "filters": [["name", "in", ["Value Add Card"]]]
     },
     {
         "doctype": "Letter Head",
@@ -142,10 +148,10 @@ fixtures = [
                 "Contact-is_billing_contact",  # Is Billing Contact
 
                 # Contact Phone (2 custom fields)
-                "Contact Phone-custom_contact_type",  # Contact Type
                 "Contact Phone-custom_contact_name",  # Contact Name
+                "Contact Phone-custom_customer_relationship",  # Customer Relationship
 
-                # Customer (12 custom fields)
+                # Customer (14 custom fields)
                 "Customer-custom_customer_id",  # Customer Id
                 "Customer-custom_new_sales_invoice",  # New Sales Invoice
                 "Customer-custom_customer_since",  # Customer Since
@@ -153,7 +159,9 @@ fixtures = [
                 "Customer-custom_ethinicity",  # Ethnicity
                 "Customer-custom_date_of_birth",  # Date of Birth
                 "Customer-custom_last_pta",  # Last PTA
+                "Customer-custom_devices",  # Devices
                 "Customer-custom_customer_info",  # Customer Info
+                "Customer-custom_maintenance",  # Maintenance
                 "Customer-custom_devices_and_sales",  # Devices and Sales
                 "Customer-custom_items_purchased",  # Items Purchased
                 "Customer-custom_maintenance_information",  # Maintenance Information
@@ -186,8 +194,8 @@ fixtures = [
                 # Sales Invoice (10 custom fields)
                 "Sales Invoice-custom_sales_person",  # Sales Person
                 "Sales Invoice-custom_partial_payment_section",  # Partial Payment Section
-                "Sales Invoice-custom_column_break_bwhw7",  # 
                 "Sales Invoice-custom_partial_payment_amount",  # Partial Payment Amount
+                "Sales Invoice-custom_column_break_bwhw7",  # 
                 "Sales Invoice-custom_amount_paid_this_transaction",  # Amount Paid This Transaction
                 "Sales Invoice-custom_payment_overview",  # 
                 "Sales Invoice-custom_payment_history_html",  # Payment History HTML
@@ -214,11 +222,15 @@ fixtures = [
                 "Sales Invoice",
                 "Delivery Note",
                 "Address",
+                "Contact",
+                "Contact Phone",
                 "Lead",
                 "Maintenance Schedule",
                 "Maintenance Visit",
                 "Maintenance Visit Purpose",
-                "Delivery Note Item"
+                "Delivery Note Item",
+                "Value Add Card",
+                "Print Format",
             ]]
         ]
     },
