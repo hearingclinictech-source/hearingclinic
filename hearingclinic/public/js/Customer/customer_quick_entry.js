@@ -39,7 +39,7 @@ try {
                 },
                 {
                     label: __("Ethnicity"),
-                    fieldname: "custom_ethnicity",
+                    fieldname: "custom_ethinicity",  // Note: matches database field name
                     fieldtype: "Select",
                     options: [
                         "Chinese",

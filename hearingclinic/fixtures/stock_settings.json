@@ -27,7 +27,7 @@
   "enable_stock_reservation": 0,
   "item_group": null,
   "item_naming_by": "Item Code",
-  "modified": "2025-12-18 12:51:00.031071",
+  "modified": "2025-12-22 09:38:41.529314",
   "mr_qty_allowance": 0.0,
   "name": "Stock Settings",
   "naming_series_prefix": "BATCH-",
