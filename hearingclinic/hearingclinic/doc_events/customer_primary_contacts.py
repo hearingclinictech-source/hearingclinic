@@ -106,13 +106,9 @@ def create_primary_contact(customer_doc, contact_data):
             if contact_data.get('custom_contact_name'):
                 phone_entry['custom_contact_name'] = contact_data.get('custom_contact_name')
 
-            # Note: custom_contact_type is available in Contact Phone child table
-            # but we're using custom_contact_relationship from the form
-            # Map it if the field exists in Contact Phone
+            # Add customer relationship to Contact Phone child table
             if contact_data.get('custom_contact_relationship'):
-                # The relationship is stored as custom_contact_name in Contact Phone
-                # This maps the relationship to the contact name field
-                phone_entry['custom_contact_name'] = f"{contact_name} ({contact_data.get('custom_contact_relationship')})"
+                phone_entry['custom_customer_relationship'] = contact_data.get('custom_contact_relationship')
 
             contact.append("phone_nos", phone_entry)
 

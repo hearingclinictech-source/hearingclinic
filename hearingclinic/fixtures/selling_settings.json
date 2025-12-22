@@ -20,7 +20,7 @@
   "hide_tax_id": 0,
   "maintain_same_rate_action": "Stop",
   "maintain_same_sales_rate": 0,
-  "modified": "2025-12-18 12:50:59.138657",
+  "modified": "2025-12-22 09:38:41.308510",
   "name": "Selling Settings",
   "role_to_override_stop_action": null,
   "sales_update_frequency": "Each Transaction",

@@ -9,9 +9,9 @@ SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
 # Load .env file if it exists
-if [ -f "$SCRIPT_DIR/.env" ]; then
-    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
-    echo "Loaded environment variables from .env"
+if [ -f "$SCRIPT_DIR/.tests.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.tests.env" | xargs)
+    echo "Loaded environment variables from .tests.env"
 fi
 
 # Detect if we're running in Docker environment (hc-staging)
@@ -19,12 +19,17 @@ DOCKER_PREFIX=""
 if [ -f "/.dockerenv" ] || grep -q docker /proc/1/cgroup 2>/dev/null; then
     # We're inside a Docker container, run commands directly
     DOCKER_PREFIX=""
-elif docker compose -p frappe ps 2>/dev/null | grep -q "backend.*running"; then
-    # We're on hc-staging host and backend container is RUNNING
-    DOCKER_PREFIX="docker compose -p frappe exec -T backend"
-    echo "Detected hc-staging environment - using Docker exec"
+elif [ "$TEST_ENV" = "staging" ]; then
+    # TEST_ENV=staging means we want to use Docker (typical for hc-staging host)
+    if docker compose -p frappe ps 2>/dev/null | grep -q "backend.*Up"; then
+        DOCKER_PREFIX="docker compose -p frappe exec -T backend"
+        echo "Detected TEST_ENV=staging - using Docker exec"
+    else
+        echo "Warning: TEST_ENV=staging but backend container not running"
+        DOCKER_PREFIX=""
+    fi
 else
-    # Local environment or backend not running
+    # Local environment (TEST_ENV=development or not set)
     DOCKER_PREFIX=""
 fi
 
@@ -101,12 +106,24 @@ echo -e "${BLUE}Checking dependencies...${NC}"
 if [ -z "$DOCKER_PREFIX" ]; then
     ./env/bin/pip install unittest-xml-reporting -q 2>/dev/null || true
 else
-    $DOCKER_PREFIX pip install unittest-xml-reporting -q 2>/dev/null || true
+    # In Docker, use the bench environment's pip
+    $DOCKER_PREFIX /home/frappe/frappe-bench/env/bin/pip install unittest-xml-reporting -q 2>/dev/null || true
 fi
 
 # Create test results directory (use absolute path)
-TEST_RESULTS_DIR="$BENCH_DIR/test-results/backend"
-mkdir -p "$TEST_RESULTS_DIR"
+# Use backups directory for Docker data exchange, similar to existing backup approach
+if [ -n "$DOCKER_PREFIX" ]; then
+    # Inside Docker container, use backups directory for data exchange
+    TEST_RESULTS_DIR="/home/frappe/frappe-bench/backups/test-results/backend"
+    # Create directory inside the container
+    $DOCKER_PREFIX mkdir -p "$TEST_RESULTS_DIR"
+    # Also set the host path for later access
+    HOST_TEST_RESULTS_DIR="$BENCH_DIR/backups/test-results/backend"
+else
+    TEST_RESULTS_DIR="$BENCH_DIR/test-results/backend"
+    HOST_TEST_RESULTS_DIR="$TEST_RESULTS_DIR"
+    mkdir -p "$TEST_RESULTS_DIR"
+fi
 
 # Test modules to run
 TEST_MODULES=(
@@ -172,21 +189,19 @@ echo ""
 if [ "$TESTOMAT_ENABLED" = true ]; then
     echo -e "${GREEN}Uploading backend test results to Testomat.io...${NC}"
 
-    # Check if npx is available (needed for testomatio reporter)
-    if command -v npx &> /dev/null; then
-        # Upload all XML files to Testomat.io using the correct command
-        # Use report-xml command from @testomatio/reporter package
-        cd "$BENCH_DIR/apps/hearingclinic"
+    # Generate test run title with date
+    RUN_TITLE="Backend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
 
-        # Generate test run title with date
-        RUN_TITLE="Backend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
+    # Upload XML files
+    if [ -n "$DOCKER_PREFIX" ]; then
+        # In Docker mode, run npx inside the container where Node.js is available
+        echo -e "${BLUE}Uploading from Docker container...${NC}"
 
-        # Upload with TESTOMATIO_CREATE env var to create tests if they don't exist
-        # TESTOMATIO_TITLE sets the run title
-        TESTOMATIO=$TESTOMATIO \
-        TESTOMATIO_CREATE=1 \
-        TESTOMATIO_TITLE="$RUN_TITLE" \
-        npx report-xml "$TEST_RESULTS_DIR/*.xml" --lang=Python
+        $DOCKER_PREFIX bash -c "cd /home/frappe/frappe-bench/apps/hearingclinic && \
+            TESTOMATIO=$TESTOMATIO \
+            TESTOMATIO_CREATE=1 \
+            TESTOMATIO_TITLE='$RUN_TITLE' \
+            npx report-xml '$TEST_RESULTS_DIR/*.xml' --lang=Python"
 
         if [ $? -eq 0 ]; then
             echo -e "${GREEN}✓${NC} Backend test results uploaded to Testomat.io"
@@ -195,7 +210,24 @@ if [ "$TESTOMAT_ENABLED" = true ]; then
             echo -e "${YELLOW}Warning: Failed to upload XML reports to Testomat.io${NC}"
         fi
     else
-        echo -e "${YELLOW}Warning: npx not found. Install Node.js to enable backend test upload to Testomat.io${NC}"
+        # Local mode - check if npx is available on host
+        if command -v npx &> /dev/null; then
+            cd "$SCRIPT_DIR"
+
+            TESTOMATIO=$TESTOMATIO \
+            TESTOMATIO_CREATE=1 \
+            TESTOMATIO_TITLE="$RUN_TITLE" \
+            npx report-xml "$HOST_TEST_RESULTS_DIR/*.xml" --lang=Python
+
+            if [ $? -eq 0 ]; then
+                echo -e "${GREEN}✓${NC} Backend test results uploaded to Testomat.io"
+                echo -e "${BLUE}  Run title:${NC} $RUN_TITLE"
+            else
+                echo -e "${YELLOW}Warning: Failed to upload XML reports to Testomat.io${NC}"
+            fi
+        else
+            echo -e "${YELLOW}Warning: npx not found. Install Node.js to enable backend test upload to Testomat.io${NC}"
+        fi
     fi
     echo ""
 fi
@@ -205,19 +237,39 @@ echo ""
 echo -e "${GREEN}Running Frontend Tests...${NC}"
 echo "========================================"
 
-cd "$BENCH_DIR/apps/hearingclinic"
+# Determine where to run frontend tests
+if [ -n "$DOCKER_PREFIX" ]; then
+    # Running in Docker mode - execute npm test inside container
+    echo -e "${BLUE}Running frontend tests inside Docker container...${NC}"
 
-# Run frontend tests with Testomat.io reporting if enabled
-if [ "$TESTOMAT_ENABLED" = true ]; then
-    # Generate test run title with date
-    FRONTEND_RUN_TITLE="Frontend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
-    echo -e "${BLUE}Run title:${NC} $FRONTEND_RUN_TITLE"
-    echo ""
+    # Run frontend tests with Testomat.io reporting if enabled
+    if [ "$TESTOMAT_ENABLED" = true ]; then
+        # Generate test run title with date
+        FRONTEND_RUN_TITLE="Frontend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
+        echo -e "${BLUE}Run title:${NC} $FRONTEND_RUN_TITLE"
+        echo ""
 
-    # Pass TESTOMATIO and TESTOMATIO_TITLE to npm test so Jest reporter can use them
-    TESTOMATIO=$TESTOMATIO TESTOMATIO_TITLE="$FRONTEND_RUN_TITLE" npm test
+        # Pass TESTOMATIO and TESTOMATIO_TITLE to npm test inside Docker
+        $DOCKER_PREFIX bash -c "cd /home/frappe/frappe-bench/apps/hearingclinic && TESTOMATIO=$TESTOMATIO TESTOMATIO_TITLE='$FRONTEND_RUN_TITLE' npm test"
+    else
+        $DOCKER_PREFIX bash -c "cd /home/frappe/frappe-bench/apps/hearingclinic && npm test"
+    fi
 else
-    npm test
+    # Running locally - execute npm test on host
+    cd "$SCRIPT_DIR"
+
+    # Run frontend tests with Testomat.io reporting if enabled
+    if [ "$TESTOMAT_ENABLED" = true ]; then
+        # Generate test run title with date
+        FRONTEND_RUN_TITLE="Frontend Tests - $(date '+%Y-%m-%d %H:%M:%S')"
+        echo -e "${BLUE}Run title:${NC} $FRONTEND_RUN_TITLE"
+        echo ""
+
+        # Pass TESTOMATIO and TESTOMATIO_TITLE to npm test
+        TESTOMATIO=$TESTOMATIO TESTOMATIO_TITLE="$FRONTEND_RUN_TITLE" npm test
+    else
+        npm test
+    fi
 fi
 
 FRONTEND_EXIT=$?
