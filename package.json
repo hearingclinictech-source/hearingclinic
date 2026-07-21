@@ -27,7 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/jest-dom": "6.9.1",
     "@testomatio/reporter": "^1.0.0",
     "dotenv": "^17.2.3",
     "jest": "^29.7.0",
