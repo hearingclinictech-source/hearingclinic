@@ -2909,7 +2909,7 @@
   "property": "link_filters",
   "property_type": "JSON",
   "row_name": null,
-  "value": "{\"filters\": [[\"Value Add Card\", \"customer\", \"=\", \"eval:doc.customer\"], [\"Value Add Card\", \"status\", \"=\", \"Active\"]]}"
+  "value": "[[\"Value Add Card\", \"customer\", \"=\", \"eval:doc.customer\"], [\"Value Add Card\", \"status\", \"=\", \"Active\"]]"
  },
  {
   "default_value": null,
